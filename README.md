@@ -1,6 +1,6 @@
 # Dev-MasterKit
 
-> A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, and performance benchmarking. Zero dependencies. Production-ready.
+> A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 ## Features
 
@@ -11,6 +11,10 @@
 - ⚡ **Performance Benchmarking** — Measure and compare code with statistical analysis
 - 🤖 **Agent Personas** — Specialized agents for architecture, security, and performance
 - 🔄 **Full Pipeline Orchestration** — End-to-end automation: create → code → test → audit → push
+- ✨ **Prompt Engineering** — Write effective system prompts and instruction templates
+- 🔌 **API Validation** — Systematically test API keys and endpoints
+- ⏰ **Cron Orchestration** — Set up automated monitoring and scheduled jobs
+- 📦 **Zero-Dependency Patterns** — Create single-file Python utilities (the "tiny family")
 
 ## Quick Start
 
@@ -37,33 +41,74 @@ open skills/repo-creator/SKILL.md
 # Follow the procedure to create a new repository
 ```
 
+## Stats
+
+| Category | Count | Last Updated |
+|----------|-------|-------------|
+| Skills | 9 | 2026-06-25 |
+| Prompts | 3 | 2026-06-25 |
+| Commands | 5 | 2026-06-20 |
+| Agents | 3 | 2026-06-20 |
+| Orchestrators | 1 | 2026-06-20 |
+| Tools | 3 | 2026-06-25 |
+| Daily Updates | 6 | 2026-06-25 |
+
 ## Structure
+
 
 ```
 dev-masterkit/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
-├── skills/                   # Reusable skill files
-│   ├── repo-creator/         # Create zero-dependency Python repos
-│   ├── test-automation/      # Auto-generate test suites
-│   ├── doc-generator/        # Generate README + docs
-│   ├── security-audit/       # Scan for secrets/vulns
-│   └── benchmark-runner/     # Performance benchmarking
-├── commands/                 # Chat commands
-│   ├── scaffold/             # /scaffold — create repo
-│   ├── test/                 # /test — run test suite
-│   ├── benchmark/            # /benchmark — benchmark
-│   ├── release/              # /release — version + tag
-│   └── audit/                # /audit — security scan
-├── agents/                   # Agent personas
-│   ├── python-architect/     # Design Python architectures
-│   ├── security-reviewer/    # Review code for security
-│   └── performance-optimizer/# Optimize Python performance
-├── orchestrators/            # Multi-step workflows
-│   └── full-repo-pipeline/   # Create → code → test → push
+│   └── plugin.json              # Plugin manifest
+├── prompts/                      # Ready-to-use system prompts
+│   ├── system-instruction.md     # Vibe Coding session setup
+│   ├── api-test-suite.md         # API validation prompt
+│   └── zero-dep-scaffold.md      # Single-file utility prompt
+├── skills/                       # Reusable skill files
+│   ├── repo-creator/             # Create zero-dependency Python repos
+│   ├── test-automation/          # Auto-generate test suites
+│   ├── doc-generator/            # Generate README + docs
+│   ├── security-audit/           # Scan for secrets/vulns
+│   ├── benchmark-runner/         # Performance benchmarking
+│   ├── prompt-engineering/       # Write effective prompts
+│   ├── api-validation/           # Test API keys/endpoints
+│   ├── cron-orchestrator/        # Set up scheduled jobs
+│   └── zero-dep-pattern/         # Single-file utility pattern
+├── commands/                     # Chat commands
+│   ├── scaffold/                 # /scaffold — create repo
+│   ├── test/                     # /test — run test suite
+│   ├── benchmark/                # /benchmark — benchmark
+│   ├── release/                  # /release — version + tag
+│   └── audit/                    # /audit — security scan
+├── agents/                       # Agent personas
+│   ├── python-architect/         # Design Python architectures
+│   ├── security-reviewer/        # Review code for security
+│   └── performance-optimizer/    # Optimize Python performance
+├── orchestrators/                # Multi-step workflows
+│   └── full-repo-pipeline/       # Create → code → test → push
+├── tools/                        # Tool guides and references
+│   ├── plugin-install-guide.md   # OpenClaw plugin setup
+│   ├── snapdb-guide.md           # SnapDB usage guide
+│   └── cost-tracker.md           # API cost tracking
+├── daily-updates/                # Daily changelog
+│   └── 2026-06-25.md             # Latest update
 ├── README.md
 └── LICENSE
 ```
+
+## Skills
+
+| Skill | Purpose | Trigger |
+|-------|---------|---------|
+| `repo-creator` | Scaffold zero-dependency Python repos | "Create a repo" / `/scaffold` |
+| `test-automation` | Generate unittest suites | "Write tests" / `/test` |
+| `doc-generator` | Generate README + API docs | "Write documentation" |
+| `security-audit` | Scan for secrets/vulnerabilities | "Security scan" / `/audit` |
+| `benchmark-runner` | Performance benchmarking | "Benchmark this" / `/benchmark` |
+| `prompt-engineering` | Write effective prompts | "Write a system prompt" |
+| `api-validation` | Test API keys/endpoints | "Test this API" |
+| `cron-orchestrator` | Set up scheduled jobs | "Automate [task]" |
+| `zero-dep-pattern` | Single-file utilities | "Create a tiny [tool]" |
 
 ## Commands
 
@@ -82,6 +127,26 @@ dev-masterkit/
 | `python-architect` | Design clean Python architectures | "Design the structure for..." |
 | `security-reviewer` | Find and fix security issues | "Review this for security" |
 | `performance-optimizer` | Optimize speed and memory | "Make this faster" / "Profile..." |
+
+## Prompts
+
+| Prompt | Purpose | When to Use |
+|--------|---------|-------------|
+| `system-instruction` | Vibe Coding session setup | Starting dev sessions, setting AI expectations |
+| `api-test-suite` | Systematic API validation | Onboarding keys, debugging integrations |
+| `zero-dep-scaffold` | Single-file utility creation | Creating tiny Python modules |
+
+## Tools
+
+| Tool | Description | Last Verified |
+|------|-------------|---------------|
+| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-06-25 |
+| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB | 2026-06-25 |
+| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-06-24 |
+
+## Daily Updates
+
+Each day's learnings are logged in `daily-updates/YYYY-MM-DD.md`.
 
 ## Pipeline
 
