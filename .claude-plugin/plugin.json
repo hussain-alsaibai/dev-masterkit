@@ -1,0 +1,46 @@
+{
+  "name": "dev-masterkit",
+  "version": "1.0.0",
+  "description": "A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, and performance benchmarking.",
+  "author": "hussain-alsaibai",
+  "license": "MIT",
+  "entryPoints": {
+    "skills": "skills/*/SKILL.md",
+    "commands": "commands/*/command.md",
+    "agents": "agents/*/agent.md",
+    "orchestrators": "orchestrators/*/orchestrator.md"
+  },
+  "capabilities": [
+    "repo-scaffolding",
+    "test-automation",
+    "documentation-generation",
+    "security-auditing",
+    "performance-benchmarking",
+    "architecture-design",
+    "code-review",
+    "ci-cd-pipeline"
+  ],
+  "triggers": [
+    "create repository",
+    "scaffold project",
+    "generate tests",
+    "write documentation",
+    "security scan",
+    "benchmark code",
+    "optimize performance",
+    "design architecture"
+  ],
+  "dependencies": {
+    "required": [],
+    "optional": [
+      "git",
+      "python3",
+      "pytest",
+      "docker"
+    ]
+  },
+  "compatibility": {
+    "claude": ">=3.5",
+    "openclaw": ">=1.0"
+  }
+}
