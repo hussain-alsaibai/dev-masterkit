@@ -136,6 +136,25 @@ dev-masterkit/
 | `api-test-suite` | Systematic API validation | Onboarding keys, debugging integrations |
 | `zero-dep-scaffold` | Single-file utility creation | Creating tiny Python modules |
 
+## 🏗️ Our Tools
+
+Production-tested tools and libraries built by this team:
+
+| Repo | Description | Stars | Lang |
+|------|-------------|-------|------|
+| [context-bridge](https://github.com/hussain-alsaibai/context-bridge) | MCP server with persistent semantic knowledge graph | ⭐0 | TypeScript |
+| [snapdb](https://github.com/hussain-alsaibai/snapdb) | Lightning-fast in-memory DB, zero dependencies | ⭐0 | Python |
+| [fast-cache](https://github.com/hussain-alsaibai/fast-cache) | High-performance cache (TTL, LRU, memory limits) | ⭐0 | Python |
+| [tiny-router](https://github.com/hussain-alsaibai/tiny-router) | Minimal WSGI router — Flask in one file | ⭐0 | Python |
+| [tiny-config](https://github.com/hussain-alsaibai/tiny-config) | Config loader (JSON, .env, INI, Python) | ⭐0 | Python |
+| [tiny-cli](https://github.com/hussain-alsaibai/tiny-cli) | Minimal argument parser — Click in one file | ⭐0 | Python |
+| [tiny-log](https://github.com/hussain-alsaibai/tiny-log) | Structured logging — structlog in one file | ⭐0 | Python |
+| [tiny-validator](https://github.com/hussain-alsaibai/tiny-validator) | Data validation — Pydantic in one file | ⭐0 | Python |
+| [ai-git-hooks](https://github.com/hussain-alsaibai/ai-git-hooks) | AI-powered Git hooks with local LLMs | ⭐0 | Shell/Python |
+| [container-security-monitor](https://github.com/hussain-alsaibai/container-security-monitor) | Continuous container security with Trivy | ⭐0 | Python |
+
+*All Python tools follow the "zero-dependency, single-file" philosophy.*
+
 ## Tools
 
 | Tool | Description | Last Verified |
