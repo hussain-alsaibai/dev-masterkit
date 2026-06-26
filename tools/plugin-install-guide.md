@@ -89,4 +89,4 @@ gateway action=config.get path=plugins.entries
 - Check plugin dependencies (some need API keys)
 - Look for config conflicts in logs
 
-## Last Verified: 2026-06-25
+## Last Verified: 2026-06-26

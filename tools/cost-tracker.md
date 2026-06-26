@@ -50,4 +50,4 @@ cat /tmp/session_logs/<session_id>.json | python -m skills.model-cost-tracker.in
 - UTC/AST timezone boundary can affect daily filtering
 - Fixed on 2026-06-24 to use AST timezone
 
-## Last Verified: 2026-06-24
+## Last Verified: 2026-06-26

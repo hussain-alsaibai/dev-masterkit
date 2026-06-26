@@ -164,6 +164,23 @@ dependencies = []  # Zero dependencies!
 
 **Performance:** ~450K ops/sec (benchmarked vs dict baseline)
 
+## The "Tiny Family" — Verified Modules
+
+| Module | Like | Size | Use Case |
+|--------|------|------|----------|
+| snapdb | SQLite/Redis | ~15KB | In-memory database |
+| fast-cache | Redis | ~15KB | Local caching |
+| tiny-router | Flask | ~5KB | WSGI routing |
+| tiny-config | python-decouple | ~4KB | Config loading |
+| tiny-cli | Click/argparse | ~4KB | CLI parsing |
+| tiny-log | structlog | ~4KB | Structured logging |
+| tiny-validator | Pydantic | ~5KB | Data validation |
+| tiny-worker | Celery | ~9KB | Background tasks |
+| tiny-events | Redis Pub/Sub | ~8KB | Event-driven architecture |
+| tiny-http | requests | ~10KB | HTTP client |
+
+**Total:** ~80KB of Python across 10 production-ready libraries. Zero dependencies.
+
 ## Validation Checklist
 
 - [ ] Zero third-party imports
@@ -178,10 +195,10 @@ dependencies = []  # Zero dependencies!
 
 ## Notes
 
-- The "tiny family" includes: tiny-router, tiny-config, tiny-cli, tiny-log, tiny-validator
+- The "tiny family" includes: tiny-router, tiny-config, tiny-cli, tiny-log, tiny-validator, tiny-worker, tiny-events, tiny-http
 - Each follows this exact pattern
 - Copy any module into a project — no pip install needed
 - For complex projects, compose multiple tiny modules rather than growing one
 - Benchmark against stdlib equivalents (dict, list, set) to justify existence
 
-## Last Verified: 2026-06-25
+## Last Verified: 2026-06-26

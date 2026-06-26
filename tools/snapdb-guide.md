@@ -64,4 +64,4 @@ results = docs.find({
 | v0.2.0 | 2026-06-25 | Query engine, DocumentStore, hash indexes, WAL |
 | v0.1.0 | 2026-06-23 | Initial release, key-value API |
 
-## Last Verified: 2026-06-25
+## Last Verified: 2026-06-26
