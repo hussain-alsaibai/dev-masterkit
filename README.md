@@ -45,13 +45,13 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 9 | 2026-06-25 |
+| Skills | 12 | 2026-06-26 |
 | Prompts | 3 | 2026-06-25 |
 | Commands | 5 | 2026-06-20 |
 | Agents | 3 | 2026-06-20 |
 | Orchestrators | 1 | 2026-06-20 |
 | Tools | 3 | 2026-06-25 |
-| Daily Updates | 6 | 2026-06-25 |
+| Daily Updates | 7 | 2026-06-26 |
 
 ## Structure
 
@@ -73,6 +73,9 @@ dev-masterkit/
 │   ├── prompt-engineering/       # Write effective prompts
 │   ├── api-validation/           # Test API keys/endpoints
 │   ├── cron-orchestrator/        # Set up scheduled jobs
+│   ├── api-dev/                # Build, test, and debug APIs
+│   ├── data-analyst/           # Data analysis and visualization
+│   ├── security-sentinel/      # Scan for secrets and vulnerabilities
 │   └── zero-dep-pattern/         # Single-file utility pattern
 ├── commands/                     # Chat commands
 │   ├── scaffold/                 # /scaffold — create repo
@@ -109,6 +112,9 @@ dev-masterkit/
 | `api-validation` | Test API keys/endpoints | "Test this API" |
 | `cron-orchestrator` | Set up scheduled jobs | "Automate [task]" |
 | `zero-dep-pattern` | Single-file utilities | "Create a tiny [tool]" |
+| `api-dev` | Build, test, and debug APIs | "Create an API" / "Test this endpoint" |
+| `data-analyst` | Data analysis and visualization | "Analyze this data" / "Generate report" |
+| `security-sentinel` | Scan for secrets and vulnerabilities | "Security scan" / "Find secrets" |
 
 ## Commands
 
@@ -151,6 +157,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-log](https://github.com/hussain-alsaibai/tiny-log) | Structured logging — structlog in one file | ⭐0 | Python |
 | [tiny-validator](https://github.com/hussain-alsaibai/tiny-validator) | Data validation — Pydantic in one file | ⭐0 | Python |
 | [ai-git-hooks](https://github.com/hussain-alsaibai/ai-git-hooks) | AI-powered Git hooks with local LLMs | ⭐0 | Shell/Python |
+| [tiny-worker](https://github.com/hussain-alsaibai/tiny-worker) | Background task queue — Celery in one file | ⭐0 | Python |
+| [tiny-events](https://github.com/hussain-alsaibai/tiny-events) | Event bus — Redis Pub/Sub in one file | ⭐0 | Python |
+| [tiny-http](https://github.com/hussain-alsaibai/tiny-http) | HTTP client — requests in one file | ⭐0 | Python |
 | [container-security-monitor](https://github.com/hussain-alsaibai/container-security-monitor) | Continuous container security with Trivy | ⭐0 | Python |
 
 *All Python tools follow the "zero-dependency, single-file" philosophy.*
