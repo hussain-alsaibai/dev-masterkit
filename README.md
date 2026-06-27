@@ -51,7 +51,7 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-06-27 |
 | Orchestrators | 1 | 2026-06-27 |
 | Tools | 3 | 2026-06-27 |
-| Daily Updates | 8 | 2026-06-27 |
+| Daily Updates | 3 | 2026-06-27 |
 
 ## Structure
 
