@@ -45,13 +45,13 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 12 | 2026-06-26 |
-| Prompts | 3 | 2026-06-26 |
-| Commands | 5 | 2026-06-26 |
-| Agents | 3 | 2026-06-26 |
-| Orchestrators | 1 | 2026-06-26 |
-| Tools | 3 | 2026-06-26 |
-| Daily Updates | 7 | 2026-06-26 |
+| Skills | 12 | 2026-06-27 |
+| Prompts | 4 | 2026-06-27 |
+| Commands | 5 | 2026-06-27 |
+| Agents | 3 | 2026-06-27 |
+| Orchestrators | 1 | 2026-06-27 |
+| Tools | 3 | 2026-06-27 |
+| Daily Updates | 8 | 2026-06-27 |
 
 ## Structure
 
@@ -63,6 +63,7 @@ dev-masterkit/
 ├── prompts/                      # Ready-to-use system prompts
 │   ├── system-instruction.md     # Vibe Coding session setup
 │   ├── api-test-suite.md         # API validation prompt
+│   ├── automation-pattern-research.md  # AI automation research
 │   └── zero-dep-scaffold.md      # Single-file utility prompt
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
@@ -94,7 +95,9 @@ dev-masterkit/
 │   ├── snapdb-guide.md           # SnapDB usage guide
 │   └── cost-tracker.md           # API cost tracking
 ├── daily-updates/                # Daily changelog
-│   └── 2026-06-25.md             # Latest update
+│   ├── 2026-06-25.md             # June 25 update
+│   ├── 2026-06-26.md             # June 26 update
+│   └── 2026-06-27.md             # June 27 update
 ├── README.md
 └── LICENSE
 ```
@@ -138,8 +141,9 @@ dev-masterkit/
 
 | Prompt | Purpose | When to Use |
 |--------|---------|-------------|
-| `system-instruction` | Vibe Coding session setup | Starting dev sessions, setting AI expectations |
 | `api-test-suite` | Systematic API validation | Onboarding keys, debugging integrations |
+| `automation-pattern-research` | Research AI automation patterns | Exploring use cases, benchmarking |
+| `system-instruction` | Vibe Coding session setup | Starting dev sessions, setting AI expectations |
 | `zero-dep-scaffold` | Single-file utility creation | Creating tiny Python modules |
 
 ## 🏗️ Our Tools
@@ -168,9 +172,9 @@ Production-tested tools and libraries built by this team:
 
 | Tool | Description | Last Verified |
 |------|-------------|---------------|
-| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-06-26 |
-| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB | 2026-06-26 |
-| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-06-26 |
+| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-06-27 |
+| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-06-27 |
+| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB | 2026-06-27 |
 
 ## Daily Updates
 
