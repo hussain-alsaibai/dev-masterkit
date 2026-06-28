@@ -45,13 +45,13 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 12 | 2026-06-27 |
-| Prompts | 4 | 2026-06-27 |
-| Commands | 5 | 2026-06-27 |
-| Agents | 3 | 2026-06-27 |
-| Orchestrators | 1 | 2026-06-27 |
-| Tools | 3 | 2026-06-27 |
-| Daily Updates | 3 | 2026-06-27 |
+| Skills | 14 | 2026-06-28 |
+| Prompts | 4 | 2026-06-28 |
+| Commands | 5 | 2026-06-28 |
+| Agents | 3 | 2026-06-28 |
+| Orchestrators | 1 | 2026-06-28 |
+| Tools | 3 | 2026-06-28 |
+| Daily Updates | 4 | 2026-06-28 |
 
 ## Structure
 
@@ -97,7 +97,8 @@ dev-masterkit/
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
-│   └── 2026-06-27.md             # June 27 update
+│   ├── 2026-06-27.md             # June 27 update
+│   └── 2026-06-28.md             # June 28 update
 ├── README.md
 └── LICENSE
 ```
@@ -118,6 +119,8 @@ dev-masterkit/
 | `api-dev` | Build, test, and debug APIs | "Create an API" / "Test this endpoint" |
 | `data-analyst` | Data analysis and visualization | "Analyze this data" / "Generate report" |
 | `security-sentinel` | Scan for secrets and vulnerabilities | "Security scan" / "Find secrets" |
+| `bounty-scanner` | Scan GitHub for official bounties (Algora/Opire) | "Find bounties" / "Scan for bounties" |
+| `browser-automation` | Web browser automation and data extraction | "Browse this" / "Fill this form" |
 
 ## Commands
 
@@ -168,13 +171,15 @@ Production-tested tools and libraries built by this team:
 
 *All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 10 libraries (~80KB).*
 
+**SnapDB** is the flagship database: v0.3.1 with columnar engine, metrics, CDC, and batch insert. 47/47 tests passing. Benchmarks vs DuckDB/SQLite available in repo.
+
 ## Tools
 
 | Tool | Description | Last Verified |
 |------|-------------|---------------|
-| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-06-27 |
-| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-06-27 |
-| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB | 2026-06-27 |
+| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-06-28 |
+| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-06-28 |
+| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-06-28 |
 
 ## Daily Updates
 
