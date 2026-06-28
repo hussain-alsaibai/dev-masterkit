@@ -168,8 +168,13 @@ Production-tested tools and libraries built by this team:
 | [tiny-events](https://github.com/hussain-alsaibai/tiny-events) | Event bus — Redis Pub/Sub in one file | ⭐0 | Python |
 | [tiny-http](https://github.com/hussain-alsaibai/tiny-http) | HTTP client — requests in one file | ⭐0 | Python |
 | [container-security-monitor](https://github.com/hussain-alsaibai/container-security-monitor) | Continuous container security with Trivy | ⭐0 | Python |
+| [tiny-agent](https://github.com/hussain-alsaibai/tiny-agent) | Agent framework — LangChain in one file | ⭐0 | Python |
+| [tiny-embed](https://github.com/hussain-alsaibai/tiny-embed) | Text embeddings — sentence-transformers in one file | ⭐0 | Python |
+| [tiny-mcp](https://github.com/hussain-alsaibai/tiny-mcp) | MCP server — Model Context Protocol in one file | ⭐0 | Python |
 
-*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 10 libraries (~80KB).*
+*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 13 libraries (~100KB).*
+
+**SnapDB** is the flagship database: v0.3.1 with columnar engine, metrics, CDC, and batch insert. 47/47 tests passing. Benchmarks vs DuckDB/SQLite available in repo.
 
 **SnapDB** is the flagship database: v0.3.1 with columnar engine, metrics, CDC, and batch insert. 47/47 tests passing. Benchmarks vs DuckDB/SQLite available in repo.
 
