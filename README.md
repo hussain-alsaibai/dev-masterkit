@@ -51,7 +51,7 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-06-28 |
 | Orchestrators | 1 | 2026-06-28 |
 | Tools | 3 | 2026-06-28 |
-| Daily Updates | 4 | 2026-06-28 |
+| Daily Updates | 5 | 2026-06-29 |
 
 ## Structure
 
@@ -98,7 +98,8 @@ dev-masterkit/
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
 │   ├── 2026-06-27.md             # June 27 update
-│   └── 2026-06-28.md             # June 28 update
+│   ├── 2026-06-28.md             # June 28 update
+│   └── 2026-06-29.md             # June 29 update
 ├── README.md
 └── LICENSE
 ```
@@ -172,9 +173,7 @@ Production-tested tools and libraries built by this team:
 | [tiny-embed](https://github.com/hussain-alsaibai/tiny-embed) | Text embeddings — sentence-transformers in one file | ⭐0 | Python |
 | [tiny-mcp](https://github.com/hussain-alsaibai/tiny-mcp) | MCP server — Model Context Protocol in one file | ⭐0 | Python |
 
-*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 13 libraries (~100KB).*
-
-**SnapDB** is the flagship database: v0.3.1 with columnar engine, metrics, CDC, and batch insert. 47/47 tests passing. Benchmarks vs DuckDB/SQLite available in repo.
+*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 16 libraries (~120KB).*
 
 **SnapDB** is the flagship database: v0.3.1 with columnar engine, metrics, CDC, and batch insert. 47/47 tests passing. Benchmarks vs DuckDB/SQLite available in repo.
 
