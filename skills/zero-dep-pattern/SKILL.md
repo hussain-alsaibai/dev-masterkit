@@ -201,4 +201,4 @@ dependencies = []  # Zero dependencies!
 - For complex projects, compose multiple tiny modules rather than growing one
 - Benchmark against stdlib equivalents (dict, list, set) to justify existence
 
-## Last Verified: 2026-06-26
+## Last Verified: 2026-06-29

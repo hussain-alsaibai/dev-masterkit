@@ -45,13 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 14 | 2026-06-28 |
-| Prompts | 4 | 2026-06-28 |
-| Commands | 5 | 2026-06-28 |
-| Agents | 3 | 2026-06-28 |
-| Orchestrators | 1 | 2026-06-28 |
-| Tools | 3 | 2026-06-28 |
+| Skills | 14 | 2026-06-29 |
+| Prompts | 4 | 2026-06-29 |
+| Commands | 5 | 2026-06-29 |
+| Agents | 3 | 2026-06-29 |
+| Orchestrators | 1 | 2026-06-29 |
+| Tools | 3 | 2026-06-29 |
 | Daily Updates | 5 | 2026-06-29 |
+| tiny-* Ecosystem Repos | 16 | 2026-06-29 |
 
 ## Structure
 
@@ -123,6 +124,19 @@ dev-masterkit/
 | `bounty-scanner` | Scan GitHub for official bounties (Algora/Opire) | "Find bounties" / "Scan for bounties" |
 | `browser-automation` | Web browser automation and data extraction | "Browse this" / "Fill this form" |
 
+### 🧩 tiny-* Ecosystem Skills (built using these patterns)
+
+| Library | Mirrors | Tests | Throughput | Last Verified |
+|---------|---------|-------|------------|---------------|
+| tiny-router | Flask | 15/15 | 76K req/s | 2026-06-29 |
+| tiny-log | structlog | 17/17 | 32K logs/s | 2026-06-29 |
+| tiny-validator | Pydantic | 31/31 | 247K val/s | 2026-06-29 |
+| tiny-agent | LangChain | ✅ | — | 2026-06-28 |
+| tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
+| tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
+
+*16 zero-dep, single-file Python libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills.*
+
 ## Commands
 
 | Command | Description | Skill |
@@ -174,6 +188,15 @@ Production-tested tools and libraries built by this team:
 | [tiny-mcp](https://github.com/hussain-alsaibai/tiny-mcp) | MCP server — Model Context Protocol in one file | ⭐0 | Python |
 
 *All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 16 libraries (~120KB).*
+
+### Latest additions (2026-06-29)
+- **tiny-router** — 76K req/s HTTP/WSGI router (15/15 tests)
+- **tiny-log** — 32K logs/s structured logging (17/17 tests)
+- **tiny-validator** — 247K val/s Pydantic-style validation (31/31 tests)
+
+### Ecosystem cohesion (2026-06-28)
+- tiny-agent, tiny-embed, tiny-mcp gained cross-linking "Ecosystem" sections
+- Each README now links all sibling repos for discoverability
 
 **SnapDB** is the flagship database: v0.3.1 with columnar engine, metrics, CDC, and batch insert. 47/47 tests passing. Benchmarks vs DuckDB/SQLite available in repo.
 
