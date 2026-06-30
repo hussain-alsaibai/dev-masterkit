@@ -46,7 +46,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 14 | 2026-06-30 |
-| Prompts | 7 | 2026-06-30 |
+| Prompts | 8 | 2026-06-30 |
 | Commands | 5 | 2026-06-30 |
 | Agents | 3 | 2026-06-30 |
 | Orchestrators | 1 | 2026-06-30 |
@@ -68,7 +68,8 @@ dev-masterkit/
 │   ├── zero-dep-scaffold.md      # Single-file utility prompt
 │   ├── yaml-debug-tuple-unpack.md # Subset YAML parser tuple bug
 │   ├── cli-bool-flag-pattern.md  # argparse boolean flag correctness
-│   └── no-color-12factor.md      # NO_COLOR + TTY color decisions
+│   ├── no-color-12factor.md      # NO_COLOR + TTY color decisions
+│   └── cron-stagger-rpm.md       # Avoid synchronized model RPM bursts
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -176,6 +177,7 @@ dev-masterkit/
 | `yaml-debug-tuple-unpack` | Subset YAML parser tuple bug | Hand-rolled parsers returning `(value, pos)` |
 | `cli-bool-flag-pattern` | argparse boolean flag correctness | Click-style wrappers, store_true errors |
 | `no-color-12factor` | NO_COLOR + TTY color decisions | ANSI color in CLIs/loggers, 12-factor compliance |
+| `cron-stagger-rpm` | Cron job RPM stagger policy | Recurring 429 errors, synchronized bursts |
 
 ## 🏗️ Our Tools
 

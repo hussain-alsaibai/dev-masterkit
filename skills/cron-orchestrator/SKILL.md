@@ -136,4 +136,25 @@ After creating:
 - Include `lightContext: true` for long-running jobs to reduce token usage
 - Keep payload messages under 200 tokens for faster processing
 
-## Last Verified: 2026-06-25
+## Stagger Policy (added 2026-06-30)
+
+When multiple agentTurn jobs share the same `cron` minute field, add `staggerMs`
+to the schedule to prevent RPM (requests per minute) bursts against the model
+provider:
+
+```json
+"schedule": {
+  "kind": "cron",
+  "expr": "0 21 * * *",
+  "tz": "Asia/Bahrain",
+  "staggerMs": 45000
+}
+```
+
+- **Pick a unique stagger per job** — using the same value just shifts the burst.
+- **Range:** 30–90s typical; up to 60s×N if you have N jobs sharing the minute.
+- **Symptom of a missing stagger:** recurring `429 rate limit exceeded (RPM)`
+  errors in cron runs (e.g. `self-evolution-4h-report` failures).
+- See `prompts/cron-stagger-rpm.md` for the full diagnostic prompt.
+
+## Last Verified: 2026-06-30
