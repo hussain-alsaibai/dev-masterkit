@@ -36,4 +36,4 @@ Rules:
 - Debugging why a service isn't working
 - Periodic health checks of integrations
 
-## Last Verified: 2026-06-25
+## Last Verified: 2026-06-30
