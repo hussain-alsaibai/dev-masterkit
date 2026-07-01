@@ -45,14 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 14 | 2026-06-30 |
-| Prompts | 8 | 2026-06-30 |
-| Commands | 5 | 2026-06-30 |
-| Agents | 3 | 2026-06-30 |
-| Orchestrators | 1 | 2026-06-30 |
-| Tools | 6 | 2026-06-30 |
-| Daily Updates | 6 | 2026-06-30 |
-| tiny-* Ecosystem Repos | 19 | 2026-06-30 |
+| Skills | 15 | 2026-07-01 |
+| Prompts | 8 | 2026-07-01 |
+| Commands | 5 | 2026-07-01 |
+| Agents | 3 | 2026-07-01 |
+| Orchestrators | 1 | 2026-07-01 |
+| Tools | 6 | 2026-07-01 |
+| Daily Updates | 7 | 2026-07-01 |
+| tiny-* Ecosystem Repos | 12 | 2026-07-01 |
 
 ## Structure
 
@@ -82,6 +82,9 @@ dev-masterkit/
 │   ├── api-dev/                # Build, test, and debug APIs
 │   ├── data-analyst/           # Data analysis and visualization
 │   ├── security-sentinel/      # Scan for secrets and vulnerabilities
+│   ├── bounty-scanner/          # Scan GitHub for official bounties (Algora/Opire)
+│   ├── browser-automation/      # Web browser automation and data extraction
+│   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   └── zero-dep-pattern/         # Single-file utility pattern
 ├── commands/                     # Chat commands
 │   ├── scaffold/                 # /scaffold — create repo
@@ -108,7 +111,8 @@ dev-masterkit/
 │   ├── 2026-06-27.md             # June 27 update
 │   ├── 2026-06-28.md             # June 28 update
 │   ├── 2026-06-29.md             # June 29 update
-│   └── 2026-06-30.md             # June 30 update
+│   ├── 2026-06-30.md             # June 30 update
+│   └── 2026-07-01.md             # July 1 update (resilience stack: tiny-rate + tiny-retry + tiny-pool)
 ├── README.md
 └── LICENSE
 ```
@@ -131,6 +135,7 @@ dev-masterkit/
 | `security-sentinel` | Scan for secrets and vulnerabilities | "Security scan" / "Find secrets" |
 | `bounty-scanner` | Scan GitHub for official bounties (Algora/Opire) | "Find bounties" / "Scan for bounties" |
 | `browser-automation` | Web browser automation and data extraction | "Browse this" / "Fill this form" |
+| `bounty-verifier` | Two-stage verification gate (hard filters + behavioral) | "Verify this bounty" / "Is this legit?" |
 
 ### 🧩 tiny-* Ecosystem Skills (built using these patterns)
 
@@ -201,8 +206,16 @@ Production-tested tools and libraries built by this team:
 | [tiny-agent](https://github.com/hussain-alsaibai/tiny-agent) | Agent framework — LangChain in one file | ⭐0 | Python |
 | [tiny-embed](https://github.com/hussain-alsaibai/tiny-embed) | Text embeddings — sentence-transformers in one file | ⭐0 | Python |
 | [tiny-mcp](https://github.com/hussain-alsaibai/tiny-mcp) | MCP server — Model Context Protocol in one file | ⭐0 | Python |
+| [tiny-rate](https://github.com/hussain-alsaibai/tiny-rate) | Rate limiter — token bucket + fixed + sliding window, sync + async | ⭐0 | Python |
+| [tiny-retry](https://github.com/hussain-alsaibai/tiny-retry) | Retry + backoff (4 jitter modes) + circuit breaker, sync + async | ⭐0 | Python |
+| [tiny-pool](https://github.com/hussain-alsaibai/tiny-pool) | Bounded ThreadPool + AsyncPool for batched work | ⭐0 | Python |
 
-*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 19 libraries (~130KB).*
+*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 12 active libraries spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, and pooling (~5,200 LOC across the stack).*
+
+### 🆕 Latest additions (2026-07-01) — Resilience Stack
+- **tiny-rate** — Token bucket + fixed + sliding window, sync + async decorators (33/33 tests, ~720K ops/s, 538 LOC)
+- **tiny-retry** — Exponential backoff (4 jitter modes) + circuit breaker, sync + async (34/34 tests, ~1 µs/op, 500 LOC)
+- **tiny-pool** — Bounded ThreadPool + AsyncPool with submit/map/join (25/25 tests, 294 LOC)
 
 ### Latest additions (2026-06-30)
 - **tiny-config** — Layered config loader (15/15 tests, ~35 µs file load)
@@ -224,12 +237,12 @@ Production-tested tools and libraries built by this team:
 
 | Tool | Description | Last Verified |
 |------|-------------|---------------|
-| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-06-28 |
-| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-06-28 |
-| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-06-28 |
-| [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-06-30 |
-| [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-06-30 |
-| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-06-30 |
+| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-01 |
+| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-01 |
+| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-01 |
+| [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-01 |
+| [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-01 |
+| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-07-01 |
 
 ## Daily Updates
 
