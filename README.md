@@ -45,14 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-01 |
-| Prompts | 8 | 2026-07-01 |
-| Commands | 5 | 2026-07-01 |
-| Agents | 3 | 2026-07-01 |
-| Orchestrators | 1 | 2026-07-01 |
-| Tools | 6 | 2026-07-01 |
-| Daily Updates | 7 | 2026-07-01 |
-| tiny-* Ecosystem Repos | 12 | 2026-07-01 |
+| Skills | 15 | 2026-07-02 |
+| Prompts | 10 | 2026-07-02 |
+| Commands | 5 | 2026-07-02 |
+| Agents | 3 | 2026-07-02 |
+| Orchestrators | 1 | 2026-07-02 |
+| Tools | 9 | 2026-07-02 |
+| Daily Updates | 8 | 2026-07-02 |
+| tiny-* Ecosystem Repos | 15 | 2026-07-02 |
 
 ## Structure
 
@@ -69,7 +69,9 @@ dev-masterkit/
 │   ├── yaml-debug-tuple-unpack.md # Subset YAML parser tuple bug
 │   ├── cli-bool-flag-pattern.md  # argparse boolean flag correctness
 │   ├── no-color-12factor.md      # NO_COLOR + TTY color decisions
-│   └── cron-stagger-rpm.md       # Avoid synchronized model RPM bursts
+│   ├── cron-stagger-rpm.md       # Avoid synchronized model RPM bursts
+│   ├── decorator-composition-order.md # Stacked-decorator call/return order
+│   └── aws-sigv4-handrolled.md   # Stdlib-only AWS SigV4 for one action
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -104,7 +106,10 @@ dev-masterkit/
 │   ├── cost-tracker.md           # API cost tracking
 │   ├── tiny-config-guide.md      # Layered config loader (tiny-config)
 │   ├── tiny-cli-guide.md         # CLI builder (tiny-cli)
-│   └── fast-cache-guide.md       # LRU+TTL cache (fast-cache)
+│   ├── fast-cache-guide.md       # LRU+TTL cache (fast-cache)
+│   ├── tiny-compose-guide.md     # Decorator stacker (tiny-compose)
+│   ├── tiny-trace-guide.md       # OTel-API-compat tracing (tiny-trace)
+│   └── tiny-secret-guide.md      # Secret management (tiny-secret)
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -112,7 +117,8 @@ dev-masterkit/
 │   ├── 2026-06-28.md             # June 28 update
 │   ├── 2026-06-29.md             # June 29 update
 │   ├── 2026-06-30.md             # June 30 update
-│   └── 2026-07-01.md             # July 1 update (resilience stack: tiny-rate + tiny-retry + tiny-pool)
+│   ├── 2026-07-01.md             # July 1 update (resilience stack)
+│   └── 2026-07-02.md             # July 2 update (compose/trace/secret + 2 new prompts)
 ├── README.md
 └── LICENSE
 ```
@@ -183,6 +189,8 @@ dev-masterkit/
 | `cli-bool-flag-pattern` | argparse boolean flag correctness | Click-style wrappers, store_true errors |
 | `no-color-12factor` | NO_COLOR + TTY color decisions | ANSI color in CLIs/loggers, 12-factor compliance |
 | `cron-stagger-rpm` | Cron job RPM stagger policy | Recurring 429 errors, synchronized bursts |
+| `decorator-composition-order` | Stacked-decorator call/return order | Building `composed()`/`stack()` meta-decorators |
+| `aws-sigv4-handrolled` | Stdlib-only AWS SigV4 for one action | Zero-dep secret fetch from Secrets Manager |
 
 ## 🏗️ Our Tools
 
@@ -209,10 +217,18 @@ Production-tested tools and libraries built by this team:
 | [tiny-rate](https://github.com/hussain-alsaibai/tiny-rate) | Rate limiter — token bucket + fixed + sliding window, sync + async | ⭐0 | Python |
 | [tiny-retry](https://github.com/hussain-alsaibai/tiny-retry) | Retry + backoff (4 jitter modes) + circuit breaker, sync + async | ⭐0 | Python |
 | [tiny-pool](https://github.com/hussain-alsaibai/tiny-pool) | Bounded ThreadPool + AsyncPool for batched work | ⭐0 | Python |
+| [tiny-compose](https://github.com/hussain-alsaibai/tiny-compose) | Decorator stacker — composed()/stack()/pipeline() + global layer | ⭐0 | Python |
+| [tiny-trace](https://github.com/hussain-alsaibai/tiny-trace) | OTel-API-compat tracing — W3C traceparent, 4 samplers, 3 exporters | ⭐0 | Python |
+| [tiny-secret](https://github.com/hussain-alsaibai/tiny-secret) | Secret loader — 7 sources, value-hiding Secret, redacting log formatter | ⭐0 | Python |
 
-*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 12 active libraries spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, and pooling (~5,200 LOC across the stack).*
+*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 15 active libraries spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, and secrets (~6,400 LOC lib + ~9,637 LOC lib+test across the stack).*
 
-### 🆕 Latest additions (2026-07-01) — Resilience Stack
+### 🆕 Latest additions (2026-07-02) — Composition / Tracing / Secrets
+- **tiny-compose** — Meta-decorator stacker with sync+async auto-detect (53/53 tests, 411 LOC)
+- **tiny-trace** — OTel-API-compat tracing with W3C propagation (57/57 tests, 802 LOC)
+- **tiny-secret** — 7-source secret loader with redacting log formatter (56/56 tests, 694 LOC)
+
+### Latest additions (2026-07-01) — Resilience Stack
 - **tiny-rate** — Token bucket + fixed + sliding window, sync + async decorators (33/33 tests, ~720K ops/s, 538 LOC)
 - **tiny-retry** — Exponential backoff (4 jitter modes) + circuit breaker, sync + async (34/34 tests, ~1 µs/op, 500 LOC)
 - **tiny-pool** — Bounded ThreadPool + AsyncPool with submit/map/join (25/25 tests, 294 LOC)
@@ -237,12 +253,15 @@ Production-tested tools and libraries built by this team:
 
 | Tool | Description | Last Verified |
 |------|-------------|---------------|
-| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-01 |
-| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-01 |
-| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-01 |
-| [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-01 |
-| [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-01 |
-| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-07-01 |
+| [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-02 |
+| [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-02 |
+| [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
+| [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-02 |
+| [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-02 |
+| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-07-02 |
+| [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
+| [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
+| [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |
 
 ## Daily Updates
 
