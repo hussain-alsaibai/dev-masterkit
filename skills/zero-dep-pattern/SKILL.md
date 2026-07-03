@@ -179,7 +179,7 @@ dependencies = []  # Zero dependencies!
 | tiny-events | Redis Pub/Sub | ~8KB | Event-driven architecture |
 | tiny-http | requests | ~10KB | HTTP client |
 
-**Total:** ~80KB of Python across 10 production-ready libraries. Zero dependencies.
+**Total:** ~80KB of Python across 20 production-ready libraries. Zero dependencies.
 
 ## Validation Checklist
 
@@ -195,10 +195,26 @@ dependencies = []  # Zero dependencies!
 
 ## Notes
 
-- The "tiny family" includes: tiny-router, tiny-config, tiny-cli, tiny-log, tiny-validator, tiny-worker, tiny-events, tiny-http
+- The "tiny family" includes: tiny-router, tiny-config, tiny-cli, tiny-log, tiny-validator, tiny-worker, tiny-events, tiny-http, tiny-agent, tiny-embed, tiny-mcp, tiny-rate, tiny-retry, tiny-pool, tiny-compose, tiny-trace, tiny-secret, tiny-cron, tiny-flags, tiny-queue
 - Each follows this exact pattern
 - Copy any module into a project — no pip install needed
 - For complex projects, compose multiple tiny modules rather than growing one
 - Benchmark against stdlib equivalents (dict, list, set) to justify existence
 
-## Last Verified: 2026-06-29
+### Patterns Learned (2026-07-03)
+
+**Don't shadow helpers with enclosing class methods.**
+If you define an inner helper class with the same name as a method on the
+enclosing class (`class _process_lock` vs `def _process_lock()`),
+`Outer._helper(self)` resolves to the method, not the class → infinite
+recursion on first call. Capitalize inner classes (`_ProcessLock`) or use a
+distinct attribute name.
+
+**Make filesystem-dependent features toggleable.**
+Anything that depends on `fcntl.flock`, `mmap`, hardlinks, POSIX signals, or
+process-shared state must have a `cross_process_lock=False` / `no_xyz` knob
+or an env-var escape hatch. CI often runs in containers with tmpfs where
+POSIX file-lock semantics are subtly broken — the user must be able to
+disable the feature without forking.
+
+## Last Verified: 2026-07-03

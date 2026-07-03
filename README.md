@@ -45,14 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-02 |
-| Prompts | 10 | 2026-07-02 |
-| Commands | 5 | 2026-07-02 |
-| Agents | 3 | 2026-07-02 |
-| Orchestrators | 1 | 2026-07-02 |
-| Tools | 9 | 2026-07-02 |
-| Daily Updates | 8 | 2026-07-02 |
-| tiny-* Ecosystem Repos | 15 | 2026-07-02 |
+| Skills | 15 | 2026-07-03 |
+| Prompts | 10 | 2026-07-03 |
+| Commands | 5 | 2026-07-03 |
+| Agents | 3 | 2026-07-03 |
+| Orchestrators | 1 | 2026-07-03 |
+| Tools | 12 | 2026-07-03 |
+| Daily Updates | 9 | 2026-07-03 |
+| tiny-* Ecosystem Repos | 18 | 2026-07-03 |
 
 ## Structure
 
@@ -109,7 +109,10 @@ dev-masterkit/
 │   ├── fast-cache-guide.md       # LRU+TTL cache (fast-cache)
 │   ├── tiny-compose-guide.md     # Decorator stacker (tiny-compose)
 │   ├── tiny-trace-guide.md       # OTel-API-compat tracing (tiny-trace)
-│   └── tiny-secret-guide.md      # Secret management (tiny-secret)
+│   ├── tiny-secret-guide.md      # Secret management (tiny-secret)
+│   ├── tiny-cron-guide.md        # Cron-style scheduler (tiny-cron)
+│   ├── tiny-flags-guide.md       # Feature flags (tiny-flags)
+│   └── tiny-queue-guide.md       # Persistent job queue (tiny-queue)
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -118,7 +121,8 @@ dev-masterkit/
 │   ├── 2026-06-29.md             # June 29 update
 │   ├── 2026-06-30.md             # June 30 update
 │   ├── 2026-07-01.md             # July 1 update (resilience stack)
-│   └── 2026-07-02.md             # July 2 update (compose/trace/secret + 2 new prompts)
+│   ├── 2026-07-02.md             # July 2 update (compose/trace/secret + 2 new prompts)
+│   └── 2026-07-03.md             # July 3 update (cron/flags/queue + 13 cross-links)
 ├── README.md
 └── LICENSE
 ```
@@ -147,6 +151,15 @@ dev-masterkit/
 
 | Library | Mirrors | Tests | Throughput | Last Verified |
 |---------|---------|-------|------------|---------------|
+| tiny-cron | APScheduler | 48/48 | — | 2026-07-03 |
+| tiny-flags | LaunchDarkly/Flagsmith | 59/59 | — | 2026-07-03 |
+| tiny-queue | Celery/RQ | 29/29 | — | 2026-07-03 |
+| tiny-rate | limits | 33/33 | ~720K ops/s | 2026-07-01 |
+| tiny-retry | tenacity | 34/34 | ~1 µs/op | 2026-07-01 |
+| tiny-pool | concurrent.futures+ | 25/25 | — | 2026-07-01 |
+| tiny-compose | decorator chains | 53/53 | — | 2026-07-02 |
+| tiny-trace | OpenTelemetry-API | 57/57 | — | 2026-07-02 |
+| tiny-secret | pydantic.SecretStr | 56/56 | — | 2026-07-02 |
 | tiny-config | python-decouple | 15/15 | 35 µs load | 2026-06-30 |
 | tiny-cli | Click/argparse | 13/13 | 258 ns color | 2026-06-30 |
 | fast-cache | Redis | 18/18 | 2.2M ops/s | 2026-06-30 |
@@ -157,7 +170,7 @@ dev-masterkit/
 | tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
 | tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
 
-*19 zero-dep, single-file Python libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills.*
+*18 zero-dep, single-file Python libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~13,000 LOC lib + ~440 tests across the entire stack.*
 
 ## Commands
 
@@ -220,20 +233,29 @@ Production-tested tools and libraries built by this team:
 | [tiny-compose](https://github.com/hussain-alsaibai/tiny-compose) | Decorator stacker — composed()/stack()/pipeline() + global layer | ⭐0 | Python |
 | [tiny-trace](https://github.com/hussain-alsaibai/tiny-trace) | OTel-API-compat tracing — W3C traceparent, 4 samplers, 3 exporters | ⭐0 | Python |
 | [tiny-secret](https://github.com/hussain-alsaibai/tiny-secret) | Secret loader — 7 sources, value-hiding Secret, redacting log formatter | ⭐0 | Python |
+| [tiny-cron](https://github.com/hussain-alsaibai/tiny-cron) | Cron-style scheduler — 5-field syntax + @aliases + L/W/# extensions, Scheduler w/ anti-overlap | ⭐0 | Python |
+| [tiny-flags](https://github.com/hussain-alsaibai/tiny-flags) | Feature flags — bool / percentage / multivariate, 11 rule operators, deterministic SHA-256 bucketing | ⭐0 | Python |
+| [tiny-queue](https://github.com/hussain-alsaibai/tiny-queue) | Persistent job queue — NDJSON, fcntl.flock, exponential backoff, dead-letter, idempotency | ⭐0 | Python |
 
-*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: 15 active libraries spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, and secrets (~6,400 LOC lib + ~9,637 LOC lib+test across the stack).*
+*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: **18 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, and queues (~13,000 LOC lib + ~440 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-02) — Composition / Tracing / Secrets
+### 🆕 Latest additions (2026-07-03) — Agent Control Plane
+- **tiny-cron** — Cron-style scheduler with @aliases + L/W/# extensions, anti-overlap, jitter, decorator API (48/48 tests)
+- **tiny-flags** — Bool/percentage/multivariate feature flags with SHA-256 bucketing + 11 rule operators (59/59 tests)
+- **tiny-queue** — NDJSON persistent queue with flock + dead-letter + idempotency (29/29 tests)
+- All 13 sibling ecosystem repos updated with cross-links (~15 commits)
+
+### Previous additions (2026-07-02) — Composition / Tracing / Secrets
 - **tiny-compose** — Meta-decorator stacker with sync+async auto-detect (53/53 tests, 411 LOC)
 - **tiny-trace** — OTel-API-compat tracing with W3C propagation (57/57 tests, 802 LOC)
 - **tiny-secret** — 7-source secret loader with redacting log formatter (56/56 tests, 694 LOC)
 
-### Latest additions (2026-07-01) — Resilience Stack
+### Previous additions (2026-07-01) — Resilience Stack
 - **tiny-rate** — Token bucket + fixed + sliding window, sync + async decorators (33/33 tests, ~720K ops/s, 538 LOC)
 - **tiny-retry** — Exponential backoff (4 jitter modes) + circuit breaker, sync + async (34/34 tests, ~1 µs/op, 500 LOC)
 - **tiny-pool** — Bounded ThreadPool + AsyncPool with submit/map/join (25/25 tests, 294 LOC)
 
-### Latest additions (2026-06-30)
+### Previous additions (2026-06-30)
 - **tiny-config** — Layered config loader (15/15 tests, ~35 µs file load)
 - **tiny-cli** — Click-style CLI builder (13/13 tests, NO_COLOR compliant)
 - **fast-cache** — LRU+TTL+stale-while-revalidate (18/18 tests, 2.2M ops/sec)
@@ -262,6 +284,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
 | [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
 | [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |
+| [tiny-cron Guide](tools/tiny-cron-guide.md) | Cron-style scheduler with @aliases + L/W/# extensions | 2026-07-03 |
+| [tiny-flags Guide](tools/tiny-flags-guide.md) | Feature flags with SHA-256 bucketing + 11 rule ops | 2026-07-03 |
+| [tiny-queue Guide](tools/tiny-queue-guide.md) | Persistent NDJSON queue + dead-letter + idempotency | 2026-07-03 |
 
 ## Daily Updates
 

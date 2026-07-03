@@ -157,4 +157,18 @@ provider:
   errors in cron runs (e.g. `self-evolution-4h-report` failures).
 - See `prompts/cron-stagger-rpm.md` for the full diagnostic prompt.
 
+## Webhook Server Checklist (added 2026-07-02)
+
+When a cron announcement targets a webhook (FalconEye, Slack, etc.), the receiving
+endpoint should:
+
+- **Short-circuit `HEAD` and empty-body `POST` to `204 No Content`** before any
+  JSON parse runs. Health probes and keepalive pings will otherwise fill the log
+  with `Unexpected end of JSON input` errors that distract from real failures.
+- **Limit body size** with `Content-Length` reading + `request.body.read(max_bytes)`.
+- **Return within 10 seconds** — long-running handlers belong in a worker, not the
+  webhook thread.
+
+## Last Verified: 2026-07-03
+
 ## Last Verified: 2026-06-30
