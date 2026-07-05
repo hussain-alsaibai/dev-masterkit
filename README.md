@@ -51,8 +51,8 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 15 | 2026-07-04 |
-| Daily Updates | 10 | 2026-07-04 |
-| tiny-* Ecosystem Repos | 21 | 2026-07-04 |
+| Daily Updates | 11 | 2026-07-05 |
+| tiny-* Ecosystem Repos | 21 | 2026-07-05 |
 
 ## Structure
 
@@ -124,7 +124,8 @@ dev-masterkit/
 │   ├── 2026-07-01.md             # July 1 update (resilience stack)
 │   ├── 2026-07-02.md             # July 2 update (compose/trace/secret + 2 new prompts)
 │   ├── 2026-07-03.md             # July 3 update (cron/flags/queue + 13 cross-links)
-│   └── 2026-07-04.md             # July 4 update (metrics/timeout/idempotency + 18 cross-links)
+│   ├── 2026-07-04.md             # July 4 update (metrics/timeout/idempotency + 18 cross-links)
+│   └── 2026-07-05.md             # July 5 update (agent workflow positioning + docs refresh)
 ├── README.md
 └── LICENSE
 ```
