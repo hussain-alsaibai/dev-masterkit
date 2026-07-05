@@ -51,7 +51,7 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 15 | 2026-07-04 |
-| Daily Updates | 11 | 2026-07-05 |
+| Daily Updates | 12 | 2026-07-05 |
 | tiny-* Ecosystem Repos | 21 | 2026-07-05 |
 
 ## Structure
@@ -154,12 +154,12 @@ dev-masterkit/
 
 | Library | Mirrors | Tests | Throughput | Last Verified |
 |---------|---------|-------|------------|---------------|
-| tiny-cron | APScheduler | 48/48 | — | 2026-07-03 |
-| tiny-flags | LaunchDarkly/Flagsmith | 59/59 | — | 2026-07-03 |
-| tiny-queue | Celery/RQ | 29/29 | — | 2026-07-03 |
-| tiny-metrics | prometheus_client | 32/32 | — | 2026-07-04 |
-| tiny-timeout | N/A (stdlib-only) | 21/21 | — | 2026-07-04 |
-| tiny-idempotency | N/A (Stripe-style) | 23/23 | — | 2026-07-04 |
+| tiny-cron | APScheduler | 48/48 | — | 2026-07-05 |
+| tiny-flags | LaunchDarkly/Flagsmith | 59/59 | — | 2026-07-05 |
+| tiny-queue | Celery/RQ | 29/29 | — | 2026-07-05 |
+| tiny-metrics | prometheus_client | 32/32 | — | 2026-07-05 |
+| tiny-timeout | N/A (stdlib-only) | 21/21 | — | 2026-07-05 |
+| tiny-idempotency | N/A (Stripe-style) | 23/23 | — | 2026-07-05 |
 | tiny-rate | limits | 33/33 | ~720K ops/s | 2026-07-01 |
 | tiny-retry | tenacity | 34/34 | ~1 µs/op | 2026-07-01 |
 | tiny-pool | concurrent.futures+ | 25/25 | — | 2026-07-01 |
