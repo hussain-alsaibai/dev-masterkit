@@ -50,8 +50,8 @@ open skills/repo-creator/SKILL.md
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
-| Tools | 15 | 2026-07-04 |
-| Daily Updates | 12 | 2026-07-05 |
+| Tools | 17 | 2026-07-06 |
+| Daily Updates | 13 | 2026-07-06 |
 | tiny-* Ecosystem Repos | 23 | 2026-07-06 |
 
 ## Structure
@@ -113,7 +113,9 @@ dev-masterkit/
 │   ├── tiny-secret-guide.md      # Secret management (tiny-secret)
 │   ├── tiny-cron-guide.md        # Cron-style scheduler (tiny-cron)
 │   ├── tiny-flags-guide.md       # Feature flags (tiny-flags)
-│   └── tiny-queue-guide.md       # Persistent job queue (tiny-queue)
+│   ├── tiny-queue-guide.md       # Persistent job queue (tiny-queue)
+│   ├── tiny-budget-guide.md      # Runtime budget enforcement (tiny-budget)
+│   └── tiny-eventbus-guide.md    # Durable pub/sub with replay (tiny-eventbus)
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -125,7 +127,8 @@ dev-masterkit/
 │   ├── 2026-07-02.md             # July 2 update (compose/trace/secret + 2 new prompts)
 │   ├── 2026-07-03.md             # July 3 update (cron/flags/queue + 13 cross-links)
 │   ├── 2026-07-04.md             # July 4 update (metrics/timeout/idempotency + 18 cross-links)
-│   └── 2026-07-05.md             # July 5 update (agent workflow positioning + docs refresh)
+│   ├── 2026-07-05.md             # July 5 update (agent workflow positioning + docs refresh)
+│   └── 2026-07-06.md             # July 6 update (budget/eventbus + agent primitive positioning)
 ├── README.md
 └── LICENSE
 ```
@@ -160,6 +163,8 @@ dev-masterkit/
 | tiny-metrics | prometheus_client | 32/32 | — | 2026-07-05 |
 | tiny-timeout | N/A (stdlib-only) | 21/21 | — | 2026-07-05 |
 | tiny-idempotency | N/A (Stripe-style) | 23/23 | — | 2026-07-05 |
+| tiny-budget | LiteLLM/LangSmith budget controls | 16/16 | — | 2026-07-06 |
+| tiny-eventbus | Redis Streams/EventEmitter middle tier | 17/17 | — | 2026-07-06 |
 | tiny-rate | limits | 33/33 | ~720K ops/s | 2026-07-01 |
 | tiny-retry | tenacity | 34/34 | ~1 µs/op | 2026-07-01 |
 | tiny-pool | concurrent.futures+ | 25/25 | — | 2026-07-01 |
@@ -176,7 +181,7 @@ dev-masterkit/
 | tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
 | tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
 
-*21 zero-dep, single-file Python libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~14,700 LOC lib + ~516 tests across the entire stack.*
+*23 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~16,000 LOC lib + ~549 tests across the entire stack.*
 
 ## Commands
 
@@ -246,10 +251,17 @@ Production-tested tools and libraries built by this team:
 | [tiny-metrics](https://github.com/hussain-alsaibai/tiny-metrics) | Prometheus-compatible metrics — Counter / Gauge / Histogram / Summary, OpenMetrics exposition, /metrics HTTP endpoint | ⭐0 | Python |
 | [tiny-timeout](https://github.com/hussain-alsaibai/tiny-timeout) | Timeouts — hard cut-off via worker thread + cooperative Deadline, works on every thread/OS | ⭐0 | Python |
 | [tiny-idempotency](https://github.com/hussain-alsaibai/tiny-idempotency) | Stripe-style idempotency keys — fingerprint detection, atomic claim/complete/fail, in-memory + FileStore | ⭐0 | Python |
+| [tiny-budget](https://github.com/hussain-alsaibai/tiny-budget) | Runtime USD + token budget enforcement for AI agents | ⭐0 | JavaScript |
+| [tiny-eventbus](https://github.com/hussain-alsaibai/tiny-eventbus) | Durable pub/sub with JSONL replay, wildcard subscribers, and one-shot waits | ⭐0 | JavaScript |
 
-*All Python tools follow the "zero-dependency, single-file" philosophy. Total ecosystem: **21 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, and idempotency (~14,700 LOC lib + ~516 tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **23 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, and durable event streams (~16,000 LOC lib + ~549 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-04) — Metrics / Timeouts / Idempotency
+### 🆕 Latest additions (2026-07-06) — Agent Budget / Durable Events
+- **tiny-budget** — Runtime USD + token budget enforcement for AI agents, atomic JSON persistence, OpenAI/Anthropic usage-shape support, and warning thresholds (16/16 tests)
+- **tiny-eventbus** — Durable JSONL pub/sub with replay, wildcard subscribers, offset cursors, `once()` waits, and log rotation (17/17 tests)
+- Existing router/CLI/config/log/validator repos updated with agent-workflow cross-links
+
+### Previous additions (2026-07-04) — Metrics / Timeouts / Idempotency
 - **tiny-metrics** — Prometheus-compatible Counter/Gauge/Histogram/Summary with OpenMetrics exposition + /metrics HTTP endpoint (32/32 tests, ~980 LOC)
 - **tiny-timeout** — Hard cut-off via worker thread + cooperative Deadline; works on every thread/OS, no `signal.alarm` (21/21 tests, ~500 LOC)
 - **tiny-idempotency** — Stripe-style idempotency keys with fingerprint detection + atomic claim/complete/fail + crash-safe FileStore (23/23 tests, ~570 LOC)
@@ -306,6 +318,8 @@ Production-tested tools and libraries built by this team:
 | [tiny-metrics Guide](tools/tiny-metrics-guide.md) | Prometheus-compatible metrics with /metrics endpoint | 2026-07-04 |
 | [tiny-timeout Guide](tools/tiny-timeout-guide.md) | Timeouts that work on every thread/OS | 2026-07-04 |
 | [tiny-idempotency Guide](tools/tiny-idempotency-guide.md) | Stripe-style idempotency keys with fingerprint detection | 2026-07-04 |
+| [tiny-budget Guide](tools/tiny-budget-guide.md) | Runtime USD + token budget enforcement for agents | 2026-07-06 |
+| [tiny-eventbus Guide](tools/tiny-eventbus-guide.md) | Durable JSONL pub/sub with replay and one-shot waits | 2026-07-06 |
 
 ## Daily Updates
 
