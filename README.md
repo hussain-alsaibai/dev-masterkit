@@ -115,7 +115,9 @@ dev-masterkit/
 │   ├── tiny-flags-guide.md       # Feature flags (tiny-flags)
 │   ├── tiny-queue-guide.md       # Persistent job queue (tiny-queue)
 │   ├── tiny-budget-guide.md      # Runtime budget enforcement (tiny-budget)
-│   └── tiny-eventbus-guide.md    # Durable pub/sub with replay (tiny-eventbus)
+│   ├── tiny-eventbus-guide.md    # Durable pub/sub with replay (tiny-eventbus)
+│   ├── tiny-policy-guide.md      # ABAC policy engine (tiny-policy)        [NEW 2026-07-07]
+│   └── tiny-otel-guide.md        # OTLP/HTTP trace exporter (tiny-otel)    [NEW 2026-07-07]
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -252,11 +254,18 @@ Production-tested tools and libraries built by this team:
 | [tiny-timeout](https://github.com/hussain-alsaibai/tiny-timeout) | Timeouts — hard cut-off via worker thread + cooperative Deadline, works on every thread/OS | ⭐0 | Python |
 | [tiny-idempotency](https://github.com/hussain-alsaibai/tiny-idempotency) | Stripe-style idempotency keys — fingerprint detection, atomic claim/complete/fail, in-memory + FileStore | ⭐0 | Python |
 | [tiny-budget](https://github.com/hussain-alsaibai/tiny-budget) | Runtime USD + token budget enforcement for AI agents | ⭐0 | JavaScript |
-| [tiny-eventbus](https://github.com/hussain-alsaibai/tiny-eventbus) | Durable pub/sub with JSONL replay, wildcard subscribers, and one-shot waits | ⭐0 | JavaScript |
+| [tiny-eventbus](https://github.com/hussain-alsaibai/tiny-eventbus) | Durable pub/sub with JSONL replay — topic filtering, wildcards, cursor consumers, automatic log rotation | ⭐0 | Node |
+| [tiny-policy](https://github.com/hussain-alsaibai/tiny-policy) | ABAC policy engine — JSON policies, glob matching, deny-overrides, 11 condition ops, ~1.5 µs/eval | ⭐0 | Node |
+| [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **23 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, and durable event streams (~16,000 LOC lib + ~549 tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~570 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-06) — Agent Budget / Durable Events
+### 🆕 Latest additions (2026-07-07) — Authorization + Observability
+- **tiny-policy** — Attribute-based authorization policy engine for agents (19/19 tests, 174 LOC, ~1.5 µs/eval). JSON policy files, glob matching (`*`/`**`/`?`), 11 condition ops (`eq`, `ne`, `in`, `nin`, `gt`/`gte`/`lt`/`lte`, `contains`, `startsWith`, `endsWith`, `matches`, `exists`), deny-overrides semantics, optional default-allow, metrics + explain().
+- **tiny-otel** — Zero-dep OTLP/HTTP trace exporter for agents (10/10 tests, 268 LOC). Ships the exact `ExportTraceServiceRequest` envelope from the OTLP v1.5.0 spec. `inSpan()` wrapper with auto status + exception capture, standard `OTEL_*` env vars, fetch injection for testing. ~1 µs per span creation. Targets Honeycomb / Tempo / SigNoz / Datadog (via otel-collector) / Jaeger.
+- All 4 sibling Node ecosystem repos updated with cross-links (tiny-router, tiny-budget, tiny-eventbus, dev-masterkit)
+
+### Previous additions (2026-07-06) — Cost + Durable Events
 - **tiny-budget** — Runtime USD + token budget enforcement for AI agents, atomic JSON persistence, OpenAI/Anthropic usage-shape support, and warning thresholds (16/16 tests)
 - **tiny-eventbus** — Durable JSONL pub/sub with replay, wildcard subscribers, offset cursors, `once()` waits, and log rotation (17/17 tests)
 - Existing router/CLI/config/log/validator repos updated with agent-workflow cross-links
