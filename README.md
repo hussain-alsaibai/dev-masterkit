@@ -50,9 +50,9 @@ open skills/repo-creator/SKILL.md
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
-| Tools | 17 | 2026-07-06 |
-| Daily Updates | 13 | 2026-07-06 (2 PM reconciliation appended) |
-| tiny-* Ecosystem Repos | 23 | 2026-07-06 |
+| Tools | 19 | 2026-07-07 |
+| Daily Updates | 13 | 2026-07-07 |
+| tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
 
@@ -130,7 +130,8 @@ dev-masterkit/
 │   ├── 2026-07-03.md             # July 3 update (cron/flags/queue + 13 cross-links)
 │   ├── 2026-07-04.md             # July 4 update (metrics/timeout/idempotency + 18 cross-links)
 │   ├── 2026-07-05.md             # July 5 update (agent workflow positioning + docs refresh)
-│   └── 2026-07-06.md             # July 6 update (budget/eventbus + agent primitive positioning)
+│   ├── 2026-07-06.md             # July 6 update (budget/eventbus + agent primitive positioning)
+│   └── 2026-07-07.md             # July 7 update (policy/otel + control-plane positioning)
 ├── README.md
 └── LICENSE
 ```
@@ -167,6 +168,8 @@ dev-masterkit/
 | tiny-idempotency | N/A (Stripe-style) | 23/23 | — | 2026-07-05 |
 | tiny-budget | LiteLLM/LangSmith budget controls | 16/16 | — | 2026-07-06 |
 | tiny-eventbus | Redis Streams/EventEmitter middle tier | 17/17 | — | 2026-07-06 |
+| tiny-policy | OpenFGA/Cerbos/Cedar light tier | 19/19 | ~1.5 us/eval | 2026-07-07 |
+| tiny-otel | OpenTelemetry OTLP/HTTP exporter | 10/10 | ~1 us span create | 2026-07-07 |
 | tiny-rate | limits | 33/33 | ~720K ops/s | 2026-07-01 |
 | tiny-retry | tenacity | 34/34 | ~1 µs/op | 2026-07-01 |
 | tiny-pool | concurrent.futures+ | 25/25 | — | 2026-07-01 |
@@ -183,7 +186,7 @@ dev-masterkit/
 | tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
 | tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
 
-*23 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~16,000 LOC lib + ~549 tests across the entire stack.*
+*25 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~16,000 LOC lib + ~570 tests across the entire stack.*
 
 ## Commands
 
@@ -329,6 +332,8 @@ Production-tested tools and libraries built by this team:
 | [tiny-idempotency Guide](tools/tiny-idempotency-guide.md) | Stripe-style idempotency keys with fingerprint detection | 2026-07-04 |
 | [tiny-budget Guide](tools/tiny-budget-guide.md) | Runtime USD + token budget enforcement for agents | 2026-07-06 |
 | [tiny-eventbus Guide](tools/tiny-eventbus-guide.md) | Durable JSONL pub/sub with replay and one-shot waits | 2026-07-06 |
+| [tiny-policy Guide](tools/tiny-policy-guide.md) | ABAC policy engine with deny-overrides and JSON policies | 2026-07-07 |
+| [tiny-otel Guide](tools/tiny-otel-guide.md) | OTLP/HTTP trace exporter for agent spans | 2026-07-07 |
 
 ## Daily Updates
 
