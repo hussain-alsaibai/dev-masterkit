@@ -45,13 +45,13 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-04 |
+| Skills | 15 | 2026-07-08 |
 | Prompts | 11 | 2026-07-04 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 19 | 2026-07-07 |
-| Daily Updates | 13 | 2026-07-07 |
+| Daily Updates | 15 | 2026-07-08 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -131,7 +131,9 @@ dev-masterkit/
 │   ├── 2026-07-04.md             # July 4 update (metrics/timeout/idempotency + 18 cross-links)
 │   ├── 2026-07-05.md             # July 5 update (agent workflow positioning + docs refresh)
 │   ├── 2026-07-06.md             # July 6 update (budget/eventbus + agent primitive positioning)
-│   └── 2026-07-07.md             # July 7 update (policy/otel + control-plane positioning)
+│   ├── 2026-07-07.md             # July 7 update (policy/otel + control-plane positioning)
+│   ├── 2026-07-07-afternoon.md   # July 7 afternoon verification + CI coverage gap
+│   └── 2026-07-08.md             # July 8 update (bounty scam filter re-check)
 ├── README.md
 └── LICENSE
 ```

@@ -15,6 +15,7 @@ Scans GitHub for open **official** bounty issues from verified platforms, scores
 - Fictional/joke repos (Harry Potter references, etc.)
 - Young repos (<90 days) with unrealistic bounties
 - Inorganic forks of well-known projects with zero stars
+- Dollar-marker issues in throwaway forks of major Go projects, even when the issue body names real payouts
 
 ## Scoring (0–100)
 | Factor | Max | Logic |
@@ -56,5 +57,10 @@ Uses `hussain-alsaibai` token from `~/.git-credentials` automatically.
 | Inorganic forks | Forks of popular repos with zero stars, no activity |
 | Young repos | <90 days old with unrealistic bounty amounts |
 | Same operators | Repeat offenders with multiple fake repos |
+| Go-project fork wave | Fake "Fix:" issues in forks of cobra, helm, mysql, go-redis, grpc-go, echo, gocron, zap, VictoriaMetrics |
 
-## Last Verified: 2026-06-28
+## Recent Verification Notes
+
+- **2026-07-08:** Daily bounty scan found 29 issues with dollar markers and 27 with explicit dollar amounts. All 27 payout-looking issues were rejected by the existing hard filters: `young_repo`, `no_stars`, and `inorganic_forks`. No bounty work started.
+
+## Last Verified: 2026-07-08

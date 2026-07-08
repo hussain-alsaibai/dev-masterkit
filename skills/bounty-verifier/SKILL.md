@@ -1,11 +1,11 @@
 ---
 name: bounty-verifier
-description: Two-stage bounty issue verification — hard filters + behavioral signals — to refuse scam/fork issues before picking them. Last verified: 2026-07-01.
+description: Two-stage bounty issue verification — hard filters + behavioral signals — to refuse scam/fork issues before picking them. Last verified: 2026-07-08.
 ---
 
 # Bounty Verifier
 
-> **Last verified:** 2026-07-01
+> **Last verified:** 2026-07-08
 > Born from the July 1, 2026 Opire scam flood (18/18 issues from 10 throwaway-account fork repos).
 > See: [`bounty-scanner`](../bounty-scanner/SKILL.md) for the upstream scanner; this skill is the verification gate.
 
@@ -76,6 +76,18 @@ These are the actual signals from July 1, 2026:
 4. **Single collaborator, single commit** — "Initial commit" + the bounty issue
 5. **Reward denominated in a token, not USD** — easier to fake, no platform escrow
 
+### July 8, 2026 Re-check
+
+The same hard filters still held during the July 8 daily scan:
+
+- 29 issues contained dollar markers; 27 contained explicit dollar amounts
+- 27/27 payout-looking issues were rejected
+- Dominant triggers: `young_repo`, `no_stars`, `inorganic_forks`
+- Common targets impersonated by fork repos: cobra, helm, mysql, go-redis, grpc-go, echo, gocron, zap, VictoriaMetrics
+- Creator names again looked auto-generated or low-reputation (`qxrtjdggj653`, `Markp1598M`, `MariauqmpsA333`)
+
+Do not relax the star/age/fork filters just because the issue includes a plausible USD amount.
+
 ## Procedure
 
 1. Run `bounty-scanner` (or equivalent) to get a candidate list
@@ -97,6 +109,7 @@ gh api repos/{owner}/{repo} --jq '.stargazers_count, .created_at, .fork, .size' 
 - `bounty-scanner` — Upstream issue discovery (Algora + Opire + verified repos)
 - `repo-creator` — Once you've picked, this scaffolds the fix repo
 - `memory/2026-07-01.md` — July 1 bounty work log (the trigger for this skill)
+- `memory/2026-07-08.md` — July 8 re-check: 27/27 payout-looking issues rejected by hard filters
 
 ---
 
