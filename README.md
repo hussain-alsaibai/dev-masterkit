@@ -46,12 +46,12 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-08 |
-| Prompts | 11 | 2026-07-04 |
+| Prompts | 13 | 2026-07-09 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 19 | 2026-07-07 |
-| Daily Updates | 15 | 2026-07-08 |
+| Daily Updates | 16 | 2026-07-09 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -73,6 +73,8 @@ dev-masterkit/
 │   ├── decorator-composition-order.md # Stacked-decorator call/return order
 │   ├── aws-sigv4-handrolled.md   # Stdlib-only AWS SigV4 for one action
 │   └── test-isolation-singleton-registry.md # Per-test registry isolation pattern
+│   ├── gitea-cross-fork-pr-blocker.md # Fine-grained PAT `pull`-only blocks cross-fork PRs [NEW 2026-07-09]
+│   └── go-build-on-tmpfs.md         # Workaround for tmpfs-backed `/tmp` failing `go build` [NEW 2026-07-09]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -133,7 +135,8 @@ dev-masterkit/
 │   ├── 2026-07-06.md             # July 6 update (budget/eventbus + agent primitive positioning)
 │   ├── 2026-07-07.md             # July 7 update (policy/otel + control-plane positioning)
 │   ├── 2026-07-07-afternoon.md   # July 7 afternoon verification + CI coverage gap
-│   └── 2026-07-08.md             # July 8 update (bounty scam filter re-check)
+│   ├── 2026-07-08.md             # July 8 update (bounty scam filter re-check)
+│   └── 2026-07-09.md             # July 9 update (Gitea PR #4898 + cross-fork PAT + tmpfs gotchas)
 ├── README.md
 └── LICENSE
 ```
@@ -223,6 +226,8 @@ dev-masterkit/
 | `decorator-composition-order` | Stacked-decorator call/return order | Building `composed()`/`stack()` meta-decorators |
 | `aws-sigv4-handrolled` | Stdlib-only AWS SigV4 for one action | Zero-dep secret fetch from Secrets Manager |
 | `test-isolation-singleton-registry` | Per-test isolation for module-level registries | Duplicate-metric / duplicate-flag test failures |
+| `gitea-cross-fork-pr-blocker` | Fine-grained PAT `pull`-only blocks cross-fork PRs | 403 on `gh pr create` against upstream |
+| `go-build-on-tmpfs` | Workaround for `go build` `no space left on device` on tmpfs | Building Go projects in sandboxed/container hosts |
 
 ## 🏗️ Our Tools
 
@@ -265,7 +270,13 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~570 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-07) — Authorization + Observability
+### 🆕 Latest additions (2026-07-09) — Gitea PR #4898 + cross-fork PR gotchas
+- **Gitea PR #4898** (branch `feat/commit-inline-comments-4898`, SHA `c50dffec5a`) — full inline-comments-on-commits implementation in `hussain-alsaibai/gitea`; cross-fork PR blocked by fine-grained PAT `pull`-only scope; handoff doc at `~/.openclaw/workspace/gitea-pr-handoff.md`
+- **`gitea-cross-fork-pr-blocker.md`** prompt — Documents the deterministic 403 from `gh pr create` against upstream repos when the bot PAT has `pull`-only scope, plus the recommended handoff workflow (branch + SHA + `gh pr create` command + PR body file)
+- **`go-build-on-tmpfs.md`** prompt — Documents the `importcfg: no space left on device` failure mode on tmpfs-backed `/tmp` and the `TMPDIR=~/go-build-tmp` + `GOFLAGS=-tmpdir=...` fix
+- 2 new verified prompts (11 → 13); daily-updates 15 → 16. No new skill or tool added — the Gitea work was a one-off bounty implementation, not a reusable primitive.
+
+### Previous additions (2026-07-07) — Authorization + Observability
 - **tiny-policy** — Attribute-based authorization policy engine for agents (19/19 tests, 174 LOC, ~1.5 µs/eval). JSON policy files, glob matching (`*`/`**`/`?`), 11 condition ops (`eq`, `ne`, `in`, `nin`, `gt`/`gte`/`lt`/`lte`, `contains`, `startsWith`, `endsWith`, `matches`, `exists`), deny-overrides semantics, optional default-allow, metrics + explain().
 - **tiny-otel** — Zero-dep OTLP/HTTP trace exporter for agents (10/10 tests, 268 LOC). Ships the exact `ExportTraceServiceRequest` envelope from the OTLP v1.5.0 spec. `inSpan()` wrapper with auto status + exception capture, standard `OTEL_*` env vars, fetch injection for testing. ~1 µs per span creation. Targets Honeycomb / Tempo / SigNoz / Datadog (via otel-collector) / Jaeger.
 - All 4 sibling Node ecosystem repos updated with cross-links (tiny-router, tiny-budget, tiny-eventbus, dev-masterkit)
