@@ -46,12 +46,12 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-08 |
-| Prompts | 14 | 2026-07-10 |
+| Prompts | 16 | 2026-07-11 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 19 | 2026-07-07 |
-| Daily Updates | 17 | 2026-07-10 |
+| Daily Updates | 18 | 2026-07-11 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -74,7 +74,10 @@ dev-masterkit/
 │   ├── aws-sigv4-handrolled.md   # Stdlib-only AWS SigV4 for one action
 │   └── test-isolation-singleton-registry.md # Per-test registry isolation pattern
 │   ├── gitea-cross-fork-pr-blocker.md # Fine-grained PAT `pull`-only blocks cross-fork PRs [NEW 2026-07-09]
-│   └── go-build-on-tmpfs.md         # Workaround for tmpfs-backed `/tmp` failing `go build` [NEW 2026-07-09]
+│   ├── go-build-on-tmpfs.md         # Workaround for tmpfs-backed `/tmp` failing `go build` [NEW 2026-07-09]
+│   ├── cost-tracker-session-ingest.md # Re-register per-session cost tracker or it goes silent [NEW 2026-07-10]
+│   ├── reusable-ci-matrix-template.md # Drop-in GitHub Actions CI for tiny-* Python libs [NEW 2026-07-11]
+│   └── bounty-saturation-resolved-not-skip.md # Override the saturation rule when mirror-shape fits [NEW 2026-07-11]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -183,10 +186,10 @@ dev-masterkit/
 | tiny-secret | pydantic.SecretStr | 56/56 | — | 2026-07-02 |
 | tiny-config | python-decouple | 15/15 | 35 µs load | 2026-06-30 |
 | tiny-cli | Click/argparse | 13/13 | 258 ns color | 2026-06-30 |
-| fast-cache | Redis | 18/18 | 2.2M ops/s | 2026-06-30 |
-| tiny-router | Flask | 15/15 | 76K req/s | 2026-06-29 |
+| fast-cache | Redis | 18/18 | 2.2M ops/s | 2026-07-11 |
+| tiny-router | Flask | 15/15 | 76K req/s | 2026-07-11 |
 | tiny-log | structlog | 17/17 | 32K logs/s | 2026-06-29 |
-| tiny-validator | Pydantic | 31/31 | 247K val/s | 2026-06-29 |
+| tiny-validator | Pydantic | 31/31 | 247K val/s | 2026-07-11 |
 | tiny-agent | LangChain | ✅ | — | 2026-06-28 |
 | tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
 | tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
@@ -228,6 +231,9 @@ dev-masterkit/
 | `test-isolation-singleton-registry` | Per-test isolation for module-level registries | Duplicate-metric / duplicate-flag test failures |
 | `gitea-cross-fork-pr-blocker` | Fine-grained PAT `pull`-only blocks cross-fork PRs | 403 on `gh pr create` against upstream |
 | `go-build-on-tmpfs` | Workaround for `go build` `no space left on device` on tmpfs | Building Go projects in sandboxed/container hosts |
+| `cost-tracker-session-ingest` | Re-register per-session cost tracker or it goes silent | Cost dashboard shows $0/stale; no events from new sessions |
+| `reusable-ci-matrix-template` | Drop-in `.github/workflows/ci.yml` for zero-dep Python libs | Adding CI to a new or stale `tiny-*` repo |
+| `bounty-saturation-resolved-not-skip` | Override the saturation rule when mirror-shape fits | Saturated bounty with mirror-able class shape |
 
 ## 🏗️ Our Tools
 
@@ -269,6 +275,13 @@ Production-tested tools and libraries built by this team:
 | [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~570 tests across the stack).*
+
+### 🆕 Latest additions (2026-07-11) — CI hygiene for `tiny-router` / `tiny-validator` / `fast-cache` + Qdrant bounty implementation
+- **Qdrant vector DB in EdgeChains JS SDK** (branch `ts`, commit `d0ceb72a` on `hussain-alsaibai/EdgeChains`) — `Qdrant` class mirroring the existing `Supabase` class method-for-method (7 methods: insertVectorData, searchVector, getData, getDataById, getDataFromQuery, updateById, deleteById); 2 test files; cross-fork PR blocked by fine-grained PAT `pull`-only scope (see `gitea-cross-fork-pr-blocker`)
+- **CI matrix rolled out to 3 repos** — `tiny-router` (`7254ea7`, 15/15), `tiny-validator` (`eff3dd9`, 31/31), `fast-cache` (`9755a43`, 18/18). Each repo now has GitHub Actions CI on Python 3.8 / 3.11 / 3.12 with `ruff` + `pytest`
+- **`reusable-ci-matrix-template.md`** prompt — Drop-in `.github/workflows/ci.yml` for any zero-dep Python library. Verified by rolling it out to three repos in one morning with zero per-repo customization
+- **`bounty-saturation-resolved-not-skip.md`** prompt — Companion to the saturation-rejection heuristic. Documents when to override the `≥10 open PRs → skip` rule (issue forbids the obvious path; mirror-able class shape) and how to ship (mirror method-for-method, one happy-path test per public method, no novel features)
+- 2 new verified prompts (14 → 16); 3 ecosystem repos CI-bumped (fast-cache / tiny-router / tiny-validator); daily-updates 17 → 18. No new skill or tool added — the Qdrant implementation is an upstream contribution, and the CI template is a one-file artifact.
 
 ### 🆕 Latest additions (2026-07-09) — Gitea PR #4898 + cross-fork PR gotchas
 - **Gitea PR #4898** (branch `feat/commit-inline-comments-4898`, SHA `c50dffec5a`) — full inline-comments-on-commits implementation in `hussain-alsaibai/gitea`; cross-fork PR blocked by fine-grained PAT `pull`-only scope; handoff doc at `~/.openclaw/workspace/gitea-pr-handoff.md`
@@ -333,7 +346,7 @@ Production-tested tools and libraries built by this team:
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-02 |
 | [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-02 |
-| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-07-02 |
+| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-07-11 |
 | [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
 | [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
 | [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |
