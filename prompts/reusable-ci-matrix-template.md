@@ -101,13 +101,13 @@ Before committing, check:
 
 ## Last verified: 2026-07-11
 
-- `hussain-alsaibai/tiny-router` - `7254ea7` on `main` - added CI, 15/15 tests passing locally
-- `hussain-alsaibai/tiny-validator` - `eff3dd9` on `main` - added CI, 31/31 tests passing locally
-- `hussain-alsaibai/fast-cache` - `9755a43` on `main` - added CI, 18/18 tests passing locally
+- `hussain-alsaibai/tiny-router` - `7254ea7` on `main` - added CI, 15/15 tests passing locally; GitHub Actions run `29153758229` completed/success
+- `hussain-alsaibai/tiny-validator` - `eff3dd9` on `main` - added CI, 31/31 tests passing locally; GitHub Actions run `29153758779` completed/success
+- `hussain-alsaibai/fast-cache` - `9755a43` on `main` - added CI, 18/18 tests passing locally; GitHub Actions run `29153758484` completed/success
 
-All three are zero-dep Python libraries with `pyproject.toml` only, so
-the `requirements-dev.txt` install step is a no-op (`pip install -r ...`
-returns exit 0 when the file is absent under `pip` 21+). The
-`cache: pip` hint relies on a `requirements*.txt` or `pyproject.toml`
-being present; `pyproject.toml` is sufficient for setup-python@v5 to
-cache wheels.
+All three are zero-dep Python libraries with `pyproject.toml` only. The
+`requirements-dev.txt` install step is intentionally guarded with
+`2>/dev/null || true`, so repos without a dev-requirements file still
+run the `pytest` step. The `cache: pip` hint relies on a
+`requirements*.txt` or `pyproject.toml` being present; `pyproject.toml`
+is sufficient for setup-python@v5 to cache wheels.
