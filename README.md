@@ -46,12 +46,12 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-08 |
-| Prompts | 16 | 2026-07-11 |
+| Prompts | 17 | 2026-07-12 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 19 | 2026-07-07 |
-| Daily Updates | 18 | 2026-07-11 |
+| Daily Updates | 19 | 2026-07-12 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -77,7 +77,8 @@ dev-masterkit/
 │   ├── go-build-on-tmpfs.md         # Workaround for tmpfs-backed `/tmp` failing `go build` [NEW 2026-07-09]
 │   ├── cost-tracker-session-ingest.md # Re-register per-session cost tracker or it goes silent [NEW 2026-07-10]
 │   ├── reusable-ci-matrix-template.md # Drop-in GitHub Actions CI for tiny-* Python libs [NEW 2026-07-11]
-│   └── bounty-saturation-resolved-not-skip.md # Override the saturation rule when mirror-shape fits [NEW 2026-07-11]
+│   ├── bounty-saturation-resolved-not-skip.md # Override the saturation rule when mirror-shape fits [NEW 2026-07-11]
+│   └── bounty-saturation-pat-blocked-skip.md # Skip saturated bounties when PR creation is blocked [NEW 2026-07-12]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -139,7 +140,10 @@ dev-masterkit/
 │   ├── 2026-07-07.md             # July 7 update (policy/otel + control-plane positioning)
 │   ├── 2026-07-07-afternoon.md   # July 7 afternoon verification + CI coverage gap
 │   ├── 2026-07-08.md             # July 8 update (bounty scam filter re-check)
-│   └── 2026-07-09.md             # July 9 update (Gitea PR #4898 + cross-fork PAT + tmpfs gotchas)
+│   ├── 2026-07-09.md             # July 9 update (Gitea PR #4898 + cross-fork PAT + tmpfs gotchas)
+│   ├── 2026-07-10.md             # July 10 update (cost tracker ingest + saturated bounty defer)
+│   ├── 2026-07-11.md             # July 11 update (CI matrix + Qdrant bounty)
+│   └── 2026-07-12.md             # July 12 update (saturated bounty + PAT-blocked skip gate)
 ├── README.md
 └── LICENSE
 ```
@@ -234,6 +238,7 @@ dev-masterkit/
 | `cost-tracker-session-ingest` | Re-register per-session cost tracker or it goes silent | Cost dashboard shows $0/stale; no events from new sessions |
 | `reusable-ci-matrix-template` | Drop-in `.github/workflows/ci.yml` for zero-dep Python libs | Adding CI to a new or stale `tiny-*` repo |
 | `bounty-saturation-resolved-not-skip` | Override the saturation rule when mirror-shape fits | Saturated bounty with mirror-able class shape |
+| `bounty-saturation-pat-blocked-skip` | Skip saturated bounties when PR creation is blocked | All top bounty candidates saturated and fork PRs already blocked |
 
 ## 🏗️ Our Tools
 
@@ -275,6 +280,12 @@ Production-tested tools and libraries built by this team:
 | [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~570 tests across the stack).*
+
+### 🆕 Latest additions (2026-07-12) — Saturated bounty + PAT-blocked skip gate
+- **`bounty-saturation-pat-blocked-skip.md`** prompt — Captures when the right bounty-scanner action is no new implementation: all top candidates saturated, cross-fork PR creation still blocked by PAT scope, existing fork branches already parked, and no mirror-shape override available.
+- **Daily bounty scan recorded as a verified skip** — 200 official issues, 327 bounty-labeled issues, 10 bounty-farm/scam candidates rejected, top 7 all saturated or oversized. No new fork, no new commits, no PR API calls.
+- **Parked branch context carried forward** — `hussain-alsaibai/EdgeChains:ts` (`d0ceb72a`) and `hussain-alsaibai/gitea:feat/commit-inline-comments-4898` (`c50dffec5a`) still need a PAT scope fix or human PR open.
+- 1 new verified prompt (16 → 17); daily-updates 18 → 19. No new skill or tool added, and nothing removed.
 
 ### 🆕 Latest additions (2026-07-11) — CI hygiene for `tiny-router` / `tiny-validator` / `fast-cache` + Qdrant bounty implementation
 - **Qdrant vector DB in EdgeChains JS SDK** (branch `ts`, commit `d0ceb72a` on `hussain-alsaibai/EdgeChains`) — `Qdrant` class mirroring the existing `Supabase` class method-for-method (7 methods: insertVectorData, searchVector, getData, getDataById, getDataFromQuery, updateById, deleteById); 2 test files; cross-fork PR blocked by fine-grained PAT `pull`-only scope (see `gitea-cross-fork-pr-blocker`)
