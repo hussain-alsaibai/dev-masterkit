@@ -24,11 +24,35 @@ def expensive_query(user_id: int) -> dict:
 ## Features
 - **LRU eviction** — bounded memory under sustained load
 - **TTL** — automatic expiry after N seconds
+- **Atomic claim** — `Cache.add()` sets a value only when the key is absent or
+  expired, useful for dedupe locks and first-writer-wins work claims
+- **Keepalive refresh** — `Cache.touch()` extends TTL for long-running jobs
 - **Stale-while-revalidate** — return stale value, refresh in background
   (prevents thundering herd)
 - **Sync + async** — same decorator works on `def` and `async def`
 - **Thread-safe** — uses `threading.RLock` internally
 - **Stats** — `cache.stats()` returns hits, misses, evictions, hit rate
+
+## Dedupe / Keepalive Pattern
+```python
+from fast_cache import Cache
+
+claims = Cache(default_ttl=300)
+
+if not claims.add("callback:req_123", "processing"):
+    return {"duplicate": True}
+
+try:
+    run_side_effect()
+    claims.touch("callback:req_123", ttl=3600)
+finally:
+    # Keep the key if duplicate suppression should survive completion.
+    ...
+```
+
+Use `add()` when only one worker should claim a callback, job, or refresh.
+Use `touch()` when the work may run longer than the original TTL and duplicate
+delivery should not start a second copy.
 
 ## Stale-While-Revalidate Pattern
 ```python
@@ -56,12 +80,15 @@ async def fetch_weather(city: str) -> dict:
 - Memory: ~250 bytes per entry + value
 
 ## Tests
-18/18 passing. Covers LRU eviction, TTL expiry, stale-while-revalidate,
-concurrent access, async wrapping.
+26/26 passing. Covers LRU eviction, TTL expiry, stale-while-revalidate,
+concurrent access, async wrapping, atomic add, and TTL keepalive refresh.
 
 ## When NOT to Use
 - Distributed systems (use Redis/Memcached)
 - Persistence required (fast-cache is in-memory only)
 - Per-process caches that need to be invalidated externally (no pub/sub)
 
-## Last Verified: 2026-06-30
+## Last Verified: 2026-07-13
+
+- Commit: `29ee08b`
+- Verification: full local test suite passing.

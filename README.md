@@ -46,12 +46,12 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-08 |
-| Prompts | 17 | 2026-07-12 |
+| Prompts | 18 | 2026-07-13 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
-| Tools | 19 | 2026-07-07 |
-| Daily Updates | 19 | 2026-07-12 |
+| Tools | 21 | 2026-07-13 |
+| Daily Updates | 20 | 2026-07-13 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -78,7 +78,8 @@ dev-masterkit/
 │   ├── cost-tracker-session-ingest.md # Re-register per-session cost tracker or it goes silent [NEW 2026-07-10]
 │   ├── reusable-ci-matrix-template.md # Drop-in GitHub Actions CI for tiny-* Python libs [NEW 2026-07-11]
 │   ├── bounty-saturation-resolved-not-skip.md # Override the saturation rule when mirror-shape fits [NEW 2026-07-11]
-│   └── bounty-saturation-pat-blocked-skip.md # Skip saturated bounties when PR creation is blocked [NEW 2026-07-12]
+│   ├── bounty-saturation-pat-blocked-skip.md # Skip saturated bounties when PR creation is blocked [NEW 2026-07-12]
+│   └── agent-boundary-contracts.md # Harden agent side-effect boundaries [NEW 2026-07-13]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -122,6 +123,8 @@ dev-masterkit/
 │   ├── tiny-queue-guide.md       # Persistent job queue (tiny-queue)
 │   ├── tiny-budget-guide.md      # Runtime budget enforcement (tiny-budget)
 │   ├── tiny-eventbus-guide.md    # Durable pub/sub with replay (tiny-eventbus)
+│   ├── tiny-router-guide.md      # Stdlib routing + agent callback receiver [NEW 2026-07-13]
+│   ├── tiny-validator-guide.md   # JSON Schema bridge for tool contracts [NEW 2026-07-13]
 │   ├── tiny-policy-guide.md      # ABAC policy engine (tiny-policy)        [NEW 2026-07-07]
 │   └── tiny-otel-guide.md        # OTLP/HTTP trace exporter (tiny-otel)    [NEW 2026-07-07]
 ├── daily-updates/                # Daily changelog
@@ -143,7 +146,8 @@ dev-masterkit/
 │   ├── 2026-07-09.md             # July 9 update (Gitea PR #4898 + cross-fork PAT + tmpfs gotchas)
 │   ├── 2026-07-10.md             # July 10 update (cost tracker ingest + saturated bounty defer)
 │   ├── 2026-07-11.md             # July 11 update (CI matrix + Qdrant bounty)
-│   └── 2026-07-12.md             # July 12 update (saturated bounty + PAT-blocked skip gate)
+│   ├── 2026-07-12.md             # July 12 update (saturated bounty + PAT-blocked skip gate)
+│   └── 2026-07-13.md             # July 13 update (agent boundary contracts + tool guides)
 ├── README.md
 └── LICENSE
 ```
@@ -190,15 +194,15 @@ dev-masterkit/
 | tiny-secret | pydantic.SecretStr | 56/56 | — | 2026-07-02 |
 | tiny-config | python-decouple | 15/15 | 35 µs load | 2026-06-30 |
 | tiny-cli | Click/argparse | 13/13 | 258 ns color | 2026-06-30 |
-| fast-cache | Redis | 18/18 | 2.2M ops/s | 2026-07-11 |
-| tiny-router | Flask | 15/15 | 76K req/s | 2026-07-11 |
+| fast-cache | Redis | 26/26 | 2.2M ops/s | 2026-07-13 |
+| tiny-router | Flask | 15/15 + 11 examples | 76K req/s | 2026-07-13 |
 | tiny-log | structlog | 17/17 | 32K logs/s | 2026-06-29 |
-| tiny-validator | Pydantic | 31/31 | 247K val/s | 2026-07-11 |
+| tiny-validator | Pydantic / JSON Schema | 34/34 | 247K val/s | 2026-07-13 |
 | tiny-agent | LangChain | ✅ | — | 2026-06-28 |
 | tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
 | tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
 
-*25 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~16,000 LOC lib + ~570 tests across the entire stack.*
+*25 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~16,000 LOC lib + ~590 tests across the entire stack.*
 
 ## Commands
 
@@ -239,6 +243,7 @@ dev-masterkit/
 | `reusable-ci-matrix-template` | Drop-in `.github/workflows/ci.yml` for zero-dep Python libs | Adding CI to a new or stale `tiny-*` repo |
 | `bounty-saturation-resolved-not-skip` | Override the saturation rule when mirror-shape fits | Saturated bounty with mirror-able class shape |
 | `bounty-saturation-pat-blocked-skip` | Skip saturated bounties when PR creation is blocked | All top bounty candidates saturated and fork PRs already blocked |
+| `agent-boundary-contracts` | Harden agent side-effect boundaries | Callback receivers, tool calls, job queues, API writes |
 
 ## 🏗️ Our Tools
 
@@ -279,7 +284,14 @@ Production-tested tools and libraries built by this team:
 | [tiny-policy](https://github.com/hussain-alsaibai/tiny-policy) | ABAC policy engine — JSON policies, glob matching, deny-overrides, 11 condition ops, ~1.5 µs/eval | ⭐0 | Node |
 | [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~570 tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
+
+### 🆕 Latest additions (2026-07-13) — Agent boundary contracts + tool guides
+- **`agent-boundary-contracts.md` prompt** — Captures the verified pattern for hardening autonomous-agent side-effect boundaries: auth, request IDs, idempotency, rate limits, schema validation, structured logs, status endpoints, TTL cleanup, and negative-path tests.
+- **`tiny-router` callback receiver recipe** — `tiny-router` commit `902691d` added `examples/agent_callback_receiver.py` with auth, request IDs, rate limiting, TTL idempotency, JSON validation, `/health`, `/ready`, `/status`, structured logs, and CI-covered example tests. Verification: 15 core tests + 11 example tests passing.
+- **`fast-cache` atomic claim + keepalive** — `fast-cache` commit `29ee08b` added `Cache.add()` and `Cache.touch()` for callback/job dedupe and long-running work. Verification: 26 tests passing.
+- **`tiny-validator` JSON Schema bridge** — `tiny-validator` commit `296079e` added `from_json_schema()` for practical MCP/tool-call JSON Schema contracts. Verification: 34 tests passing.
+- 1 new verified prompt (17 -> 18); 2 new tool guides (19 -> 21); daily-updates 19 -> 20. No skill added and nothing removed.
 
 ### 🆕 Latest additions (2026-07-12) — Saturated bounty + PAT-blocked skip gate
 - **`bounty-saturation-pat-blocked-skip.md`** prompt — Captures when the right bounty-scanner action is no new implementation: all top candidates saturated, cross-fork PR creation still blocked by PAT scope, existing fork branches already parked, and no mirror-shape override available.
@@ -335,12 +347,12 @@ Production-tested tools and libraries built by this team:
 ### Previous additions (2026-06-30)
 - **tiny-config** — Layered config loader (15/15 tests, ~35 µs file load)
 - **tiny-cli** — Click-style CLI builder (13/13 tests, NO_COLOR compliant)
-- **fast-cache** — LRU+TTL+stale-while-revalidate (18/18 tests, 2.2M ops/sec)
+- **fast-cache** — LRU+TTL+stale-while-revalidate (26/26 tests, 2.2M ops/sec)
 
 ### Previous additions (2026-06-29)
-- **tiny-router** — 76K req/s HTTP/WSGI router (15/15 tests)
+- **tiny-router** — 76K req/s HTTP/WSGI router (15/15 core tests + 11 callback receiver example tests)
 - **tiny-log** — 32K logs/s structured logging (17/17 tests)
-- **tiny-validator** — 247K val/s Pydantic-style validation (31/31 tests)
+- **tiny-validator** — 247K val/s Pydantic-style validation + JSON Schema bridge (34/34 tests)
 
 ### Ecosystem cohesion (2026-06-28)
 - tiny-agent, tiny-embed, tiny-mcp gained cross-linking "Ecosystem" sections
@@ -357,7 +369,9 @@ Production-tested tools and libraries built by this team:
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-02 |
 | [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-02 |
-| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache | 2026-07-11 |
+| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache with atomic claim + keepalive | 2026-07-13 |
+| [tiny-router Guide](tools/tiny-router-guide.md) | Stdlib WSGI routing + agent callback receiver pattern | 2026-07-13 |
+| [tiny-validator Guide](tools/tiny-validator-guide.md) | Data validation + JSON Schema bridge for tool contracts | 2026-07-13 |
 | [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
 | [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
 | [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |
