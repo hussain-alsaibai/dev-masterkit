@@ -65,6 +65,22 @@ When the entry is between `ttl` and `stale_ttl`, the cache returns the stale
 value immediately and schedules a refresh in a background thread. The next
 caller after refresh completes gets the new value.
 
+## Cache ROI Checklist
+
+For agent and cron workloads, treat caching as a budget and rate-limit
+control, not only a latency optimization:
+
+- Include repository, provider, query, and permission mode in cache keys.
+- Record whether each result was live, fresh-cache, or stale-cache data.
+- Use `stats()` to review hits, misses, evictions, stale returns, and avoided
+  provider calls before increasing cache duration.
+- Prefer bounded local caches for short-lived metadata lookups; do not cache
+  tokens, private messages, or destructive-action decisions.
+- Label stale values in user-facing summaries so freshness is never hidden.
+
+See [Cache ROI for Agent Runs](https://github.com/hussain-alsaibai/fast-cache/blob/main/reports/2026-07-14-cache-roi-for-agent-runs.md)
+for the verified field note.
+
 ## Async Support
 ```python
 @cache(ttl=60)
@@ -88,7 +104,9 @@ concurrent access, async wrapping, atomic add, and TTL keepalive refresh.
 - Persistence required (fast-cache is in-memory only)
 - Per-process caches that need to be invalidated externally (no pub/sub)
 
-## Last Verified: 2026-07-13
+## Last Verified: 2026-07-14
 
-- Commit: `29ee08b`
-- Verification: full local test suite passing.
+- Commit: `8389359` (field note; cache primitives remain at `29ee08b`)
+- Verification: the cache-ROI guidance was recorded after reviewing the
+  repository's cache and agent-workflow field reports; no code changed in
+  this documentation-only commit.

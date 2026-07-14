@@ -50,7 +50,7 @@ open skills/repo-creator/SKILL.md
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
-| Tools | 21 | 2026-07-13 |
+| Tools | 21 | 2026-07-14 |
 | Daily Updates | 21 | 2026-07-14 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
@@ -286,10 +286,12 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-14) — Saturation-floor masking confirmed across two daily runs
-- **`bounty-scanner` SKILL.md calibration note** — Added a "Recent Verification Notes" entry plus a "Known Calibration Debt" section documenting that the scanner's `top N` output hits the same competition floor on every candidate when all top bounties are saturated. Confirmed on 2026-07-12 and again on 2026-07-14. When this pattern appears, the right action is to follow `prompts/bounty-saturation-pat-blocked-skip.md` rather than force an implementation. The pending scanner fix is either (a) surface zero-open-PR candidates even at lower raw scores, or (b) attach a `saturated_warning` flag so humans can override intelligently.
-- **Daily bounty skip recorded as a verified artifact** — 336 official issues scanned, 240 rejected by anti-scam heuristics, top 5 saturated or out-of-skill-stack. No code committed, no PR API calls. Existing parked branches (`hussain-alsaibai/EdgeChains:ts @ d0ceb72a`, `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`) remain parked pending PAT scope fix.
-- daily-updates 20 → 21; Skills 15 unchanged (verification date refreshed in place); no prompts, tools, or new skills added today, and nothing removed.
+### 🆕 Latest additions (2026-07-14) — Signed callbacks, cache ROI, and schema-drift repair
+- **`tiny-router` signed callback guidance** — Source field note `41ddb67` records HMAC verification over the exact raw body, timestamp tolerance, TTL delivery-ID dedupe, deterministic 401/409/422 responses, and health/readiness/status observability. Existing callback receiver recipe remains at `902691d`.
+- **`fast-cache` cache-ROI guidance** — Source field note `8389359` records cache-key design, live/fresh/stale source labels, `stats()`-based avoided-call measurement, bounded local caches, and never-cache boundaries.
+- **`tiny-validator` schema-drift repair guidance** — Source field note `84b0f8d` records strict validation, redacted path-specific repair input, a one- or two-attempt cap, re-validation before side effects, and structured repair logging.
+- **Daily bounty skip recorded as a verified artifact** — 336 official issues scanned, 240 rejected by anti-scam heuristics, top 5 saturated or out-of-skill-stack. No code committed, no PR API calls. Existing parked branches (`hussain-alsaibai/EdgeChains:ts @ d0ceb72a`, `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`) remain parked pending PAT scope fix. Saturation-floor masking was confirmed across the 2026-07-12 and 2026-07-14 runs.
+- daily-updates 20 → 21; Skills 15 unchanged; Tools 21 unchanged (three guides refreshed); no new prompts or repos, and nothing removed.
 
 ### 🆕 Latest additions (2026-07-13) — Agent boundary contracts + tool guides
 - **`agent-boundary-contracts.md` prompt** — Captures the verified pattern for hardening autonomous-agent side-effect boundaries: auth, request IDs, idempotency, rate limits, schema validation, structured logs, status endpoints, TTL cleanup, and negative-path tests.
@@ -374,9 +376,9 @@ Production-tested tools and libraries built by this team:
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-02 |
 | [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-02 |
-| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache with atomic claim + keepalive | 2026-07-13 |
-| [tiny-router Guide](tools/tiny-router-guide.md) | Stdlib WSGI routing + agent callback receiver pattern | 2026-07-13 |
-| [tiny-validator Guide](tools/tiny-validator-guide.md) | Data validation + JSON Schema bridge for tool contracts | 2026-07-13 |
+| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache with atomic claim + keepalive | 2026-07-14 |
+| [tiny-router Guide](tools/tiny-router-guide.md) | Stdlib WSGI routing + agent callback receiver pattern | 2026-07-14 |
+| [tiny-validator Guide](tools/tiny-validator-guide.md) | Data validation + JSON Schema bridge for tool contracts | 2026-07-14 |
 | [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
 | [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
 | [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |

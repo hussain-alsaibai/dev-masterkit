@@ -49,6 +49,19 @@ validate = from_json_schema(schema)
 args = validate({"query": "cache invalidation", "limit": 5})
 ```
 
+## Schema-Drift Repair Loop
+
+When a prompt emits an outdated tool shape, keep validation strict. Turn the
+structured path errors into a bounded repair task, validate the repaired JSON
+again, and only then allow a side effect. Include the schema name, failed
+payload, exact errors, and allowed values in the repair input; redact secrets
+before sending it to a model. Use a maximum of one or two repairs, then reject
+or escalate for human review instead of looping forever. Log `schema`, `path`,
+`decision`, and `repair_attempt` with `tiny-log`.
+
+See [Schema Drift Repair Loops With tiny-validator](https://github.com/hussain-alsaibai/tiny-validator/blob/main/reports/2026-07-14-schema-drift-repair-loops.md)
+for the verified field note.
+
 ## Operational Checklist
 
 - Validate before issuing network, filesystem, queue, or billing side effects.
@@ -60,8 +73,10 @@ args = validate({"query": "cache invalidation", "limit": 5})
 
 34/34 passing after adding the JSON Schema bridge.
 
-## Last verified: 2026-07-13
+## Last verified: 2026-07-14
 
 - Repo: `hussain-alsaibai/tiny-validator`
-- Commit: `296079e`
-- Verification: full local test suite passing.
+- Commit: `84b0f8d` (field note; JSON Schema bridge remains at `296079e`)
+- Verification: the schema-drift guidance was recorded after reviewing the
+  repository's strict-validation and repair-loop field reports; no code
+  changed in this documentation-only commit.

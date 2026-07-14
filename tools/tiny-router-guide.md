@@ -30,6 +30,19 @@ The verified `examples/agent_callback_receiver.py` recipe includes:
 - focused tests for valid, duplicate, unauthorized, invalid, and throttled
   callback flows.
 
+## Signed Callback Receiver Additions
+
+The July 14 field note extends the callback pattern for providers that sign
+requests. Verify the HMAC over the exact raw request body before parsing JSON,
+reject timestamps outside a small tolerance, and deduplicate by delivery ID
+with a TTL. Keep rejected callbacks deterministic: use 401 for missing or
+invalid signatures, 409 for recognized replays, and 422 for structurally
+invalid payloads. Pair the receiver with `/health`, `/ready`, and `/status`
+endpoints so tunnel, DNS, and provider-retry failures are observable.
+
+See [Signed Callback Receivers With tiny-router](https://github.com/hussain-alsaibai/tiny-router/blob/main/reports/2026-07-14-signed-callback-receivers.md)
+for the verified field note.
+
 ## Minimal Shape
 
 ```python
@@ -61,8 +74,10 @@ def callback(request):
 - Core router tests: 15/15 passing.
 - Callback receiver example tests: 11/11 passing.
 
-## Last verified: 2026-07-13
+## Last verified: 2026-07-14
 
 - Repo: `hussain-alsaibai/tiny-router`
-- Commit: `902691d`
-- Verification: core tests and callback receiver example tests passing.
+- Commit: `41ddb67` (field note; callback recipe remains at `902691d`)
+- Verification: the signed-receiver guidance was recorded after reviewing the
+  repo's callback receiver implementation and field report; no code changed in
+  this documentation-only commit.
