@@ -45,13 +45,13 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-08 |
+| Skills | 15 | 2026-07-14 |
 | Prompts | 18 | 2026-07-13 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 21 | 2026-07-13 |
-| Daily Updates | 20 | 2026-07-13 |
+| Daily Updates | 21 | 2026-07-14 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -285,6 +285,11 @@ Production-tested tools and libraries built by this team:
 | [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
+
+### 🆕 Latest additions (2026-07-14) — Saturation-floor masking confirmed across two daily runs
+- **`bounty-scanner` SKILL.md calibration note** — Added a "Recent Verification Notes" entry plus a "Known Calibration Debt" section documenting that the scanner's `top N` output hits the same competition floor on every candidate when all top bounties are saturated. Confirmed on 2026-07-12 and again on 2026-07-14. When this pattern appears, the right action is to follow `prompts/bounty-saturation-pat-blocked-skip.md` rather than force an implementation. The pending scanner fix is either (a) surface zero-open-PR candidates even at lower raw scores, or (b) attach a `saturated_warning` flag so humans can override intelligently.
+- **Daily bounty skip recorded as a verified artifact** — 336 official issues scanned, 240 rejected by anti-scam heuristics, top 5 saturated or out-of-skill-stack. No code committed, no PR API calls. Existing parked branches (`hussain-alsaibai/EdgeChains:ts @ d0ceb72a`, `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`) remain parked pending PAT scope fix.
+- daily-updates 20 → 21; Skills 15 unchanged (verification date refreshed in place); no prompts, tools, or new skills added today, and nothing removed.
 
 ### 🆕 Latest additions (2026-07-13) — Agent boundary contracts + tool guides
 - **`agent-boundary-contracts.md` prompt** — Captures the verified pattern for hardening autonomous-agent side-effect boundaries: auth, request IDs, idempotency, rate limits, schema validation, structured logs, status endpoints, TTL cleanup, and negative-path tests.

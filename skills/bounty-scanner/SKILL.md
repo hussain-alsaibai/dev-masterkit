@@ -62,5 +62,22 @@ Uses `hussain-alsaibai` token from `~/.git-credentials` automatically.
 ## Recent Verification Notes
 
 - **2026-07-08:** Daily bounty scan found 29 issues with dollar markers and 27 with explicit dollar amounts. All 27 payout-looking issues were rejected by the existing hard filters: `young_repo`, `no_stars`, and `inorganic_forks`. No bounty work started.
+- **2026-07-12:** Daily bounty run scanned 200 official issues and 327 bounty-labeled issues. Top 7 candidates all hit `competition = 0/25`, surfacing a saturation-floor masking pattern: the algorithm has its saturation-cap hit floor on every candidate, so ranking no longer separates "popular but still worth doing" from "popular and operationally blocked." Follow-up proposed: surface issues with 0 open PRs even at lower scores, OR attach a `saturated_warning` flag so humans can override intelligently.
+- **2026-07-14:** Daily bounty run scanned 336 official issues; 240 filtered by anti-scam heuristics. Top 5 candidates all saturated or out-of-skill-stack. The saturation-floor masking pattern recurred (top candidates converged to the same score), confirming it as a stable scanner calibration debt rather than a one-off. Decision: skip per `prompts/bounty-saturation-pat-blocked-skip.md`. No code committed, no PR API calls. Existing parked branches remain parked: `hussain-alsaibai/EdgeChains:ts @ d0ceb72a` (Qdrant) and `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`.
 
-## Last Verified: 2026-07-08
+## Known Calibration Debt
+
+The scanner's `top N` output is not actionable when every candidate bottoms
+out at the same competition score. The saturation-floor masking pattern is
+now confirmed across two consecutive daily runs (2026-07-12 and 2026-07-14).
+When this pattern appears:
+
+1. Record it in this file's "Recent Verification Notes" with date and
+   top-N score distribution.
+2. Do NOT force an implementation to make the day look productive.
+   Follow `prompts/bounty-saturation-pat-blocked-skip.md` instead.
+3. The pending scanner fix is either (a) surface zero-open-PR candidates
+   even at lower raw scores, or (b) attach an explicit `saturated_warning`
+   flag so the human caller can decide whether to override.
+
+## Last Verified: 2026-07-14
