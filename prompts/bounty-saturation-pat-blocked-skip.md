@@ -72,14 +72,18 @@ is no longer ranking useful work. Add a follow-up item to surface either:
 The goal is not to hide saturated issues; it is to separate "popular but still
 worth doing" from "popular and operationally blocked."
 
-## Last verified: 2026-07-12
+## Last verified: 2026-07-15
 
-- Daily bounty run scanned 200 official issues and 327 bounty-labeled issues,
-  rejected 10 bounty-farm/scam candidates, and analyzed 7 top candidates.
-- All top candidates had at least 2 active PRs or stronger saturation signals.
-- Existing parked branches remained blocked by fine-grained PAT scope:
+- Daily bounty run scanned 336 total issues, 334 with dollar markers, rejected
+  241 through the anti-scam / hard-filter path, and analyzed the top 9.
+- All non-implemented top-5 candidates had at least 3 active open PRs, were
+  out of the current stack, or were known scam/no-star candidates.
+- Cross-fork PR creation was re-probed and still failed with
+  `403 Resource not accessible by personal access token`.
+- Existing parked branches remain blocked by fine-grained PAT scope:
   `hussain-alsaibai/EdgeChains:ts` at `d0ceb72a` and
   `hussain-alsaibai/gitea:feat/commit-inline-comments-4898` at `c50dffec5a`.
 - Result: no new fork, no new commits, no PR API calls. The durable lesson was
-  the explicit skip gate above plus a scanner follow-up to surface
-  zero-open-PR candidates even when their raw score is lower.
+  to preserve the explicit skip gate and keep the scanner follow-up visible:
+  surface zero-open-PR candidates even when their raw score is lower, or attach
+  a `saturated_warning` when high-payout candidates are operationally blocked.

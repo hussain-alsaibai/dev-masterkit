@@ -62,6 +62,30 @@ or escalate for human review instead of looping forever. Log `schema`, `path`,
 See [Schema Drift Repair Loops With tiny-validator](https://github.com/hussain-alsaibai/tiny-validator/blob/main/reports/2026-07-14-schema-drift-repair-loops.md)
 for the verified field note.
 
+## Typed Tool Boundaries
+
+Use tiny-validator as the last local boundary before generated arguments reach
+filesystem, GitHub, browser, messaging, deployment, or billing tools. Validate
+required fields, enum modes, idempotency keys, and payload shapes before any
+side effect, then log accepted or rejected arguments separately from execution.
+
+```python
+from tiny_validator import Field, Schema
+
+tool_call = Schema({
+    "mode": Field(str, required=True, enum=["dry_run", "write", "notify"]),
+    "target": Field(str, required=True, min_length=1),
+    "idempotency_key": Field(str, required=True, min_length=12),
+    "payload": Field(dict, required=True),
+}, strict=True)
+
+validated = tool_call(arguments)
+```
+
+Prefer fail-closed schemas for side-effecting tools. Unknown fields should be
+rejected, not quietly ignored, unless the handler has a specific compatibility
+reason to accept them.
+
 ## Operational Checklist
 
 - Validate before issuing network, filesystem, queue, or billing side effects.
@@ -73,10 +97,12 @@ for the verified field note.
 
 34/34 passing after adding the JSON Schema bridge.
 
-## Last verified: 2026-07-14
+## Last verified: 2026-07-15
 
 - Repo: `hussain-alsaibai/tiny-validator`
-- Commit: `84b0f8d` (field note; JSON Schema bridge remains at `296079e`)
-- Verification: the schema-drift guidance was recorded after reviewing the
-  repository's strict-validation and repair-loop field reports; no code
-  changed in this documentation-only commit.
+- Commit: `84b0f8d` (schema-drift field note; JSON Schema bridge remains at
+  `296079e`)
+- Verification: local field note
+  `reports/2026-07-15-typed-tool-boundaries.md` was reviewed during the July
+  15 developer-tools report run; no new code was required for the typed
+  boundary procedure.

@@ -81,6 +81,35 @@ control, not only a latency optimization:
 See [Cache ROI for Agent Runs](https://github.com/hussain-alsaibai/fast-cache/blob/main/reports/2026-07-14-cache-roi-for-agent-runs.md)
 for the verified field note.
 
+## Operator Lease Caches
+
+For local cron jobs, webhook receivers, bounty scanners, and repo updaters,
+use `Cache.add()` as a short-lived first-writer-wins lease. Refresh long work
+with `touch()`, and delete the lease when the run ends if duplicate suppression
+does not need to survive completion.
+
+```python
+from fast_cache import Cache
+
+leases = Cache(max_size=512, default_ttl=900)
+
+def run_once(job_id: str, target: str) -> str:
+    key = ("lease", job_id, target)
+    if not leases.add(key, {"status": "running"}):
+        return "skipped: already running"
+
+    try:
+        run_repo_update(target)
+        return "completed"
+    finally:
+        leases.delete(key)
+```
+
+Keep lease keys separate from ordinary memoization keys, and include job name,
+target repo, issue number, and permission mode when those fields affect the
+side effect. Local leases coordinate one process/container; use a real shared
+lock when multiple hosts can execute the same job.
+
 ## Async Support
 ```python
 @cache(ttl=60)
@@ -104,9 +133,10 @@ concurrent access, async wrapping, atomic add, and TTL keepalive refresh.
 - Persistence required (fast-cache is in-memory only)
 - Per-process caches that need to be invalidated externally (no pub/sub)
 
-## Last Verified: 2026-07-14
+## Last Verified: 2026-07-15
 
-- Commit: `8389359` (field note; cache primitives remain at `29ee08b`)
-- Verification: the cache-ROI guidance was recorded after reviewing the
-  repository's cache and agent-workflow field reports; no code changed in
-  this documentation-only commit.
+- Commit: `2820fef` (operator lease field note; cache ROI remains at
+  `8389359`; cache primitives remain at `29ee08b`)
+- Verification: the operator lease guidance was recorded after reviewing the
+  repository's agent-workflow field reports; no code changed in this
+  documentation-only commit.

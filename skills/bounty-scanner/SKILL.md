@@ -64,12 +64,14 @@ Uses `hussain-alsaibai` token from `~/.git-credentials` automatically.
 - **2026-07-08:** Daily bounty scan found 29 issues with dollar markers and 27 with explicit dollar amounts. All 27 payout-looking issues were rejected by the existing hard filters: `young_repo`, `no_stars`, and `inorganic_forks`. No bounty work started.
 - **2026-07-12:** Daily bounty run scanned 200 official issues and 327 bounty-labeled issues. Top 7 candidates all hit `competition = 0/25`, surfacing a saturation-floor masking pattern: the algorithm has its saturation-cap hit floor on every candidate, so ranking no longer separates "popular but still worth doing" from "popular and operationally blocked." Follow-up proposed: surface issues with 0 open PRs even at lower scores, OR attach a `saturated_warning` flag so humans can override intelligently.
 - **2026-07-14:** Daily bounty run scanned 336 official issues; 240 filtered by anti-scam heuristics. Top 5 candidates all saturated or out-of-skill-stack. The saturation-floor masking pattern recurred (top candidates converged to the same score), confirming it as a stable scanner calibration debt rather than a one-off. Decision: skip per `prompts/bounty-saturation-pat-blocked-skip.md`. No code committed, no PR API calls. Existing parked branches remain parked: `hussain-alsaibai/EdgeChains:ts @ d0ceb72a` (Qdrant) and `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`.
+- **2026-07-15:** Daily bounty run scanned 336 total issues, 334 with dollar markers, and rejected 241 through the anti-scam / hard-filter path. Top 9 were unchanged in shape from the prior saturated queue: implemented Qdrant and Gitea branches still parked, non-implemented top candidates had at least 3 open PRs or were out-of-stack, and a fresh PR probe still returned `403 Resource not accessible by personal access token`. Decision: skip per `prompts/bounty-saturation-pat-blocked-skip.md`. No new fork, no new commits, no PR API calls.
 
 ## Known Calibration Debt
 
 The scanner's `top N` output is not actionable when every candidate bottoms
 out at the same competition score. The saturation-floor masking pattern is
-now confirmed across two consecutive daily runs (2026-07-12 and 2026-07-14).
+now confirmed across three daily runs (2026-07-12, 2026-07-14, and
+2026-07-15).
 When this pattern appears:
 
 1. Record it in this file's "Recent Verification Notes" with date and
@@ -80,4 +82,4 @@ When this pattern appears:
    even at lower raw scores, or (b) attach an explicit `saturated_warning`
    flag so the human caller can decide whether to override.
 
-## Last Verified: 2026-07-14
+## Last Verified: 2026-07-15

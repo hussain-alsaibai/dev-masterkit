@@ -45,13 +45,13 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-14 |
+| Skills | 15 | 2026-07-15 |
 | Prompts | 18 | 2026-07-13 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
-| Tools | 21 | 2026-07-14 |
-| Daily Updates | 21 | 2026-07-14 |
+| Tools | 22 | 2026-07-15 |
+| Daily Updates | 22 | 2026-07-15 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -114,6 +114,7 @@ dev-masterkit/
 │   ├── cost-tracker.md           # API cost tracking
 │   ├── tiny-config-guide.md      # Layered config loader (tiny-config)
 │   ├── tiny-cli-guide.md         # CLI builder (tiny-cli)
+│   ├── tiny-log-guide.md         # Structured evidence logs and audit bundles [NEW 2026-07-15]
 │   ├── fast-cache-guide.md       # LRU+TTL cache (fast-cache)
 │   ├── tiny-compose-guide.md     # Decorator stacker (tiny-compose)
 │   ├── tiny-trace-guide.md       # OTel-API-compat tracing (tiny-trace)
@@ -147,7 +148,9 @@ dev-masterkit/
 │   ├── 2026-07-10.md             # July 10 update (cost tracker ingest + saturated bounty defer)
 │   ├── 2026-07-11.md             # July 11 update (CI matrix + Qdrant bounty)
 │   ├── 2026-07-12.md             # July 12 update (saturated bounty + PAT-blocked skip gate)
-│   └── 2026-07-13.md             # July 13 update (agent boundary contracts + tool guides)
+│   ├── 2026-07-13.md             # July 13 update (agent boundary contracts + tool guides)
+│   ├── 2026-07-14.md             # July 14 update (signed callbacks, cache ROI, schema-drift repair)
+│   └── 2026-07-15.md             # July 15 update (operator leases, audit bundles, typed boundaries)
 ├── README.md
 └── LICENSE
 ```
@@ -286,7 +289,14 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-14) — Signed callbacks, cache ROI, and schema-drift repair
+### 🆕 Latest additions (2026-07-15) — Operator leases, audit bundles, and typed tool boundaries
+- **`fast-cache` operator lease guidance** — Source field note `2820fef` records `Cache.add()` first-writer-wins claims, `touch()` keepalive refreshes, short TTLs, explicit lease keys, and the warning that local leases do not coordinate across multiple hosts.
+- **`tiny-log` audit bundle guide** — New `tools/tiny-log-guide.md` captures JSONL evidence logs, Markdown summaries, event vocabulary (`started`, `claimed`, `skipped`, `validated`, `executed`, `retried`, `reported`, `failed`), bound context, and redaction defaults for agent runs.
+- **`tiny-validator` typed tool-boundary guidance** — Local field note `reports/2026-07-15-typed-tool-boundaries.md` records fail-closed validation before filesystem, GitHub, browser, messaging, deployment, or billing side effects.
+- **Bounty skip verification refreshed** — 336 total issues scanned, 334 with dollar markers, 241 hard-filtered/rejected, top 9 unchanged in shape, fresh cross-fork PR probe still blocked with `403 Resource not accessible by personal access token`. Existing parked branches (`hussain-alsaibai/EdgeChains:ts @ d0ceb72a`, `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`) remain parked pending PAT scope fix.
+- Tools 21 -> 22; daily-updates 21 -> 22; Skills 15 unchanged; Prompts 18 unchanged (one prompt verification refreshed); no repos created and nothing removed.
+
+### Previous additions (2026-07-14) — Signed callbacks, cache ROI, and schema-drift repair
 - **`tiny-router` signed callback guidance** — Source field note `41ddb67` records HMAC verification over the exact raw body, timestamp tolerance, TTL delivery-ID dedupe, deterministic 401/409/422 responses, and health/readiness/status observability. Existing callback receiver recipe remains at `902691d`.
 - **`fast-cache` cache-ROI guidance** — Source field note `8389359` records cache-key design, live/fresh/stale source labels, `stats()`-based avoided-call measurement, bounded local caches, and never-cache boundaries.
 - **`tiny-validator` schema-drift repair guidance** — Source field note `84b0f8d` records strict validation, redacted path-specific repair input, a one- or two-attempt cap, re-validation before side effects, and structured repair logging.
@@ -376,9 +386,10 @@ Production-tested tools and libraries built by this team:
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-02 |
 | [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-02 |
-| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache with atomic claim + keepalive | 2026-07-14 |
+| [tiny-log Guide](tools/tiny-log-guide.md) | Structured evidence logs and agent audit bundles | 2026-07-15 |
+| [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache with operator leases | 2026-07-15 |
 | [tiny-router Guide](tools/tiny-router-guide.md) | Stdlib WSGI routing + agent callback receiver pattern | 2026-07-14 |
-| [tiny-validator Guide](tools/tiny-validator-guide.md) | Data validation + JSON Schema bridge for tool contracts | 2026-07-14 |
+| [tiny-validator Guide](tools/tiny-validator-guide.md) | Data validation + typed tool boundaries for side effects | 2026-07-15 |
 | [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
 | [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
 | [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |
