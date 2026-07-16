@@ -46,12 +46,12 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-15 |
-| Prompts | 18 | 2026-07-13 |
+| Prompts | 19 | 2026-07-16 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 22 | 2026-07-15 |
-| Daily Updates | 22 | 2026-07-15 |
+| Daily Updates | 23 | 2026-07-16 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -79,7 +79,8 @@ dev-masterkit/
 │   ├── reusable-ci-matrix-template.md # Drop-in GitHub Actions CI for tiny-* Python libs [NEW 2026-07-11]
 │   ├── bounty-saturation-resolved-not-skip.md # Override the saturation rule when mirror-shape fits [NEW 2026-07-11]
 │   ├── bounty-saturation-pat-blocked-skip.md # Skip saturated bounties when PR creation is blocked [NEW 2026-07-12]
-│   └── agent-boundary-contracts.md # Harden agent side-effect boundaries [NEW 2026-07-13]
+│   ├── agent-boundary-contracts.md # Harden agent side-effect boundaries [NEW 2026-07-13]
+│   └── chainable-redaction-wrapper.md # Preserve chat surfaces while redacting PII [NEW 2026-07-16]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -150,7 +151,8 @@ dev-masterkit/
 │   ├── 2026-07-12.md             # July 12 update (saturated bounty + PAT-blocked skip gate)
 │   ├── 2026-07-13.md             # July 13 update (agent boundary contracts + tool guides)
 │   ├── 2026-07-14.md             # July 14 update (signed callbacks, cache ROI, schema-drift repair)
-│   └── 2026-07-15.md             # July 15 update (operator leases, audit bundles, typed boundaries)
+│   ├── 2026-07-15.md             # July 15 update (operator leases, audit bundles, typed boundaries)
+│   └── 2026-07-16.md             # July 16 update (chainable PII redaction wrapper)
 ├── README.md
 └── LICENSE
 ```
@@ -247,6 +249,7 @@ dev-masterkit/
 | `bounty-saturation-resolved-not-skip` | Override the saturation rule when mirror-shape fits | Saturated bounty with mirror-able class shape |
 | `bounty-saturation-pat-blocked-skip` | Skip saturated bounties when PR creation is blocked | All top bounty candidates saturated and fork PRs already blocked |
 | `agent-boundary-contracts` | Harden agent side-effect boundaries | Callback receivers, tool calls, job queues, API writes |
+| `chainable-redaction-wrapper` | Preserve chat surfaces while redacting PII | Adding a redaction layer around LLM/client APIs |
 
 ## 🏗️ Our Tools
 
@@ -289,7 +292,12 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-15) — Operator leases, audit bundles, and typed tool boundaries
+### 🆕 Latest additions (2026-07-16) — Chainable PII redaction wrapper
+- **`chainable-redaction-wrapper.md` prompt** — Captures the verified pattern for adding a sensitive-data redaction layer in front of an existing chat-style client while preserving `.chat({ prompt })` and `.chat({ messages })`, exposing redaction events, supporting custom replacements, and testing provider responses through mocks.
+- **EdgeChains AWS Comprehend implementation recorded** — Fork branch `hussain-alsaibai/EdgeChains:ts` commit `c7bfdae4` added inline SigV4 Comprehend helpers, a `Redact` wrapper for OpenAI/GeminiAI/LlamaAI/RetellAI-style endpoints, 12 focused unit tests, and a runnable `examples/redact-with-comprehend/` example.
+- Prompts 18 -> 19; daily-updates 22 -> 23; Skills 15 unchanged; Tools 22 unchanged; no new general-purpose tool guide and nothing removed. Upstream PR creation remains blocked by fine-grained PAT scope.
+
+### Previous additions (2026-07-15) — Operator leases, audit bundles, and typed tool boundaries
 - **`fast-cache` operator lease guidance** — Source field note `2820fef` records `Cache.add()` first-writer-wins claims, `touch()` keepalive refreshes, short TTLs, explicit lease keys, and the warning that local leases do not coordinate across multiple hosts.
 - **`tiny-log` audit bundle guide** — New `tools/tiny-log-guide.md` captures JSONL evidence logs, Markdown summaries, event vocabulary (`started`, `claimed`, `skipped`, `validated`, `executed`, `retried`, `reported`, `failed`), bound context, and redaction defaults for agent runs.
 - **`tiny-validator` typed tool-boundary guidance** — Local field note `reports/2026-07-15-typed-tool-boundaries.md` records fail-closed validation before filesystem, GitHub, browser, messaging, deployment, or billing side effects.
