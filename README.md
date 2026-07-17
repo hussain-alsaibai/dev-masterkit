@@ -81,7 +81,8 @@ dev-masterkit/
 │   ├── bounty-saturation-pat-blocked-skip.md # Skip saturated bounties when PR creation is blocked [NEW 2026-07-12]
 │   ├── agent-boundary-contracts.md # Harden agent side-effect boundaries [NEW 2026-07-13]
 │   ├── chainable-redaction-wrapper.md # Preserve chat surfaces while redacting PII [NEW 2026-07-16]
-│   └── external-bounty-clean-branch.md # Clean fork branch + handoff for PAT-blocked bounty PRs [NEW 2026-07-17]
+│   ├── external-bounty-clean-branch.md # Clean fork branch + handoff for PAT-blocked bounty PRs [NEW 2026-07-17]
+│   └── openclaw-self-version-check.md # Detect upstream OpenClaw updates without trusting stale install paths [NEW 2026-07-17]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
