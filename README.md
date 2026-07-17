@@ -46,7 +46,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-15 |
-| Prompts | 19 | 2026-07-16 |
+| Prompts | 20 | 2026-07-17 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
@@ -80,7 +80,8 @@ dev-masterkit/
 │   ├── bounty-saturation-resolved-not-skip.md # Override the saturation rule when mirror-shape fits [NEW 2026-07-11]
 │   ├── bounty-saturation-pat-blocked-skip.md # Skip saturated bounties when PR creation is blocked [NEW 2026-07-12]
 │   ├── agent-boundary-contracts.md # Harden agent side-effect boundaries [NEW 2026-07-13]
-│   └── chainable-redaction-wrapper.md # Preserve chat surfaces while redacting PII [NEW 2026-07-16]
+│   ├── chainable-redaction-wrapper.md # Preserve chat surfaces while redacting PII [NEW 2026-07-16]
+│   └── external-bounty-clean-branch.md # Clean fork branch + handoff for PAT-blocked bounty PRs [NEW 2026-07-17]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -251,6 +252,7 @@ dev-masterkit/
 | `bounty-saturation-pat-blocked-skip` | Skip saturated bounties when PR creation is blocked | All top bounty candidates saturated and fork PRs already blocked |
 | `agent-boundary-contracts` | Harden agent side-effect boundaries | Callback receivers, tool calls, job queues, API writes |
 | `chainable-redaction-wrapper` | Preserve chat surfaces while redacting PII | Adding a redaction layer around LLM/client APIs |
+| `external-bounty-clean-branch` | Prepare clean fork branches for bounty PR handoff | Local/fork work exists but PR automation is PAT-blocked |
 
 ## 🏗️ Our Tools
 
@@ -293,7 +295,12 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-16) — Chainable PII redaction wrapper
+### 🆕 Latest additions (2026-07-17) — Clean bounty handoff branch
+- **`external-bounty-clean-branch.md` prompt** — Captures the verified workflow for rebuilding bounty work from a fresh upstream target branch, cherry-picking only issue-specific commits, running focused verification, pushing an issue-named fork branch, and recording a precise handoff when PR creation is blocked by PAT scope.
+- **EdgeChains #290 handoff cleaned up** — AWS Comprehend redaction work was republished as `hussain-alsaibai/EdgeChains:fix/issue-290`, verified with `npm run build` and `npm test -- --run src/ai/src/tests/awsComprehend.test.ts`, then left ready for manual PR creation because GitHub returned `403 Resource not accessible by personal access token`.
+- Prompts 19 -> 20; daily-updates remains 24; Skills 15 unchanged; Tools 22 unchanged; nothing removed.
+
+### Previous additions (2026-07-16) — Chainable PII redaction wrapper
 - **`chainable-redaction-wrapper.md` prompt** — Captures the verified pattern for adding a sensitive-data redaction layer in front of an existing chat-style client while preserving `.chat({ prompt })` and `.chat({ messages })`, exposing redaction events, supporting custom replacements, and testing provider responses through mocks.
 - **EdgeChains AWS Comprehend implementation recorded** — Fork branch `hussain-alsaibai/EdgeChains:ts` commit `c7bfdae4` added inline SigV4 Comprehend helpers, a `Redact` wrapper for OpenAI/GeminiAI/LlamaAI/RetellAI-style endpoints, 12 focused unit tests, and a runnable `examples/redact-with-comprehend/` example.
 - Prompts 18 -> 19; daily-updates 22 -> 23; Skills 15 unchanged; Tools 22 unchanged; no new general-purpose tool guide and nothing removed. Upstream PR creation remains blocked by fine-grained PAT scope.
