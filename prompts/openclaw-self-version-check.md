@@ -56,4 +56,4 @@ been customised - update the recipe before relying on it.
 - Local older by a minor/major release, OR upstream has a security
   advisory: announce to the operator's preferred channel.
 
-Last verified: 2026-07-17 (OpenClaw 2026.6.11 installed, 2026.7.1 upstream).
+Last verified: 2026-07-18 (OpenClaw 2026.7.1 installed, 2026.7.1 upstream — in sync).

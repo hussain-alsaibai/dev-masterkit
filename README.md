@@ -46,7 +46,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 15 | 2026-07-15 |
-| Prompts | 20 | 2026-07-17 |
+| Prompts | 21 | 2026-07-18 |
 | Commands | 5 | 2026-07-04 |
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
@@ -255,6 +255,7 @@ dev-masterkit/
 | `agent-boundary-contracts` | Harden agent side-effect boundaries | Callback receivers, tool calls, job queues, API writes |
 | `chainable-redaction-wrapper` | Preserve chat surfaces while redacting PII | Adding a redaction layer around LLM/client APIs |
 | `external-bounty-clean-branch` | Prepare clean fork branches for bounty PR handoff | Local/fork work exists but PR automation is PAT-blocked |
+| `openclaw-self-version-check` | Detect OpenClaw updates without trusting stale install paths | Cron alerting on new releases; hardcoded install paths go stale |
 
 ## 🏗️ Our Tools
 
@@ -299,8 +300,9 @@ Production-tested tools and libraries built by this team:
 
 ### 🆕 Latest additions (2026-07-17) — Clean bounty handoff branch
 - **`external-bounty-clean-branch.md` prompt** — Captures the verified workflow for rebuilding bounty work from a fresh upstream target branch, cherry-picking only issue-specific commits, running focused verification, pushing an issue-named fork branch, and recording a precise handoff when PR creation is blocked by PAT scope.
+- **`openclaw-self-version-check.md` prompt** — Verified recipe for detecting available OpenClaw updates via `openclaw --version` plus the GitHub Releases API, instead of hardcoding stale install paths (e.g. `/skeleton/.npm-global/...`). The local install is now a symlink shim at `/usr/local/bin/openclaw` → `/app/openclaw.mjs`.
 - **EdgeChains #290 handoff cleaned up** — AWS Comprehend redaction work was republished as `hussain-alsaibai/EdgeChains:fix/issue-290`, verified with `npm run build` and `npm test -- --run src/ai/src/tests/awsComprehend.test.ts`, then left ready for manual PR creation because GitHub returned `403 Resource not accessible by personal access token`.
-- Prompts 19 -> 20; daily-updates remains 24; Skills 15 unchanged; Tools 22 unchanged; nothing removed.
+- Prompts 19 -> 21; daily-updates remains 24; Skills 15 unchanged; Tools 22 unchanged; nothing removed.
 
 ### Previous additions (2026-07-16) — Chainable PII redaction wrapper
 - **`chainable-redaction-wrapper.md` prompt** — Captures the verified pattern for adding a sensitive-data redaction layer in front of an existing chat-style client while preserving `.chat({ prompt })` and `.chat({ messages })`, exposing redaction events, supporting custom replacements, and testing provider responses through mocks.
