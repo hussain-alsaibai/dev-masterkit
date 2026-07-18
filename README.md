@@ -51,7 +51,7 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-07-04 |
 | Orchestrators | 1 | 2026-07-04 |
 | Tools | 22 | 2026-07-15 |
-| Daily Updates | 24 | 2026-07-17 |
+| Daily Updates | 25 | 2026-07-18 |
 | tiny-* Ecosystem Repos | 25 | 2026-07-07 |
 
 ## Structure
@@ -155,7 +155,8 @@ dev-masterkit/
 │   ├── 2026-07-14.md             # July 14 update (signed callbacks, cache ROI, schema-drift repair)
 │   ├── 2026-07-15.md             # July 15 update (operator leases, audit bundles, typed boundaries)
 │   ├── 2026-07-16.md             # July 16 update (chainable PII redaction wrapper)
-│   └── 2026-07-17.md             # July 17 update (agent runtime gateways and capability contracts)
+│   ├── 2026-07-17.md             # July 17 update (agent runtime gateways and capability contracts)
+│   └── 2026-07-18.md             # July 18 update (operator CLI, config provenance, evidence logs)
 ├── README.md
 └── LICENSE
 ```
