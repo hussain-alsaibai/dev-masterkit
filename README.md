@@ -52,7 +52,7 @@ open skills/repo-creator/SKILL.md
 | Orchestrators | 1 | 2026-07-21 |
 | Tools | 22 | 2026-07-21 |
 | Daily Updates | 27 | 2026-07-21 |
-| tiny-* Ecosystem Repos | 25 | 2026-07-07 |
+| tiny-* Ecosystem Repos | 28 | 2026-07-22 |
 
 ## Structure
 
@@ -130,7 +130,10 @@ dev-masterkit/
 │   ├── tiny-router-guide.md      # Stdlib routing + agent callback receiver [NEW 2026-07-13]
 │   ├── tiny-validator-guide.md   # JSON Schema bridge for tool contracts [NEW 2026-07-13]
 │   ├── tiny-policy-guide.md      # ABAC policy engine (tiny-policy)        [NEW 2026-07-07]
-│   └── tiny-otel-guide.md        # OTLP/HTTP trace exporter (tiny-otel)    [NEW 2026-07-07]
+│   ├── tiny-otel-guide.md        # OTLP/HTTP trace exporter (tiny-otel)    [NEW 2026-07-07]
+│   ├── tiny-memory-guide.md       # Zero-dep agent memory (BM25+TF-IDF, 0 deps) [NEW 2026-07-22]
+│   ├── tiny-chain-guide.md        # LLM processor: streaming, retries, fallbacks   [NEW 2026-07-22]
+│   └── tiny-workflow-guide.md     # Async DAG orchestrator: retries, approvals, DLQ   [NEW 2026-07-22]
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -210,8 +213,11 @@ dev-masterkit/
 | tiny-agent | LangChain | ✅ | — | 2026-06-28 |
 | tiny-embed | sentence-transformers | ✅ | — | 2026-06-28 |
 | tiny-mcp | Model Context Protocol | ✅ | — | 2026-06-28 |
+| tiny-memory | Agent memory (BM25+TF-IDF, Semantic/Episodic/Declarative) | ✅ | — | 2026-07-22 |
+| tiny-chain | LLM processor (streaming, retry, fallback, function calling) | ✅ | — | 2026-07-22 |
+| tiny-workflow | Async DAG orchestrator (approval gates, dead-letter queue) | ✅ | — | 2026-07-22 |
 
-*25 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~16,000 LOC lib + ~590 tests across the entire stack.*
+*28 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~18,980 LOC lib + ~590 tests across the entire stack.*
 
 ## Commands
 
@@ -295,6 +301,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-eventbus](https://github.com/hussain-alsaibai/tiny-eventbus) | Durable pub/sub with JSONL replay — topic filtering, wildcards, cursor consumers, automatic log rotation | ⭐0 | Node |
 | [tiny-policy](https://github.com/hussain-alsaibai/tiny-policy) | ABAC policy engine — JSON policies, glob matching, deny-overrides, 11 condition ops, ~1.5 µs/eval | ⭐0 | Node |
 | [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
+| [tiny-memory](https://github.com/hussain-alsaibai/tiny-memory) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores, JSONL persistence | ⭐0 | Python |
+| [tiny-chain](https://github.com/hussain-alsaibai/tiny-chain) | Streaming LLM processor — retries, model fallbacks, function calling, JSON extraction, ~600 LOC zero deps | ⭐0 | Python |
+| [tiny-workflow](https://github.com/hussain-alsaibai/tiny-workflow) | Async DAG orchestrator — parallel steps, retry, approval gates, dead-letter queue, JSON state persistence | ⭐0 | Python |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
@@ -436,6 +445,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-eventbus Guide](tools/tiny-eventbus-guide.md) | Durable JSONL pub/sub with replay and one-shot waits | 2026-07-06 |
 | [tiny-policy Guide](tools/tiny-policy-guide.md) | ABAC policy engine with deny-overrides and JSON policies | 2026-07-07 |
 | [tiny-otel Guide](tools/tiny-otel-guide.md) | OTLP/HTTP trace exporter for agent spans | 2026-07-07 |
+| [tiny-memory Guide](tools/tiny-memory-guide.md) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores | 2026-07-22 |
+| [tiny-chain Guide](tools/tiny-chain-guide.md) | LLM streaming processor — retries, model fallbacks, function calling, JSON extraction | 2026-07-22 |
+| [tiny-workflow Guide](tools/tiny-workflow-guide.md) | Async DAG orchestrator — retry, approval gates, dead-letter queue, state persistence | 2026-07-22 |
 
 ## Daily Updates
 
