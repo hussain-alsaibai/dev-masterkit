@@ -45,14 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-21 |
-| Prompts | 21 | 2026-07-21 |
-| Commands | 5 | 2026-07-21 |
-| Agents | 3 | 2026-07-21 |
-| Orchestrators | 1 | 2026-07-21 |
-| Tools | 22 | 2026-07-21 |
-| Daily Updates | 27 | 2026-07-21 |
-| tiny-* Ecosystem Repos | 28 | 2026-07-22 |
+| Skills | 15 | 2026-07-23 |
+| Prompts | 21 | 2026-07-23 |
+| Commands | 5 | 2026-07-23 |
+| Agents | 3 | 2026-07-23 |
+| Orchestrators | 1 | 2026-07-23 |
+| Tools | 31 | 2026-07-23 |
+| Daily Updates | 28 | 2026-07-23 |
+| tiny-* Ecosystem Repos | 29 | 2026-07-23 |
 
 ## Structure
 
@@ -133,7 +133,13 @@ dev-masterkit/
 │   ├── tiny-otel-guide.md        # OTLP/HTTP trace exporter (tiny-otel)    [NEW 2026-07-07]
 │   ├── tiny-memory-guide.md       # Zero-dep agent memory (BM25+TF-IDF, 0 deps) [NEW 2026-07-22]
 │   ├── tiny-chain-guide.md        # LLM processor: streaming, retries, fallbacks   [NEW 2026-07-22]
-│   └── tiny-workflow-guide.md     # Async DAG orchestrator: retries, approvals, DLQ   [NEW 2026-07-22]
+│   ├── tiny-workflow-guide.md     # Async DAG orchestrator: retries, approvals, DLQ   [NEW 2026-07-22]
+│   ├── tiny-http-guide.md         # Zero-dep HTTP server — one file, no setup       [NEW 2026-07-23]
+│   ├── tiny-retry-guide.md        # Retry, exponential backoff, circuit breaker     [NEW 2026-07-23]
+│   ├── tiny-rate-guide.md         # Token bucket, fixed/sliding window rate limiter  [NEW 2026-07-23]
+│   ├── tiny-sandbox-guide.md      # Secure Python code execution via AST sandbox    [NEW 2026-07-23]
+│   ├── tiny-worker-guide.md       # Zero-dep background worker / job queue           [NEW 2026-07-23]
+│   └── tiny-events-guide.md       # Zero-dep event emitter — pub/sub pattern         [NEW 2026-07-23]
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
