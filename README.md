@@ -45,14 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-21 |
-| Prompts | 21 | 2026-07-21 |
-| Commands | 5 | 2026-07-21 |
-| Agents | 3 | 2026-07-21 |
-| Orchestrators | 1 | 2026-07-21 |
-| Tools | 22 | 2026-07-21 |
-| Daily Updates | 28 | 2026-07-24 |
-| tiny-* Ecosystem Repos | 32 | 2026-07-24 |
+| Skills | 15 | 2026-07-23 |
+| Prompts | 21 | 2026-07-23 |
+| Commands | 5 | 2026-07-23 |
+| Agents | 3 | 2026-07-23 |
+| Orchestrators | 1 | 2026-07-23 |
+| Tools | 31 | 2026-07-23 |
+| Daily Updates | 29 | 2026-07-24 |
+| tiny-* Ecosystem Repos | 29 | 2026-07-23 |
 
 ## Structure
 
@@ -134,13 +134,12 @@ dev-masterkit/
 │   ├── tiny-memory-guide.md       # Zero-dep agent memory (BM25+TF-IDF, 0 deps) [NEW 2026-07-22]
 │   ├── tiny-chain-guide.md        # LLM processor: streaming, retries, fallbacks   [NEW 2026-07-22]
 │   ├── tiny-workflow-guide.md     # Async DAG orchestrator: retries, approvals, DLQ   [NEW 2026-07-22]
-│   ├── tiny-sandbox-guide.md      # AST-based Python sandbox, zero deps [NEW 2026-07-24]
-│   ├── tiny-pipeline-guide.md     # Streaming pipeline builder, UNIX pipes for iterators [NEW 2026-07-24]
-│   ├── tiny-graph-guide.md        # Property graph, stdlib-only, 450 LOC [NEW 2026-07-24]
-│   ├── tiny-mem-guide.md          # Local-first agent memory, JSON/vector/hybrid [NEW 2026-07-24]
-│   ├── tiny-state-guide.md        # FSM for AI agents and workflows [NEW 2026-07-24]
-│   ├── tiny-callback-guide.md     # Async callbacks, promise pattern, event emitter [NEW 2026-07-24]
-│   └── tiny-watch-guide.md        # File watcher with debounce, glob filtering [NEW 2026-07-24]
+│   ├── tiny-http-guide.md         # Zero-dep HTTP server — one file, no setup       [NEW 2026-07-23]
+│   ├── tiny-retry-guide.md        # Retry, exponential backoff, circuit breaker     [NEW 2026-07-23]
+│   ├── tiny-rate-guide.md         # Token bucket, fixed/sliding window rate limiter  [NEW 2026-07-23]
+│   ├── tiny-sandbox-guide.md      # Secure Python code execution via AST sandbox    [NEW 2026-07-23]
+│   ├── tiny-worker-guide.md       # Zero-dep background worker / job queue           [NEW 2026-07-23]
+│   └── tiny-events-guide.md       # Zero-dep event emitter — pub/sub pattern         [NEW 2026-07-23]
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -311,24 +310,14 @@ Production-tested tools and libraries built by this team:
 | [tiny-memory](https://github.com/hussain-alsaibai/tiny-memory) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores, JSONL persistence | ⭐0 | Python |
 | [tiny-chain](https://github.com/hussain-alsaibai/tiny-chain) | Streaming LLM processor — retries, model fallbacks, function calling, JSON extraction, ~600 LOC zero deps | ⭐0 | Python |
 | [tiny-workflow](https://github.com/hussain-alsaibai/tiny-workflow) | Async DAG orchestrator — parallel steps, retry, approval gates, dead-letter queue, JSON state persistence | ⭐0 | Python |
-| [tiny-sandbox](https://github.com/hussain-alsaibai/tiny-sandbox) | Secure Python code execution via AST transformation, zero deps | ⭐0 | Python |
-| [tiny-pipeline](https://github.com/hussain-alsaibai/tiny-pipeline) | Streaming data pipeline builder — UNIX pipes for Python iterators | ⭐0 | Python |
-| [tiny-graph](https://github.com/hussain-alsaibai/tiny-graph) | Zero-dep in-memory property graph for Python | ⭐0 | Python |
-| [tiny-mem](https://github.com/hussain-alsaibai/tiny-mem) | Local-first agent memory — JSON, vector, or hybrid backends | ⭐0 | Python |
-| [tiny-state](https://github.com/hussain-alsaibai/tiny-state) | Zero-dep finite state machine for AI agents and workflows | ⭐0 | Python |
-| [tiny-callback](https://github.com/hussain-alsaibai/tiny-callback) | Async callbacks, promise pattern, event emitter — zero deps | ⭐0 | Python |
-| [tiny-watch](https://github.com/hussain-alsaibai/tiny-watch) | File watcher with debounce, coalescing, glob filtering — zero deps | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **32 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **25 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-24) — 8 new tiny-* repos, 7 new tool guides
+### 🆕 Latest additions (2026-07-21) — Quiet period logged; no new artifacts
 
-- **7 new tiny-* repos shipped** (July 23–24) — GitHub API scan confirms 7 new repos under hussain-alsaibai: `tiny-sandbox` (~1360 LOC, AST-based Python sandbox), `tiny-pipeline` (~1300 LOC, streaming pipeline for iterators), `tiny-graph` (~450 LOC, in-memory property graph), `tiny-mem` (~480 LOC, agent memory with JSON/vector/hybrid backends), `tiny-state` (FSM for AI agents), `tiny-callback` (async callbacks + promise pattern), `tiny-watch` (file watcher with debounce). `tiny-sandbox`, `tiny-pipeline`, `tiny-graph` also exist locally under `repos/`.
-- **7 new tool guides added** — `tools/tiny-{sandbox,pipeline,graph,mem,state,callback,watch}-guide.md` created, each with purpose, when-to-use, key patterns, and cross-links to related tools.
-- **README curated list updated** — Added 8 new repo entries to the Our Tools table; bumped ecosystem count from 25 → 32 active libraries.
-- **README tree updated** — Added 7 new guide entries under `tools/` with [NEW 2026-07-24] markers.
-- **tiny-mem note** — MIT licensed (pyproject.toml), ~480 LOC in src/, no LICENSE file committed yet, NumPy optional, SQLite WAL persistence.
-- Stats: Daily Updates 27 → 28; Tools 22 → 29; tiny-* Ecosystem Repos 28 → 32 (Last Updated 2026-07-24). No skills, prompts, commands, or agents added.
+- **Daily-update log created** — `daily-updates/2026-07-21.md` records a quiet 48-hour window (July 19–21) with zero commits and no new skills, tools, prompts, or verified code patterns. The go-redis bounty remains in "selected for implementation" status without any code committed.
+- **Accountability flag noted** — July 19 and July 20 both logged as zero-commit days. No new repos, artifacts, or removals.
+- Stats: Daily Updates 26 → 27 (Last Updated 2026-07-21). All other counts unchanged. Nothing added or removed.
 
 ### 🆕 Previous additions (2026-07-19) — Weekly status sync + go-redis bounty target
 

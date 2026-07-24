@@ -1,38 +1,47 @@
-# tiny-sandbox Guide
+# tiny-sandbox — Secure Python Code Execution Sandbox
 
-**Repo:** [hussain-alsaibai/tiny-sandbox](https://github.com/hussain-alsaibai/tiny-sandbox)  
-**Size:** ~1360 LOC | **Deps:** 0 (stdlib-only) | **Last verified:** 2026-07-24
+## Repo
+https://github.com/hussain-alsaibai/tiny-sandbox
 
-> Tiny secure Python code execution sandbox using AST transformation.
+## What It Does
 
-## What it does
+Tiny secure Python code execution sandbox using AST transformation. Zero dependencies. Whitelists safe operations, blocks dangerous ones.
 
-Execute untrusted Python code safely with zero external packages. Uses Python's own AST module to parse, analyze, and transform code before execution, blocking dangerous operations at the AST level.
+## When to Use
 
-## When to use
+- Running untrusted user code in agents/bots
+- Processing Python snippets in a code-execution tool
+- Isolating eval/exec from the host environment
 
-- **Plugin systems** that need to run user-supplied Python code
-- **AI agents** that generate and execute code snippets
-- **Code evaluation** in educational or competitive platforms
-- **Safe eval() replacement** — when you need to run arbitrary Python without `eval()`
+## Key Features
 
-## Key patterns
+- AST-based transformation (no regex blacklists)
+- Blocks: `import`, `open`, `os.`, `sys.`, `subprocess`, file I/O, network
+- Allows: arithmetic, list/dict operations, builtins (`len`, `range`, etc.)
+- Timeout enforcement via signal alarm
+- Memory limit via resource setrlimit
+- Returns: stdout, return value, execution time
+
+## Quick Start
 
 ```python
-from tiny_sandbox import Sandbox, SecurityPolicy
+from tiny_sandbox import run_sandbox
 
-policy = SecurityPolicy(
-    allowed_modules=["math", "random"],
-    blocked_names={"__import__", "open", "eval", "exec"},
-    max_iterations=1000,
-    timeout_seconds=5,
+result = run_sandbox(
+    code="[x**2 for x in range(10)]",
+    timeout=5,
+    memory_mb=50
 )
-
-sandbox = Sandbox(policy)
-result = sandbox.run(user_code)
+print(result.output)    # "[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]"
+print(result.elapsed_ms) # execution time
+print(result.blocked)    # [] — no blocked operations
 ```
 
-## Related
+## Security Notes
 
-- `tiny-chain` — for LLM-driven code generation that feeds into sandbox
-- `tiny-workflow` — for orchestrating multi-step agent tasks that may include code execution
+- Always set `timeout` and `memory_mb` limits
+- Not a full security sandbox — use containers (gVisor, firejail) for untrusted production workloads
+- Last verified: 2026-07-23
+
+## Last Verified
+2026-07-23
