@@ -52,7 +52,7 @@ open skills/repo-creator/SKILL.md
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
 | Daily Updates | 30 | 2026-07-25 |
-| tiny-* Ecosystem Repos | 29 | 2026-07-23 |
+| tiny-* Ecosystem Repos | 20 | 2026-07-25 |
 
 ## Structure
 
