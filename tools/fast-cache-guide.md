@@ -29,6 +29,10 @@ def expensive_query(user_id: int) -> dict:
 - **Keepalive refresh** — `Cache.touch()` extends TTL for long-running jobs
 - **Stale-while-revalidate** — return stale value, refresh in background
   (prevents thundering herd)
+- **peek(key, default)** — read without updating LRU order or hit count
+- **has(key)** — read-only existence check (neither hit nor miss)
+- **update(key, fn)** — in-place mutation of cached value
+- **get_or_set(key, factory, ttl)** — atomic get-or-compute-and-cache
 - **Sync + async** — same decorator works on `def` and `async def`
 - **Thread-safe** — uses `threading.RLock` internally
 - **Stats** — `cache.stats()` returns hits, misses, evictions, hit rate
@@ -133,7 +137,7 @@ concurrent access, async wrapping, atomic add, and TTL keepalive refresh.
 - Persistence required (fast-cache is in-memory only)
 - Per-process caches that need to be invalidated externally (no pub/sub)
 
-## Last Verified: 2026-07-15
+## Last Verified: 2026-07-26
 
 - Commit: `2820fef` (operator lease field note; cache ROI remains at
   `8389359`; cache primitives remain at `29ee08b`)
