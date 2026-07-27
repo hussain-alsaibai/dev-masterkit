@@ -45,14 +45,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 15 | 2026-07-23 |
+| Skills | 16 | 2026-07-27 |
 | Prompts | 21 | 2026-07-23 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 39 | 2026-07-26 |
+| Tool Guides | 41 | 2026-07-26 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
-| Daily Updates | 29 | 2026-07-24 |
+| Daily Updates | 31 | 2026-07-27 |
 | tiny-* Ecosystem Repos | 32 | 2026-07-26 |
 
 ## Structure
@@ -314,7 +314,13 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **32 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-26) — 4 new tiny-* repos + fast-cache v0.2.1
+### 🆕 Latest additions (2026-07-27) — health-monitor skill added (active cron job)
+- **health-monitor** skill added — Automated system health monitoring with FalconEye integration. Monitors disk, memory, webhook server, gateway; auto-restarts webhook if down; sends alerts via FalconEye Meet API. Runs as part of the daily accountability cron job. Last verified 2026-07-27.
+- Stats: Skills 15 → 16; Daily Updates 30 → 31 (all 2026-07-27)
+- Bounty: `Vikingr2023/awesome-agent-bounties#221` (go-redis Pub/Sub `ReceiveMessage` indefinite-block fix) remains in "selected for implementation" status. Repo confirmed real (not a stub), issue open since 2026-07-13.
+- context-bridge needs promotion (0⭐, no community activity since 2026-06-20).
+
+### 🆕 Previous additions (2026-07-26) — 4 new tiny-* repos + fast-cache v0.2.1
 - Stats: Tool Guides 35 → 39; tiny-* repos 29 → 32; Daily Updates 29 → 30 (all 2026-07-26)
 - New: tiny-semaphore (async sem + FIFO), tiny-circuit (circuit breaker), tiny-realtime (SSE + WS for AI streaming), tiny-stream (LLM streaming parser, from 2026-07-25)
 - Updated: fast-cache-guide.md — added peek/has/update/get_or_set methods
