@@ -48,12 +48,12 @@ open skills/repo-creator/SKILL.md
 | Skills | 16 | 2026-07-29 |
 | Prompts | 21 | 2026-07-23 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 41 | 2026-07-26 |
+| Tool Guides | 42 | 2026-07-29 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
-| Daily Updates | 33 | 2026-07-29 |
-| tiny-* Ecosystem Repos | 32 | 2026-07-29 |
+| Daily Updates | 35 | 2026-07-29 |
+| tiny-* Ecosystem Repos | 45 | 2026-07-29 |
 
 ## Structure
 
@@ -322,13 +322,14 @@ Production-tested tools and libraries built by this team:
 | [tiny-chain](https://github.com/hussain-alsaibai/tiny-chain) | Streaming LLM processor — retries, model fallbacks, function calling, JSON extraction, ~600 LOC zero deps | ⭐0 | Python |
 | [tiny-workflow](https://github.com/hussain-alsaibai/tiny-workflow) | Async DAG orchestrator — parallel steps, retry, approval gates, dead-letter queue, JSON state persistence | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **32 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **45 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack).*
 
-### 🆕 Latest additions (2026-07-29) — Scanner hardening + pivot strategy
-- **Bounty scanner enhanced:** `Vikingr3/awesome-agent-bounties` added to `BOUNTY_FARMS` blocklist after verifying 10/10 items are Opire fork-scams. Bug fixed: scam aggregator boards were leaking through ranking (now rejected before ranking).
-- **Pivot strategy documented:** Zero-bounty-day fallback is now a verified pattern — move to tiny-* ecosystem maintenance (cross-links, CI badges, "Last verified" dates) instead of wasting cycles on scam boards.
-- **Accountability:** 350 issues scanned, 10 scam-rejected, 0 accepted. Productive pivot executed. All commits accounted for.
-- Stats: Daily Updates 32 → 33; all other counts unchanged. Nothing removed.
+### 🆕 Latest additions (2026-07-29) — Scanner hardening + tiny-rbac + ecosystem count fix
+- **tiny-rbac** — new zero-dep RBAC/ABAC policy engine (deny-overrides, JSON policies, glob matching). Added tool guide: `tools/tiny-rbac-guide.md`.
+- **state-of-ai-agent-tooling-2026** — comprehensive report on MCP, A2A, zero-dep trends. Added to curated repo list.
+- **Bounty scanner enhanced:** `Vikingr3/awesome-agent-bounties` blocklisted, ranking bug fixed.
+- **Pivot strategy documented:** Zero-bounty-day fallback = tiny-* ecosystem maintenance.
+- **Ecosystem count corrected:** 45 tiny-* repos (up from 32 — 13 unfilled entries now counted). Stats: Skills 16, Tool Guides 42, tiny-* 45, Daily Updates 34.
 
 ### 🆕 Previous additions (2026-07-27) — health-monitor skill added (active cron job)
 - **health-monitor** skill added — Automated system health monitoring with FalconEye integration. Monitors disk, memory, webhook server, gateway; auto-restarts webhook if down; sends alerts via FalconEye Meet API. Runs as part of the daily accountability cron job. Last verified 2026-07-27.
