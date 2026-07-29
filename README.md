@@ -45,15 +45,15 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 16 | 2026-07-28 |
+| Skills | 16 | 2026-07-29 |
 | Prompts | 21 | 2026-07-23 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 41 | 2026-07-26 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
-| Daily Updates | 32 | 2026-07-28 |
-| tiny-* Ecosystem Repos | 32 | 2026-07-26 |
+| Daily Updates | 33 | 2026-07-29 |
+| tiny-* Ecosystem Repos | 32 | 2026-07-29 |
 
 ## Structure
 
@@ -166,7 +166,17 @@ dev-masterkit/
 │   ├── 2026-07-15.md             # July 15 update (operator leases, audit bundles, typed boundaries)
 │   ├── 2026-07-16.md             # July 16 update (chainable PII redaction wrapper)
 │   ├── 2026-07-17.md             # July 17 update (agent runtime gateways and capability contracts)
-│   └── 2026-07-18.md             # July 18 update (operator CLI, config provenance, evidence logs)
+│   ├── 2026-07-19.md             # July 19 update (weekly sync + go-redis bounty)
+│   ├── 2026-07-20.md             # July 20 update (quiet — zero commits)
+│   ├── 2026-07-21.md             # July 21 update (quiet — zero commits)
+│   ├── 2026-07-22.md             # July 22 update (tiny-memory, tiny-chain, tiny-workflow)
+│   ├── 2026-07-23.md             # July 23 update (tiny-http, tiny-retry, tiny-rate, tiny-sandbox, tiny-worker, tiny-events)
+│   ├── 2026-07-24.md             # July 24 update (pipeline verification)
+│   ├── 2026-07-25.md             # July 25 update (bounty scanning)
+│   ├── 2026-07-26.md             # July 26 update (4 new tiny-* repos + fast-cache v0.2.1)
+│   ├── 2026-07-27.md             # July 27 update (health-monitor skill + bounty target)
+│   ├── 2026-07-28.md             # July 28 update (bounty re-scan, status-quo)
+│   └── 2026-07-29.md             # July 29 update (scanner hardening + pivot strategy)
 ├── README.md
 └── LICENSE
 ```
@@ -314,7 +324,13 @@ Production-tested tools and libraries built by this team:
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **32 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, and OTLP tracing (~16,000 LOC lib + ~590 tests across the stack).*
 
-### 🆕 Latest additions (2026-07-27) — health-monitor skill added (active cron job)
+### 🆕 Latest additions (2026-07-29) — Scanner hardening + pivot strategy
+- **Bounty scanner enhanced:** `Vikingr3/awesome-agent-bounties` added to `BOUNTY_FARMS` blocklist after verifying 10/10 items are Opire fork-scams. Bug fixed: scam aggregator boards were leaking through ranking (now rejected before ranking).
+- **Pivot strategy documented:** Zero-bounty-day fallback is now a verified pattern — move to tiny-* ecosystem maintenance (cross-links, CI badges, "Last verified" dates) instead of wasting cycles on scam boards.
+- **Accountability:** 350 issues scanned, 10 scam-rejected, 0 accepted. Productive pivot executed. All commits accounted for.
+- Stats: Daily Updates 32 → 33; all other counts unchanged. Nothing removed.
+
+### 🆕 Previous additions (2026-07-27) — health-monitor skill added (active cron job)
 - **health-monitor** skill added — Automated system health monitoring with FalconEye integration. Monitors disk, memory, webhook server, gateway; auto-restarts webhook if down; sends alerts via FalconEye Meet API. Runs as part of the daily accountability cron job. Last verified 2026-07-27.
 - Stats: Skills 15 → 16; Daily Updates 30 → 31 (all 2026-07-27)
 - Bounty: `Vikingr2023/awesome-agent-bounties#221` (go-redis Pub/Sub `ReceiveMessage` indefinite-block fix) remains in "selected for implementation" status. Repo confirmed real (not a stub), issue open since 2026-07-13.
