@@ -48,12 +48,12 @@ open skills/repo-creator/SKILL.md
 | Skills | 16 | 2026-07-29 |
 | Prompts | 23 | 2026-07-30 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 42 | 2026-07-29 |
+| Tool Guides | 43 | 2026-07-30 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
 | Daily Updates | 36 | 2026-07-30 |
-| tiny-* Ecosystem Repos | 45 | 2026-07-29 |
+| tiny-* Ecosystem Repos | 46 | 2026-07-30 |
 
 ## Structure
 
@@ -154,6 +154,7 @@ dev-masterkit/
 │   ├── tiny-http-guide.md         # Zero-dep HTTP server — one file, no setup       [NEW 2026-07-23]
 │   ├── tiny-retry-guide.md        # Retry, exponential backoff, circuit breaker     [NEW 2026-07-23]
 │   ├── tiny-rate-guide.md         # Token bucket, fixed/sliding window rate limiter  [NEW 2026-07-23]
+│   ├── tiny-rate-limiter-guide.md # 4 algorithms, 5M ops/s, sync + async               [NEW 2026-07-30]
 │   ├── tiny-sandbox-guide.md      # Secure Python code execution via AST sandbox    [NEW 2026-07-23]
 │   ├── tiny-worker-guide.md       # Zero-dep background worker / job queue           [NEW 2026-07-23]
 │   └── tiny-events-guide.md       # Zero-dep event emitter — pub/sub pattern         [NEW 2026-07-23]
@@ -337,8 +338,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-memory](https://github.com/hussain-alsaibai/tiny-memory) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores, JSONL persistence | ⭐0 | Python |
 | [tiny-chain](https://github.com/hussain-alsaibai/tiny-chain) | Streaming LLM processor — retries, model fallbacks, function calling, JSON extraction, ~600 LOC zero deps | ⭐0 | Python |
 | [tiny-workflow](https://github.com/hussain-alsaibai/tiny-workflow) | Async DAG orchestrator — parallel steps, retry, approval gates, dead-letter queue, JSON state persistence | ⭐0 | Python |
+| [tiny-rate-limiter](https://github.com/hussain-alsaibai/tiny-rate-limiter) | Rate limiter — token bucket + leaky + sliding/fixed window, 5M ops/s, sync + async, ~400 LOC | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **45 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **46 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack).*
 
 ### 🆕 Latest additions (2026-07-29) — Scanner hardening + tiny-rbac + ecosystem count fix
 - **tiny-rbac** — new zero-dep RBAC/ABAC policy engine (deny-overrides, JSON policies, glob matching). Added tool guide: `tools/tiny-rbac-guide.md`.
