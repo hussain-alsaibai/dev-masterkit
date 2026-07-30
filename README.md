@@ -46,13 +46,13 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 16 | 2026-07-29 |
-| Prompts | 21 | 2026-07-23 |
+| Prompts | 23 | 2026-07-30 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 42 | 2026-07-29 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
-| Daily Updates | 35 | 2026-07-29 |
+| Daily Updates | 36 | 2026-07-30 |
 | tiny-* Ecosystem Repos | 45 | 2026-07-29 |
 
 ## Structure
@@ -83,7 +83,9 @@ dev-masterkit/
 │   ├── agent-boundary-contracts.md # Harden agent side-effect boundaries [NEW 2026-07-13]
 │   ├── chainable-redaction-wrapper.md # Preserve chat surfaces while redacting PII [NEW 2026-07-16]
 │   ├── external-bounty-clean-branch.md # Clean fork branch + handoff for PAT-blocked bounty PRs [NEW 2026-07-17]
-│   └── openclaw-self-version-check.md # Detect upstream OpenClaw updates without trusting stale install paths [NEW 2026-07-17]
+│   ├── openclaw-self-version-check.md # Detect upstream OpenClaw updates without trusting stale install paths [NEW 2026-07-17]
+│   ├── silent-failure-detection.md   # Monitoring design patterns — active probes vs state-file lies [NEW 2026-07-30]
+│   └── opire-scam-fingerprint.md     # Opire fork-scam detection (same-day accounts + Hello Bounty Hunter!) [NEW 2026-07-30]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -99,7 +101,21 @@ dev-masterkit/
 │   ├── bounty-scanner/          # Scan GitHub for official bounties (Algora/Opire)
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
-│   └── zero-dep-pattern/         # Single-file utility pattern
+│   ├── zero-dep-pattern/         # Single-file utility pattern
+│   ├── health-monitor/         # System health checks (gateway, webhook, disk)
+│   ├── working-memory/          # Session context persistence across restarts
+│   ├── repo-monitor/           # Monitor repo health (stars, issues, PRs)
+│   ├── self-reflection/        # Periodic self-improvement and lesson capture
+│   ├── code-verify/           # Verify generated code before commit
+│   ├── human-actor/            # Human-in-the-loop for critical actions
+│   ├── accountability/          # Daily commit tracking and accountability
+│   ├── fallback-notify/        # Multi-channel notification fallback
+│   ├── youtube-transcript/     # YouTube video transcription and summarization
+│   ├── youtube-analyzer/       # YouTube analytics and data extraction
+│   ├── youtube-api-skill/      # YouTube Data API v3 integration
+│   ├── duckduckgo-search/       # DuckDuckGo search integration
+│   ├── mcp-duckgo/             # DuckDuckGo MCP server
+│   └── pr-monitor/             # Watch open PRs for activity (comments, reviews, merges)
 ├── commands/                     # Chat commands
 │   ├── scaffold/                 # /scaffold — create repo
 │   ├── test/                     # /test — run test suite
