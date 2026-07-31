@@ -48,12 +48,12 @@ open skills/repo-creator/SKILL.md
 | Skills | 16 | 2026-07-29 |
 | Prompts | 25 | 2026-07-31 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 43 | 2026-07-30 |
+| Tool Guides | 45 | 2026-07-31 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 31 | 2026-07-23 |
 | Daily Updates | 37 | 2026-07-31 |
-| tiny-* Ecosystem Repos | 46 | 2026-07-30 |
+| tiny-* Ecosystem Repos | 48 | 2026-07-31 |
 
 ## Structure
 
