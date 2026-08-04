@@ -339,10 +339,19 @@ Production-tested tools and libraries built by this team:
 | [tiny-chain](https://github.com/hussain-alsaibai/tiny-chain) | Streaming LLM processor — retries, model fallbacks, function calling, JSON extraction, ~600 LOC zero deps | ⭐0 | Python |
 | [tiny-workflow](https://github.com/hussain-alsaibai/tiny-workflow) | Async DAG orchestrator — parallel steps, retry, approval gates, dead-letter queue, JSON state persistence | ⭐0 | Python |
 | [tiny-rate-limiter](https://github.com/hussain-alsaibai/tiny-rate-limiter) | Rate limiter — token bucket + leaky + sliding/fixed window, 5M ops/s, sync + async, ~400 LOC | ⭐0 | Python |
+| [tiny-task](https://github.com/hussain-alsaibai/tiny-task) | Durable JSONL task queue — priority, TTL, retries, multi-worker, zero deps | ⭐0 | Python |
+| [tiny-mcp-gateway](https://github.com/hussain-alsaibai/tiny-mcp-gateway) | MCP proxy/router — aggregate multiple MCP servers, route by tool prefix, auth + rate limiting | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **46 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **53 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack).*
 
-### 🆕 Latest additions (2026-08-03) — 3 new empty shell repos + stats refresh
+### 🆕 Latest additions (2026-08-04) — tiny-task + tiny-mcp-gateway + tiny-retry; ecosystem 51→53
+- **tiny-task** — Durable JSONL task queue (priority, TTL, retries, multi-worker). ~350 LOC · 11 tests · MIT. https://github.com/hussain-alsaibai/tiny-task
+- **tiny-mcp-gateway** — MCP proxy/router (multi-backend, route-by-prefix, auth + rate limiting). ~580 LOC · 24 tests · MIT. https://github.com/hussain-alsaibai/tiny-mcp-gateway
+- **tiny-retry** — Retry + circuit breaker (6 backoff strategies, jitter, async, CLOSED/OPEN/HALF_OPEN). ~280 LOC · 24 tests · MIT. https://github.com/hussain-alsaibai/tiny-retry
+- Fleet forms coherent agent stack: tiny-agent + tiny-mcp-client + tiny-mcp-gateway + tiny-task + tiny-retry. All populated repos PyPI-ready.
+- Tool Guides 46→48, tiny-* 51→53, Daily Updates 40→41.
+
+### 🆕 Previous additions (2026-08-03) — 3 new empty shell repos + stats refresh
 - **3 new tiny-* repos created:** `tiny-event-emitter`, `tiny-semver`, `tiny-circuit-breaker` — all empty shells (no README, LICENSE, or code yet). Remainder of today's session spent on bounty work (EdgeChains Qdrant vector DB JS SDK support). No new skills, tools, prompts, or verified patterns.
 - **Stats refreshed:** Daily Updates 39 → 40; tiny-* Ecosystem 48 → 51 (3 new + 3 active repos: tiny-mem, tiny-pipeline, tiny-sandbox). ecosystem count now accurate.
 
