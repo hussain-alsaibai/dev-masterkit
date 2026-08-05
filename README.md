@@ -46,7 +46,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 17 | 2026-08-02 |
-| Prompts | 25 | 2026-07-31 |
+| Prompts | 26 | 2026-08-05 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 45 | 2026-07-31 |
 | Agents | 3 | 2026-07-23 |
@@ -85,7 +85,8 @@ dev-masterkit/
 │   ├── external-bounty-clean-branch.md # Clean fork branch + handoff for PAT-blocked bounty PRs [NEW 2026-07-17]
 │   ├── openclaw-self-version-check.md # Detect upstream OpenClaw updates without trusting stale install paths [NEW 2026-07-17]
 │   ├── silent-failure-detection.md   # Monitoring design patterns — active probes vs state-file lies [NEW 2026-07-30]
-│   └── opire-scam-fingerprint.md     # Opire fork-scam detection (same-day accounts + Hello Bounty Hunter!) [NEW 2026-07-30]
+│   ├── opire-scam-fingerprint.md     # Opire fork-scam detection (same-day accounts + Hello Bounty Hunter!) [NEW 2026-07-30]
+│   └── bounty-freeze-detection.md     # Detect frozen/closed bounties before wasting effort [NEW 2026-08-05]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -296,6 +297,7 @@ dev-masterkit/
 | `chainable-redaction-wrapper` | Preserve chat surfaces while redacting PII | Adding a redaction layer around LLM/client APIs |
 | `external-bounty-clean-branch` | Prepare clean fork branches for bounty PR handoff | Local/fork work exists but PR automation is PAT-blocked |
 | `openclaw-self-version-check` | Detect OpenClaw updates without trusting stale install paths | Cron alerting on new releases; hardcoded install paths go stale |
+| `bounty-freeze-detection` | Detect frozen/resolved/stale bounties before wasting effort | Closed competing PRs, maintainer freeze language, saturation flags [NEW 2026-08-05] |
 
 ## 🏗️ Our Tools
 
