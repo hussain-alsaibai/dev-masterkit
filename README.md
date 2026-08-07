@@ -53,7 +53,8 @@ open skills/repo-creator/SKILL.md
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 49 | 2026-08-06 |
 | Daily Updates | 43 | 2026-08-06 |
-| tiny-* Ecosystem Repos | 54 | 2026-08-06 |
+| tiny-* Ecosystem Repos | 38 | 2026-08-07 |
+| Daily Updates | 44 | 2026-08-07 |
 
 ## Structure
 
@@ -195,7 +196,8 @@ dev-masterkit/
 │   ├── 2026-07-27.md             # July 27 update (health-monitor skill + bounty target)
 │   ├── 2026-07-28.md             # July 28 update (bounty re-scan, status-quo)
 │   └── 2026-07-29.md             # July 29 update (scanner hardening + pivot strategy)
-├── README.md
+│   └── 2026-08-07.md             # Aug 7 update (ecosystem count correction + cleanup)
+└── README.md
 └── LICENSE
 ```
 
@@ -344,7 +346,7 @@ Production-tested tools and libraries built by this team:
 | [tiny-task](https://github.com/hussain-alsaibai/tiny-task) | Durable JSONL task queue — priority, TTL, retries, multi-worker, zero deps | ⭐0 | Python |
 | [tiny-mcp-gateway](https://github.com/hussain-alsaibai/tiny-mcp-gateway) | MCP proxy/router — aggregate multiple MCP servers, route by tool prefix, auth + rate limiting | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **53 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack).*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
 ### 🆕 Latest additions (2026-08-04) — tiny-task + tiny-mcp-gateway + tiny-retry; ecosystem 51→53
 - **tiny-task** — Durable JSONL task queue (priority, TTL, retries, multi-worker). ~350 LOC · 11 tests · MIT. https://github.com/hussain-alsaibai/tiny-task
