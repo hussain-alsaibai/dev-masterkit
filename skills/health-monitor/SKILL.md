@@ -1,7 +1,5 @@
 # Health Monitor Skill
 
-> **Last verified:** 2026-07-27 (daily cron job active since Feb 2026)
-
 Automated system health monitoring with FalconEye integration.
 
 ## Features
