@@ -46,15 +46,14 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 33 | 2026-08-07 |
-| Prompts | 26 | 2026-08-05 |
+| Prompts | 28 | 2026-08-08 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 48 | 2026-08-06 |
+| Tool Guides | 51 | 2026-08-08 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 49 | 2026-08-06 |
-| Daily Updates | 43 | 2026-08-06 |
-| tiny-* Ecosystem Repos | 38 | 2026-08-07 |
-| Daily Updates | 44 | 2026-08-07 |
+| Daily Updates | 45 | 2026-08-08 |
+| tiny-* Ecosystem Repos | 48 | 2026-08-08 |
 
 ## Structure
 
@@ -228,9 +227,9 @@ dev-masterkit/
 | tiny-cron | APScheduler | 48/48 | — | 2026-07-05 |
 | tiny-flags | LaunchDarkly/Flagsmith | 59/59 | — | 2026-07-05 |
 | tiny-queue | Celery/RQ | 29/29 | — | 2026-07-05 |
-| tiny-metrics | prometheus_client | 32/32 | — | 2026-07-05 |
-| tiny-timeout | N/A (stdlib-only) | 21/21 | — | 2026-07-05 |
-| tiny-idempotency | N/A (Stripe-style) | 23/23 | — | 2026-07-05 |
+| tiny-metrics | prometheus_client | 21/21 | — | 2026-08-08 |
+| tiny-timeout | N/A (stdlib-only) | 14/14 | — | 2026-08-08 |
+| tiny-idempotency | N/A (Stripe-style) | 15/15 | — | 2026-08-08 |
 | tiny-budget | LiteLLM/LangSmith budget controls | 16/16 | — | 2026-07-06 |
 | tiny-eventbus | Redis Streams/EventEmitter middle tier | 17/17 | — | 2026-07-06 |
 | tiny-policy | OpenFGA/Cerbos/Cedar light tier | 19/19 | ~1.5 us/eval | 2026-07-07 |
@@ -254,7 +253,7 @@ dev-masterkit/
 | tiny-chain | LLM processor (streaming, retry, fallback, function calling) | ✅ | — | 2026-07-22 |
 | tiny-workflow | Async DAG orchestrator (approval gates, dead-letter queue) | ✅ | — | 2026-07-22 |
 
-*28 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~18,980 LOC lib + ~590 tests across the entire stack.*
+*48 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~22,000+ LOC lib + ~800+ tests across the entire stack.*
 
 ## Commands
 
