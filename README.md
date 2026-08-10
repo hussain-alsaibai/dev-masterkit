@@ -48,7 +48,7 @@ open skills/repo-creator/SKILL.md
 | Skills | 33 | 2026-08-07 |
 | Prompts | 28 | 2026-08-09 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 51 | 2026-08-09 |
+| Tool Guides | 52 | 2026-08-10 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 49 | 2026-08-06 |
@@ -132,6 +132,7 @@ dev-masterkit/
 ├── tools/                        # Tool guides and references
 │   ├── plugin-install-guide.md   # OpenClaw plugin setup
 │   ├── snapdb-guide.md           # SnapDB usage guide
+│   ├── snapdb-cli-guide.md        # SnapDB CLI tool guide
 │   ├── cost-tracker.md           # API cost tracking
 │   ├── tiny-config-guide.md      # Layered config loader (tiny-config)
 │   ├── tiny-cli-guide.md         # CLI builder (tiny-cli)
@@ -495,6 +496,7 @@ Production-tested tools and libraries built by this team:
 | [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-02 |
 | [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-02 |
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
+| [snapdb-cli Guide](tools/snapdb-cli-guide.md) | SnapDB CLI — init, insert, export, benchmark, watch | 2026-08-10 |
 | [tiny-config Guide](tools/tiny-config-guide.md) | Layered config loader (JSON/YAML/INI/.env/CLI) | 2026-07-02 |
 | [tiny-cli Guide](tools/tiny-cli-guide.md) | Click-style CLI builder with NO_COLOR | 2026-07-02 |
 | [tiny-log Guide](tools/tiny-log-guide.md) | Structured evidence logs and agent audit bundles | 2026-07-15 |
