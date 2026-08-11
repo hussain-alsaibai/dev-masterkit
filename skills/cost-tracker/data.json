@@ -1,0 +1,37 @@
+{
+  "userId": "1813960285",
+  "created": "2026-02-20T14:30:00Z",
+  "totalSessions": 47,
+  "totalCostUSD": 12.43,
+  "totalTokens": {
+    "input": 2230000,
+    "output": 1180000
+  },
+  "byModel": {
+    "anthropic/claude-sonnet-4-6": {
+      "calls": 23,
+      "cost": 8.92,
+      "tokens": {
+        "input": 850000,
+        "output": 195000
+      }
+    },
+    "synthetic/hf:moonshotai/Kimi-K2.5": {
+      "calls": 19,
+      "cost": 2.89,
+      "tokens": {
+        "input": 1200000,
+        "output": 850000
+      }
+    },
+    "google/gemini-2.5-flash-exp": {
+      "calls": 5,
+      "cost": 0.62,
+      "tokens": {
+        "input": 180000,
+        "output": 95000
+      }
+    }
+  },
+  "sessions": []
+}
