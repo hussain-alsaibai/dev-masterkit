@@ -15,7 +15,7 @@ This is a repo-level saturation gate — not per-issue. If the repo has a hot bo
 | Bounty | Issue | Competing PRs |
 |--------|-------|---------------|
 | Palm2 API (JS/TS) | #279 | **11 open PRs** |
-| Qdrant JS SDK | #273 | **9+ open PRs** |
+| Qdrant JS SDK | #273 | **7–9 open PRs** |
 | Comprehend API | #290 | **8 open PRs** |
 
 All three are on `arakoodev/EdgeChains`. Even though the Palm2 issue has no direct relation to Qdrant, the repo itself is saturated — skip the entire repo.
@@ -53,4 +53,4 @@ If you have a **mirror-shaped** implementation (your PR is substantially differe
 
 ## Last Verified
 
-2026-08-08 — EdgeChains saturation analysis on arakoodev/EdgeChains
+2026-08-11 — EdgeChains saturation re-check; Qdrant confirmed 7+ competing PRs, Palm2 11+, Comprehend 8+. Repo permanently saturated.
