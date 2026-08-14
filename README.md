@@ -45,14 +45,15 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 34 | 2026-08-14 |
+| Skills | 39 | 2026-08-11 |
 | Prompts | 30 | 2026-08-12 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 55 | 2026-08-14 |
+| Tool Guides | 52 | 2026-08-10 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Daily Updates | 51 | 2026-08-14 |
-| tiny-* Ecosystem Repos | 64 | 2026-08-14 |
+| Tools | 65 | 2026-08-14 |
+| Daily Updates | 50 | 2026-08-13 |
+| tiny-* Ecosystem Repos | 50 | 2026-08-13 |
 
 ## Structure
 
