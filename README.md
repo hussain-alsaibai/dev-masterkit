@@ -48,11 +48,11 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-08-11 |
 | Prompts | 30 | 2026-08-12 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 52 | 2026-08-10 |
+| Tool Guides | 72 | 2026-08-15 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 65 | 2026-08-14 |
-| Daily Updates | 50 | 2026-08-13 |
+| Daily Updates | 51 | 2026-08-15 |
 | tiny-* Ecosystem Repos | 50 | 2026-08-13 |
 
 ## Structure
@@ -519,6 +519,7 @@ Production-tested tools and libraries built by this team:
 | [tiny-memory Guide](tools/tiny-memory-guide.md) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores | 2026-07-22 |
 | [tiny-chain Guide](tools/tiny-chain-guide.md) | LLM streaming processor — retries, model fallbacks, function calling, JSON extraction | 2026-07-22 |
 | [tiny-workflow Guide](tools/tiny-workflow-guide.md) | Async DAG orchestrator — retry, approval gates, dead-letter queue, state persistence | 2026-07-22 |
+| [tiny-git-pr-workflow Guide](tools/tiny-git-pr-workflow-guide.md) | Cherry-pick workflow for external-repo PRs, fine-grained PAT setup, compare URL workaround | 2026-08-15 |
 
 ## Daily Updates
 
