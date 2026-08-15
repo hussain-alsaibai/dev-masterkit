@@ -53,7 +53,8 @@ open skills/repo-creator/SKILL.md
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 65 | 2026-08-14 |
 | Daily Updates | 51 | 2026-08-15 |
-| tiny-* Ecosystem Repos | 50 | 2026-08-13 |
+| tiny-* Ecosystem Repos | 53 | 2026-08-15 |
+| Additional hussain-alsaibai Repos | 2 | 2026-08-15 |
 
 ## Structure
 
@@ -345,10 +346,20 @@ Production-tested tools and libraries built by this team:
 | [tiny-rate-limiter](https://github.com/hussain-alsaibai/tiny-rate-limiter) | Rate limiter — token bucket + leaky + sliding/fixed window, 5M ops/s, sync + async, ~400 LOC | ⭐0 | Python |
 | [tiny-task](https://github.com/hussain-alsaibai/tiny-task) | Durable JSONL task queue — priority, TTL, retries, multi-worker, zero deps | ⭐0 | Python |
 | [tiny-mcp-gateway](https://github.com/hussain-alsaibai/tiny-mcp-gateway) | MCP proxy/router — aggregate multiple MCP servers, route by tool prefix, auth + rate limiting | ⭐0 | Python |
+| [tiny-mcp-observability](https://github.com/hussain-alsaibai/tiny-mcp-observability) | MCP server tracing, metrics, span recording — zero deps, 550 LOC | ⭐0 | Python |
+| [dev-tools-comparison](https://github.com/hussain-alsaibai/dev-tools-comparison) | Head-to-head benchmarks: tiny-* vs industry alternatives across 10 categories | ⭐0 | Markdown |
+| [dev-tooling-trends-2026](https://github.com/hussain-alsaibai/dev-tooling-trends-2026) | Living report on AI agent tooling, MCP, A2A, zero-dep ecosystem trends | ⭐0 | Markdown |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 active libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
-### 🆕 Latest additions (2026-08-04) — tiny-task + tiny-mcp-gateway + tiny-retry; ecosystem 51→53
+### 🆕 Latest additions (2026-08-15) — tiny-mcp-observability + dev-tools-comparison + dev-tooling-trends-2026
+- **tiny-mcp-observability** — MCP server tracing, metrics, span recording for AI pipelines (550 LOC, zero deps, MIT). https://github.com/hussain-alsaibai/tiny-mcp-observability
+- **dev-tools-comparison** — Head-to-head benchmarks across 10 categories (fast-cache vs diskcache, tiny-log vs loguru, tiny-validator vs pydantic, tiny-router vs FastAPI). Full dependency cost + cold-start analysis. https://github.com/hussain-alsaibai/dev-tools-comparison
+- **dev-tooling-trends-2026** — Living report on AI agent tooling landscape. MCP-native observability, A2A, zero-dep trends, ecosystem status (53 repos). https://github.com/hussain-alsaibai/dev-tooling-trends-2026
+- 2 new tool guides added (tiny-mcp-observability-guide, dev-tools-comparison-guide)
+- Tool Guides 71 → 73; tiny-* Ecosystem 50 → 53
+
+### Previous additions (2026-08-04) — tiny-task + tiny-mcp-gateway + tiny-retry; ecosystem 51→53
 - **tiny-task** — Durable JSONL task queue (priority, TTL, retries, multi-worker). ~350 LOC · 11 tests · MIT. https://github.com/hussain-alsaibai/tiny-task
 - **tiny-mcp-gateway** — MCP proxy/router (multi-backend, route-by-prefix, auth + rate limiting). ~580 LOC · 24 tests · MIT. https://github.com/hussain-alsaibai/tiny-mcp-gateway
 - **tiny-retry** — Retry + circuit breaker (6 backoff strategies, jitter, async, CLOSED/OPEN/HALF_OPEN). ~280 LOC · 24 tests · MIT. https://github.com/hussain-alsaibai/tiny-retry
