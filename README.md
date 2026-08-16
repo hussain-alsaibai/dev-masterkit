@@ -46,7 +46,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 39 | 2026-08-11 |
-| Prompts | 30 | 2026-08-12 |
+| Prompts | 31 | 2026-08-16 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 72 | 2026-08-15 |
 | Agents | 3 | 2026-07-23 |
@@ -301,6 +301,7 @@ dev-masterkit/
 | `external-bounty-clean-branch` | Prepare clean fork branches for bounty PR handoff | Local/fork work exists but PR automation is PAT-blocked |
 | `openclaw-self-version-check` | Detect OpenClaw updates without trusting stale install paths | Cron alerting on new releases; hardcoded install paths go stale |
 | `bounty-freeze-detection` | Detect frozen/resolved/stale bounties before wasting effort | Closed competing PRs, maintainer freeze language, saturation flags [NEW 2026-08-05] |
+| `bounty-pat-fine-grained-fixes` | Fine-grained PAT fix for cross-repo PR creation | Every new external repo needs explicit access grant in PAT settings [NEW 2026-08-16] |
 
 ## 🏗️ Our Tools
 
@@ -351,6 +352,11 @@ Production-tested tools and libraries built by this team:
 | [dev-tooling-trends-2026](https://github.com/hussain-alsaibai/dev-tooling-trends-2026) | Living report on AI agent tooling, MCP, A2A, zero-dep ecosystem trends | ⭐0 | Markdown |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
+
+### 🆕 Latest additions (2026-08-16) — bounty-pat-fine-grained-fixes prompt + Qdrant impl verified
+- **`bounty-pat-fine-grained-fixes.md`** prompt added — Full PAT fix procedure for cross-repo PR creation: add repo under "Repository access" in fine-grained token settings + Contents + Pull requests permissions. Prevention strategy: dedicated `GITHAIN_BOUNTY_PAT` pre-seeded with all known Algora target repos. Web compare URL workaround documented.
+- **Qdrant EdgeChains implementation verified complete** — Branch `pr/qdrant-273` pushed with +1960/−64 across 11 files. `npm run build` + `npm test` pass cleanly vs upstream/ts. GitHub compare URL shows "Able to merge." PR creation still blocked by fine-grained PAT; fix procedure now documented (see prompt above).
+- Prompts: 30 → 31; Daily Updates: 51 → 52
 
 ### 🆕 Latest additions (2026-08-15) — tiny-mcp-observability + dev-tools-comparison + dev-tooling-trends-2026
 - **tiny-mcp-observability** — MCP server tracing, metrics, span recording for AI pipelines (550 LOC, zero deps, MIT). https://github.com/hussain-alsaibai/tiny-mcp-observability
