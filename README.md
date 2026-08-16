@@ -48,13 +48,13 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-08-11 |
 | Prompts | 31 | 2026-08-16 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 72 | 2026-08-15 |
+| Tool Guides | 77 | 2026-08-16 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 65 | 2026-08-14 |
-| Daily Updates | 51 | 2026-08-15 |
+| Daily Updates | 52 | 2026-08-16 |
 | tiny-* Ecosystem Repos | 53 | 2026-08-15 |
-| Additional hussain-alsaibai Repos | 2 | 2026-08-15 |
+| Additional hussain-alsaibai Repos | 5 | 2026-08-16 |
 
 ## Structure
 
@@ -348,21 +348,25 @@ Production-tested tools and libraries built by this team:
 | [tiny-task](https://github.com/hussain-alsaibai/tiny-task) | Durable JSONL task queue — priority, TTL, retries, multi-worker, zero deps | ⭐0 | Python |
 | [tiny-mcp-gateway](https://github.com/hussain-alsaibai/tiny-mcp-gateway) | MCP proxy/router — aggregate multiple MCP servers, route by tool prefix, auth + rate limiting | ⭐0 | Python |
 | [tiny-mcp-observability](https://github.com/hussain-alsaibai/tiny-mcp-observability) | MCP server tracing, metrics, span recording — zero deps, 550 LOC | ⭐0 | Python |
+| [agent-security-patterns-2026](https://github.com/hussain-alsaibai/agent-security-patterns-2026) | AI agent threat model, attacks (injection, poisoning, exhaustion, exfil), defense patterns | ⭐0 | Markdown |
+| [mcp-server-registry](https://github.com/hussain-alsaibai/mcp-server-registry) | Curated MCP server catalog — categorized by GitHub, DB, Web, Slack, Notion, AWS | ⭐0 | Markdown |
+| [agent-architecture-patterns-2026](https://github.com/hussain-alsaibai/agent-architecture-patterns-2026) | 7 battle-tested patterns for production agents — ReAct, sub-agent, DAG, streaming, memory, budget, fleet | ⭐0 | Markdown |
 | [dev-tools-comparison](https://github.com/hussain-alsaibai/dev-tools-comparison) | Head-to-head benchmarks: tiny-* vs industry alternatives across 10 categories | ⭐0 | Markdown |
 | [dev-tooling-trends-2026](https://github.com/hussain-alsaibai/dev-tooling-trends-2026) | Living report on AI agent tooling, MCP, A2A, zero-dep ecosystem trends | ⭐0 | Markdown |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
-### 🆕 Latest additions (2026-08-16) — bounty-pat-fine-grained-fixes prompt + Qdrant impl verified
-- **`bounty-pat-fine-grained-fixes.md`** prompt added — Full PAT fix procedure for cross-repo PR creation: add repo under "Repository access" in fine-grained token settings + Contents + Pull requests permissions. Prevention strategy: dedicated `GITHAIN_BOUNTY_PAT` pre-seeded with all known Algora target repos. Web compare URL workaround documented.
-- **Qdrant EdgeChains implementation verified complete** — Branch `pr/qdrant-273` pushed with +1960/−64 across 11 files. `npm run build` + `npm test` pass cleanly vs upstream/ts. GitHub compare URL shows "Able to merge." PR creation still blocked by fine-grained PAT; fix procedure now documented (see prompt above).
-- Prompts: 30 → 31; Daily Updates: 51 → 52
+### 🆕 Latest additions (2026-08-16) — bounty + 3 knowledge-base repos
+- **Qdrant EdgeChains impl verified complete** — Branch `pr/qdrant-273` pushed (+1960/−64, 11 files). `npm run build` + `npm test` pass. GitHub compare shows "Able to merge." PR blocked by fine-grained PAT; fix procedure documented.
+- **agent-security-patterns-2026** — AI agent threat model, attack taxonomy (prompt injection, tool poisoning, resource exhaustion, exfil), defense patterns. MIT. https://github.com/hussain-alsaibai/agent-security-patterns-2026
+- **mcp-server-registry** — Curated MCP server catalog by category with TL;DR top picks. MIT. https://github.com/hussain-alsaibai/mcp-server-registry
+- **agent-architecture-patterns-2026** — 7 battle-tested production patterns (ReAct, sub-agent, DAG, streaming, memory, budget-gated, fleet). MIT. https://github.com/hussain-alsaibai/agent-architecture-patterns-2026
+- 3 new tool guides added; Tool Guides 73 → 77; Additional repos 2 → 5; Daily Updates 51 → 52
 
 ### 🆕 Latest additions (2026-08-15) — tiny-mcp-observability + dev-tools-comparison + dev-tooling-trends-2026
 - **tiny-mcp-observability** — MCP server tracing, metrics, span recording for AI pipelines (550 LOC, zero deps, MIT). https://github.com/hussain-alsaibai/tiny-mcp-observability
 - **dev-tools-comparison** — Head-to-head benchmarks across 10 categories (fast-cache vs diskcache, tiny-log vs loguru, tiny-validator vs pydantic, tiny-router vs FastAPI). Full dependency cost + cold-start analysis. https://github.com/hussain-alsaibai/dev-tools-comparison
 - **dev-tooling-trends-2026** — Living report on AI agent tooling landscape. MCP-native observability, A2A, zero-dep trends, ecosystem status (53 repos). https://github.com/hussain-alsaibai/dev-tooling-trends-2026
-- 2 new tool guides added (tiny-mcp-observability-guide, dev-tools-comparison-guide)
 - Tool Guides 71 → 73; tiny-* Ecosystem 50 → 53
 
 ### Previous additions (2026-08-04) — tiny-task + tiny-mcp-gateway + tiny-retry; ecosystem 51→53
