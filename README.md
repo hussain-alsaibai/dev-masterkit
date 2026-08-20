@@ -48,12 +48,12 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-08-11 |
 | Prompts | 31 | 2026-08-16 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 78 | 2026-08-17 |
+| Tool Guides | 79 | 2026-08-20 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 65 | 2026-08-14 |
 | Daily Updates | 55 | 2026-08-19 |
-| tiny-* Ecosystem Repos | 54 | 2026-08-17 |
+| tiny-* Ecosystem Repos | 55 | 2026-08-20 |
 | Additional hussain-alsaibai Repos | 6 | 2026-08-17 |
 
 ## Structure
