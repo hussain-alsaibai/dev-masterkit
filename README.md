@@ -48,13 +48,13 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-08-11 |
 | Prompts | 32 | 2026-08-24 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 79 | 2026-08-20 |
+| Tool Guides | 81 | 2026-08-24 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 65 | 2026-08-14 |
 | Daily Updates | 57 | 2026-08-22 |
-| tiny-* Ecosystem Repos | 55 | 2026-08-20 |
-| Additional hussain-alsaibai Repos | 6 | 2026-08-17 |
+| tiny-* Ecosystem Repos | 57 | 2026-08-24 |
+| Additional hussain-alsaibai Repos | 8 | 2026-08-24 |
 
 ## Structure
 
@@ -353,6 +353,8 @@ Production-tested tools and libraries built by this team:
 | [agent-architecture-patterns-2026](https://github.com/hussain-alsaibai/agent-architecture-patterns-2026) | 7 battle-tested patterns for production agents — ReAct, sub-agent, DAG, streaming, memory, budget, fleet | ⭐0 | Markdown |
 | [dev-tools-comparison](https://github.com/hussain-alsaibai/dev-tools-comparison) | Head-to-head benchmarks: tiny-* vs industry alternatives across 10 categories | ⭐0 | Markdown |
 | [dev-tooling-trends-2026](https://github.com/hussain-alsaibai/dev-tooling-trends-2026) | Living report on AI agent tooling, MCP, A2A, zero-dep ecosystem trends | ⭐0 | Markdown |
+| [tiny-cost](https://github.com/hussain-alsaibai/tiny-cost) | Token cost tracking + budget enforcement for Python agents — built-in pricing, circuit breaker, zero deps | ⭐0 | Python |
+| [tiny-mcp-server](https://github.com/hussain-alsaibai/tiny-mcp-server) | Build MCP servers with @tool decorator — stdio + SSE transports, auto JSON Schema, zero deps | ⭐0 | Python |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
