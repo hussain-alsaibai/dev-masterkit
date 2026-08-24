@@ -46,7 +46,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 39 | 2026-08-11 |
-| Prompts | 31 | 2026-08-16 |
+| Prompts | 32 | 2026-08-24 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 79 | 2026-08-20 |
 | Agents | 3 | 2026-07-23 |

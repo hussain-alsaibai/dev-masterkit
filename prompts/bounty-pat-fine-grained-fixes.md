@@ -1,7 +1,7 @@
 # Bounty PAT Fine-Grained Token Fix Procedure
 
 **Created:** 2026-08-16
-**Last verified:** 2026-08-16
+**Last verified:** 2026-08-24
 **Author:** OpenClaw / hussain-alsaibai
 **Source:** Resolved Qdrant EdgeChains bounty — arakoodev/EdgeChains#273
 
@@ -19,7 +19,13 @@ GitHub fine-grained Personal Access Tokens (PATs) return:
 
 ### Root Cause
 
-A fine-grained PAT with `pull_request: write` **still requires the upstream repo to be explicitly listed** under "Repository access" in the token settings. Without it, GitHub rejects the action at the access-control layer — before permission checking.
+A fine-grained PAT with `pull_request: write` **still requires the upstream repo to be explicitly listed** under "Repository access" in the token settings.
+
+> **⚠️ Scope applies to ALL endpoints including Search API:** The `/search/issues` endpoint
+> (used for competition counts — counting open PRs on a target repo) ALSO requires the repo to be
+> explicitly added. Without it, competition counts return `403` even though `Contents` and
+> `Pull requests` permissions are set. Add `Search: Read-only` scope AND add the repo to
+> "Repository access" to get full competition data. Without it, GitHub rejects the action at the access-control layer — before permission checking.
 
 This manifests on **every new external repo** until the token owner manually adds it.
 

@@ -68,8 +68,7 @@ Uses `hussain-alsaibai` token from `~/.git-credentials` automatically.
 - **2026-07-14:** Daily bounty run scanned 336 official issues; 240 filtered by anti-scam heuristics. Top 5 candidates all saturated or out-of-skill-stack. The saturation-floor masking pattern recurred (top candidates converged to the same score), confirming it as a stable scanner calibration debt rather than a one-off. Decision: skip per `prompts/bounty-saturation-pat-blocked-skip.md`. No code committed, no PR API calls. Existing parked branches remain parked: `hussain-alsaibai/EdgeChains:ts @ d0ceb72a` (Qdrant) and `hussain-alsaibai/gitea:feat/commit-inline-comments-4898 @ c50dffec5a`.
 - **2026-07-15:** Daily bounty run scanned 336 total issues, 334 with dollar markers, and rejected 241 through the anti-scam / hard-filter path. Top 9 were unchanged in shape from the prior saturated queue: implemented Qdrant and Gitea branches still parked, non-implemented top candidates had at least 3 open PRs or were out-of-stack, and a fresh PR probe still returned `403 Resource not accessible by personal access token`. Decision: skip per `prompts/bounty-saturation-pat-blocked-skip.md`. No new fork, no new commits, no PR API calls.
 - **2026-07-25:** Daily bounty run scanned top 5 candidates — all from `Vikingr2023/awesome-agent-bounties` aggregator, all pointing to stub repos. Example: `MurphyThomas87/go-redis` — only `README.md` + `main.go` (`fmt.Println("Hello, Bounty Hunter!")`), no `pubsub.go`, no actual Redis code. Created ~2026-07-12, single commit. 2 users already claimed (code-cannot-be-blank, Zubi-fix). Same pattern across all 5: young_repo + zero implementation. Verdict: NOT WORKABLE. Added `Vikingr2023/awesome-agent-bounties` + stub-fork pattern to scam blocklist. Added file-existence gate recommendation. No valid bounty found today.
-
-## Known Calibration Debt
+- **2026-08-24:** Parallel batch scoring fix applied. Sequential forEach loop (250 issues × 3 API calls) was hanging indefinitely. Replaced with `pMap(items, fn, 10)` using native `https.get` + `Promise.all`. Runtime: ~25s (vs. hanging). Also fixed: `httpGet` helper was NOT passing token to `https.get` — competition search (`/search/issues`) returned 401s for all candidates. Token injection confirmed broken for parallel code path. Competition counts still show 0 due to GitHub fine-grained PAT requiring explicit repo addition for search API (not just repo read endpoints). Scanner healthy, no actionable bounty found today.
 
 The scanner's `top N` output is not actionable when every candidate bottoms
 out at the same competition score. The saturation-floor masking pattern is
@@ -85,4 +84,4 @@ When this pattern appears:
    even at lower raw scores, or (b) attach an explicit `saturated_warning`
    flag so the human caller can decide whether to override.
 
-## Last Verified: 2026-07-25
+## Last Verified: 2026-08-24
