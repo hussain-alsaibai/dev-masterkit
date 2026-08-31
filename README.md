@@ -48,13 +48,13 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-08-11 |
 | Prompts | 33 | 2026-08-29 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 91 | 2026-08-30 |
+| Tool Guides | 93 | 2026-08-31 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 65 | 2026-08-14 |
 | Daily Updates | 67 | 2026-08-30 |
 | Reports | 16 | 2026-08-30 |
-| tiny-* Ecosystem Repos | 87 | 2026-08-28 |
+| tiny-* Ecosystem Repos | 90 | 2026-08-31 |
 | Additional hussain-alsaibai Repos | 18 | 2026-08-27 |
 
 ## Structure
@@ -255,8 +255,11 @@ dev-masterkit/
 | tiny-memory | Agent memory (BM25+TF-IDF, Semantic/Episodic/Declarative) | ✅ | — | 2026-07-22 |
 | tiny-chain | LLM processor (streaming, retry, fallback, function calling) | ✅ | — | 2026-07-22 |
 | tiny-workflow | Async DAG orchestrator (approval gates, dead-letter queue) | ✅ | — | 2026-07-22 |
+| tiny-semantic-cache | Vector-similarity cache (BM25+cosine, auto-threshold, TTL+LRU) | 38/38 | — | 2026-08-31 |
+| tiny-workflow-engine | Async DAG (parallel, retry, approval gates, DLQ, state persistence) | 40/40 | — | 2026-08-31 |
+| tiny-ai-workflow | Step-function AI pipeline (sequence/parallel/conditional/loop/error) | 12/12 | — | 2026-08-31 |
 
-*48 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~22,000+ LOC lib + ~800+ tests across the entire stack.*
+*51 zero-dep libraries total. Built with the `zero-dep-pattern` and `repo-creator` skills. ~22,000+ LOC lib + ~800+ tests across the entire stack.*
 
 ## Commands
 
@@ -349,6 +352,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-task](https://github.com/hussain-alsaibai/tiny-task) | Durable JSONL task queue — priority, TTL, retries, multi-worker, zero deps | ⭐0 | Python |
 | [tiny-mcp-gateway](https://github.com/hussain-alsaibai/tiny-mcp-gateway) | MCP proxy/router — aggregate multiple MCP servers, route by tool prefix, auth + rate limiting | ⭐0 | Python |
 | [tiny-mcp-observability](https://github.com/hussain-alsaibai/tiny-mcp-observability) | MCP server tracing, metrics, span recording — zero deps, 550 LOC | ⭐0 | Python |
+| [tiny-semantic-cache](https://github.com/hussain-alsaibai/tiny-semantic-cache) | Vector-similarity cache — BM25+cosine scoring, auto-threshold, TTL+LRU eviction | ⭐0 | Python |
+| [tiny-workflow-engine](https://github.com/hussain-alsaibai/tiny-workflow-engine) | Async DAG orchestrator — parallel steps, retry, approval gates, DLQ, JSON state persistence | ⭐0 | Python |
+| [tiny-ai-workflow](https://github.com/hussain-alsaibai/tiny-ai-workflow) | Step-function AI pipeline — sequence, parallel, conditional, loop, error-handling | ⭐0 | Python |
 | [agent-security-patterns-2026](https://github.com/hussain-alsaibai/agent-security-patterns-2026) | AI agent threat model, attacks (injection, poisoning, exhaustion, exfil), defense patterns | ⭐0 | Markdown |
 | [mcp-server-registry](https://github.com/hussain-alsaibai/mcp-server-registry) | Curated MCP server catalog — categorized by GitHub, DB, Web, Slack, Notion, AWS | ⭐0 | Markdown |
 | [agent-architecture-patterns-2026](https://github.com/hussain-alsaibai/agent-architecture-patterns-2026) | 7 battle-tested patterns for production agents — ReAct, sub-agent, DAG, streaming, memory, budget, fleet | ⭐0 | Markdown |
@@ -357,9 +363,16 @@ Production-tested tools and libraries built by this team:
 | [tiny-cost](https://github.com/hussain-alsaibai/tiny-cost) | Token cost tracking + budget enforcement for Python agents — built-in pricing, circuit breaker, zero deps | ⭐0 | Python |
 | [tiny-mcp-server](https://github.com/hussain-alsaibai/tiny-mcp-server) | Build MCP servers with @tool decorator — stdio + SSE transports, auto JSON Schema, zero deps | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **38 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~22,000+ LOC lib + ~800+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **41 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~23,800+ LOC lib + ~890+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
-### 🆕 Latest additions (2026-08-16) — bounty + 3 knowledge-base repos
+### 🆕 Latest additions (2026-08-31) — tiny-semantic-cache + tiny-workflow-engine + tiny-ai-workflow
+- **tiny-semantic-cache** — Vector-similarity cache with BM25+cosine scoring, auto-threshold, TTL, LRU eviction. ~580 LOC · 38 tests · MIT. https://github.com/hussain-alsaibai/tiny-semantic-cache
+- **tiny-workflow-engine** — Async DAG orchestrator with parallel steps, retry, approval gates, DLQ, JSON state persistence. ~900 LOC · 40 tests · MIT. https://github.com/hussain-alsaibai/tiny-workflow-engine
+- **tiny-ai-workflow** — Step-function workflow engine for AI pipelines (sequence, parallel, conditional, loop, error-handling). ~550 LOC · 12 tests · MIT. https://github.com/hussain-alsaibai/tiny-ai-workflow
+- 3 new tiny-* repos added; tiny-* Ecosystem 87 → 90; Daily Updates 67 → 68
+- Bounty: Rumixyz/zio#2 (`actions/create-github-app` version bump) — selected for implementation
+
+### 🆕 Previous additions (2026-08-16) — bounty + 3 knowledge-base repos
 - **Qdrant EdgeChains impl verified complete** — Branch `pr/qdrant-273` pushed (+1960/−64, 11 files). `npm run build` + `npm test` pass. GitHub compare shows "Able to merge." PR blocked by fine-grained PAT; fix procedure documented.
 - **agent-security-patterns-2026** — AI agent threat model, attack taxonomy (prompt injection, tool poisoning, resource exhaustion, exfil), defense patterns. MIT. https://github.com/hussain-alsaibai/agent-security-patterns-2026
 - **mcp-server-registry** — Curated MCP server catalog by category with TL;DR top picks. MIT. https://github.com/hussain-alsaibai/mcp-server-registry
