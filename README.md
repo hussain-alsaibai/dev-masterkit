@@ -2,7 +2,14 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
-## Features
+### 🆕 Latest additions (2026-09-11 / 2026-09-13 sync) — 3 ships + Agent Skills runtime
+- **tiny-agentskills v0.1.0** — Zero-dep Python runtime for Anthropic-style SKILL.md bundles. ~17 KB, 20 tests, MIT. https://github.com/hussain-alsaibai/tiny-agentskills
+- **tiny-router v0.1.0 → v0.4.0** — Force-push to align GitHub main with local v0.3.0 unreleased features (async handlers, FastAPI-style `Depends()`, structured errors). https://github.com/hussain-alsaibai/tiny-router
+- **dev-tools-trends-2026-q3** — 14.5 KB / 320-line Q3 trend report. 10 shifts that mattered: Agent Skills graduated, tiny-* ecosystem hit 65 repos, eval-driven dev routine, prompt-injection #1 incident class, autonomous engineers crossed the production line, bounty-driven dev emerged as a category, MCP remote servers shipped by Stripe/Figma/Supabase/Notion, LiveCodeBench became contamination-free standard, CRAB multimodal benchmark landed, Edge0 35B@2.5GB on-device inference. https://github.com/hussain-alsaibai/dev-tools-trends-2026-q3
+- **`agent-skills-runtime` prompt** — Build executable SKILL.md bundles with zero-dep Python runtime. Used to package expertise into Agent Skills bundles (Anthropic-style). Last verified 2026-09-11.
+- Daily Updates 76 → 80 (backfilled Sep 10/11/12/13); Tool Guides 96 → 99; Prompts 33 → 34; tiny-* Ecosystem 93 → 94; Additional hussain-alsaibai Repos 18 → 20.
+
+### 🆕 Previous additions (2026-09-05) — tiny-agent-memory-v2 + tiny-bounty-workflow
 
 - 🏗️ **Repository Scaffolding** — Create zero-dependency Python projects with modern `pyproject.toml` packaging
 - 🧪 **Test Automation** — Generate comprehensive unittest suites with mocking, edge cases, and error conditions
@@ -45,17 +52,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-08-11 |
-| Prompts | 34 | 2026-09-11 |
+| Skills | 39 | 2026-09-13 |
+| Prompts | 35 | 2026-09-13 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 96 | 2026-09-01 |
+| Tool Guides | 99 | 2026-09-13 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 65 | 2026-08-14 |
-| Daily Updates | 77 | 2026-09-11 |
+| Tools | 65 | 2026-09-13 |
+| Daily Updates | 80 | 2026-09-13 |
 | Reports | 16 | 2026-08-30 |
-| tiny-* Ecosystem Repos | 93 | 2026-09-01 |
-| Additional hussain-alsaibai Repos | 18 | 2026-09-01 |
+| tiny-* Ecosystem Repos | 94 | 2026-09-13 |
+| Additional hussain-alsaibai Repos | 20 | 2026-09-13 |
 
 ## Structure
 
@@ -307,6 +314,7 @@ dev-masterkit/
 | `openclaw-self-version-check` | Detect OpenClaw updates without trusting stale install paths | Cron alerting on new releases; hardcoded install paths go stale |
 | `bounty-freeze-detection` | Detect frozen/resolved/stale bounties before wasting effort | Closed competing PRs, maintainer freeze language, saturation flags [NEW 2026-08-05] |
 | `bounty-pat-fine-grained-fixes` | Fine-grained PAT fix for cross-repo PR creation | Every new external repo needs explicit access grant in PAT settings [NEW 2026-08-16] |
+| `agent-skills-runtime` | Build executable SKILL.md bundles with zero-dep Python runtime | Packaging expertise into Agent Skills bundles (Anthropic-style) [NEW 2026-09-11] |
 
 ## 🏗️ Our Tools
 
@@ -558,6 +566,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-chain Guide](tools/tiny-chain-guide.md) | LLM streaming processor — retries, model fallbacks, function calling, JSON extraction | 2026-07-22 |
 | [tiny-workflow Guide](tools/tiny-workflow-guide.md) | Async DAG orchestrator — retry, approval gates, dead-letter queue, state persistence | 2026-07-22 |
 | [tiny-git-pr-workflow Guide](tools/tiny-git-pr-workflow-guide.md) | Cherry-pick workflow for external-repo PRs, fine-grained PAT setup, compare URL workaround | 2026-08-15 |
+| [tiny-agentskills Guide](tools/tiny-agentskills-guide.md) | Zero-dep Python runtime for Anthropic-style SKILL.md bundles (v0.1.0) | 2026-09-11 |
+| [tiny-router v0.4 Guide](tools/tiny-router-v0.4-guide.md) | Async + `Depends()` + structured errors (v0.4.0 force-push) | 2026-09-11 |
+| [dev-tools-trends-2026-q3 Guide](tools/dev-tools-trends-2026-q3-guide.md) | 10 shifts that mattered for dev tools in Q3 2026 | 2026-09-11 |
 
 ## Daily Updates
 
