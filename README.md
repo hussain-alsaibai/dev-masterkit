@@ -2,7 +2,15 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
-### 🆕 Latest additions (2026-09-11 / 2026-09-13 sync) — 3 ships + Agent Skills runtime
+### 🆕 Latest additions (2026-09-17 sync) — 4 Sep 14-16 ships backfilled
+- **`tiny-budget-ledger` v0.1.0** — File-backed per-task spend ledger (USD + token caps, append-only JSONL, crash-safe, async wrapper). 16/16 tests, MIT, ~7 KB. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-budget-ledger
+- **`tiny-trace-otel` v0.1.0** — Stdlib-only OTLP/HTTP tracing exporter (W3C trace context, batching, Honeycomb/SigNoz/Grafana/Datadog compatible). 25/25 tests, MIT, ~440 LOC. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-trace-otel
+- **`tiny-llm-router` v0.1.0** — Zero-dep model router with cost caps, latency p95, circuit-breakers, 6 role presets (code/think/vision/long/json/default). 14/14 tests, 303K picks/sec, bench 3.3µs/pick. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-llm-router
+- **`tiny-cli-table` v1.1.0** — `to_csv()` + `auto_color_columns_by_name()` added to existing renderer. 99/99 tests, 94% coverage. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-cli-table
+- Daily Updates 80 → 81; Tool Guides 99 → 103; tiny-* Ecosystem 94 → 98 (+4 verified ships).
+- Quiet day overall — bounty scanner re-picked stale Rumixyz/zio #2 (6 days running, 0-for-6, picker should rotate).
+
+### 🆕 Previous additions (2026-09-11 / 2026-09-13 sync) — 3 ships + Agent Skills runtime
 - **tiny-agentskills v0.1.0** — Zero-dep Python runtime for Anthropic-style SKILL.md bundles. ~17 KB, 20 tests, MIT. https://github.com/hussain-alsaibai/tiny-agentskills
 - **tiny-router v0.1.0 → v0.4.0** — Force-push to align GitHub main with local v0.3.0 unreleased features (async handlers, FastAPI-style `Depends()`, structured errors). https://github.com/hussain-alsaibai/tiny-router
 - **dev-tools-trends-2026-q3** — 14.5 KB / 320-line Q3 trend report. 10 shifts that mattered: Agent Skills graduated, tiny-* ecosystem hit 65 repos, eval-driven dev routine, prompt-injection #1 incident class, autonomous engineers crossed the production line, bounty-driven dev emerged as a category, MCP remote servers shipped by Stripe/Figma/Supabase/Notion, LiveCodeBench became contamination-free standard, CRAB multimodal benchmark landed, Edge0 35B@2.5GB on-device inference. https://github.com/hussain-alsaibai/dev-tools-trends-2026-q3
@@ -55,13 +63,13 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-09-13 |
 | Prompts | 35 | 2026-09-13 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 99 | 2026-09-13 |
+| Tool Guides | 103 | 2026-09-17 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 65 | 2026-09-13 |
-| Daily Updates | 80 | 2026-09-13 |
+| Tools | 98 | 2026-09-17 |
+| Daily Updates | 81 | 2026-09-17 |
 | Reports | 16 | 2026-08-30 |
-| tiny-* Ecosystem Repos | 94 | 2026-09-13 |
+| tiny-* Ecosystem Repos | 98 | 2026-09-17 |
 | Additional hussain-alsaibai Repos | 20 | 2026-09-13 |
 
 ## Structure
