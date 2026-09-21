@@ -2,7 +2,13 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
-### 🆕 Latest additions (2026-09-17 sync) — 4 Sep 14-16 ships backfilled
+### 🆕 Latest additions (2026-09-21 sync) — gap-fill backfill (Sep 14–20) + today
+- Quiet day — no new ships, repos, prompts, skills, or tool guides.
+- Dev-masterkit divergence resolved: local carried 2 unpushed commits (Sep 18 + Sep 20 syncs) while origin had a parallel Sep 17 sync. Reset local to `origin/main` and recreated the lost backfill updates in a single commit.
+- Backfilled daily updates for Sep 14, 15, 16, 18, 19, 20 (all quiet-day / ship-doc entries) + today.
+- Daily Updates 81 → 88 (+7). All other counts unchanged (Skills 39, Prompts 35, Tool Guides 103, tiny-* 98, Repos 24).
+
+### 🆕 Previous additions (2026-09-17 sync) — 4 Sep 14-16 ships backfilled
 - **`tiny-budget-ledger` v0.1.0** — File-backed per-task spend ledger (USD + token caps, append-only JSONL, crash-safe, async wrapper). 16/16 tests, MIT, ~7 KB. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-budget-ledger
 - **`tiny-trace-otel` v0.1.0** — Stdlib-only OTLP/HTTP tracing exporter (W3C trace context, batching, Honeycomb/SigNoz/Grafana/Datadog compatible). 25/25 tests, MIT, ~440 LOC. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-trace-otel
 - **`tiny-llm-router` v0.1.0** — Zero-dep model router with cost caps, latency p95, circuit-breakers, 6 role presets (code/think/vision/long/json/default). 14/14 tests, 303K picks/sec, bench 3.3µs/pick. Last verified 2026-09-17. https://github.com/hussain-alsaibai/tiny-llm-router
@@ -60,17 +66,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-09-13 |
-| Prompts | 35 | 2026-09-13 |
+| Skills | 39 | 2026-09-21 |
+| Prompts | 35 | 2026-09-21 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 103 | 2026-09-17 |
+| Tool Guides | 103 | 2026-09-21 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-09-17 |
-| Daily Updates | 81 | 2026-09-17 |
+| Tools | 98 | 2026-09-21 |
+| Daily Updates | 88 | 2026-09-21 |
 | Reports | 16 | 2026-08-30 |
-| tiny-* Ecosystem Repos | 98 | 2026-09-17 |
-| Additional hussain-alsaibai Repos | 20 | 2026-09-13 |
+| tiny-* Ecosystem Repos | 98 | 2026-09-21 |
+| Additional hussain-alsaibai Repos | 24 | 2026-09-18 |
 
 ## Structure
 
