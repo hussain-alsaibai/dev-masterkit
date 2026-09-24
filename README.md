@@ -2,10 +2,21 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
-### 🆕 Latest additions (2026-09-22 sync) — quiet day
+### 🆕 Latest additions (2026-09-24 sync) — quiet day
 - Quiet day — no new ships, repos, prompts, skills, or tool guides.
-- Push still blocked by invalid `GitHUB_PAT` (HTTP 401, same blocker carried since 2026-09-19). Architect action required: rotate PAT at https://github.com/settings/tokens and update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`.
-- Daily Updates 88 → 89 (+1 quiet-day entry). All other counts unchanged (Skills 39, Prompts 35, Tool Guides 105, tiny-* 98, Repos 24).
+- Push still blocked by invalid `GitHUB_PAT` (HTTP 401, **7th consecutive cron run**). Local working tree is 4 commits ahead of `origin/main` (Sep 21/22/23 syncs + today). Architect action required: rotate PAT at https://github.com/settings/tokens and update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env` (and the embedded PAT in every remote URL).
+- Daily Updates 91 → 92 (+1 quiet-day entry). All other counts unchanged (Skills 39, Prompts 35, Tool Guides 109, tiny-* 102, Repos 24).
+- Last verified: 2026-09-24.
+
+### 🆕 Previous additions (2026-09-23 sync) — `tiny-tool-cache` guide + quiet-day carry
+- **Added:** `tools/tiny-tool-cache-guide.md` — stdlib-only tool/LLM call result cache: bounded LRU, TTL, stale-while-revalidate, negative-result caching, async-coalesced loads, JSONL disk persistence. Last verified 2026-09-23.
+- **Note:** the 09:00 EDT log mentioned a `TokenBudgetCache` example committed to `fast-cache`; that commit does not exist on disk (last fast-cache commit is `69bb8c7`). Removed from the shipped list.
+- Quiet day otherwise — `daily-bounty-work` cron and `repo-health-monitor` both 401-blocked.
+- Daily Updates 90 → 91; Tool Guides 108 → 109 (+1); tiny-* Ecosystem 101 → 102 (+1 — `tiny-tool-cache` already counted the previous day). All other counts unchanged.
+
+### 🆕 Previous additions (2026-09-22 sync v2) — 3 new tiny-* guides + quiet-day carry
+- **Added:** `tools/tiny-skill-md-guide.md`, `tools/tiny-cost-ledger-guide.md`, `tools/tiny-bounty-queue-guide.md`. All Last verified 2026-09-22.
+- Daily Updates 89 → 90 (+1 quiet-day entry); Tool Guides 105 → 108 (+3). All other counts unchanged (Skills 39, Prompts 35, tiny-* 98, Repos 24).
 
 ### 🆕 Previous additions (2026-09-21 sync) — gap-fill backfill (Sep 14–20) + today
 - Quiet day — no new ships, repos, prompts, skills, or tool guides.
@@ -71,14 +82,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-09-22 |
-| Prompts | 35 | 2026-09-22 |
+| Skills | 39 | 2026-09-24 |
+| Prompts | 35 | 2026-09-24 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 109 | 2026-09-23 |
+| Tool Guides | 109 | 2026-09-24 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-09-22 |
-| Daily Updates | 91 | 2026-09-23 |
+| Tools | 98 | 2026-09-24 |
+| Daily Updates | 92 | 2026-09-24 |
 | Reports | 16 | 2026-08-30 |
 | tiny-* Ecosystem Repos | 102 | 2026-09-23 |
 | Additional hussain-alsaibai Repos | 24 | 2026-09-18 |
