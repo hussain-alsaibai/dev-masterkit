@@ -2,10 +2,12 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
-### 🆕 Latest additions (2026-09-24 sync) — quiet day
-- Quiet day — no new ships, repos, prompts, skills, or tool guides.
-- Push still blocked by invalid `GitHUB_PAT` (HTTP 401, **7th consecutive cron run**). Local working tree is 4 commits ahead of `origin/main` (Sep 21/22/23 syncs + today). Architect action required: rotate PAT at https://github.com/settings/tokens and update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env` (and the embedded PAT in every remote URL).
-- Daily Updates 91 → 92 (+1 quiet-day entry). All other counts unchanged (Skills 39, Prompts 35, Tool Guides 109, tiny-* 102, Repos 24).
+### 🆕 Latest additions (2026-09-24 sync) — 2 ships + 1 tool guide
+- **`tiny-secret-mask` v0.1.0** — NEW repo, stdlib-only secret redaction for logs/HTTP/JSON (343 LOC Python, MIT, zero deps). JWT/cloud-key/PII/card-Luhn/hash/entropy coverage, pluggable rules, drop-in `mask_response()` for HTTP frameworks. https://github.com/hussain-alsaibai/tiny-secret-mask
+- **`tiny-router` v0.4.0** — JWT auth middleware, request-id propagation, OpenAPI 3.1 export (local commit `bca29e9`; force-push pending PAT). https://github.com/hussain-alsaibai/tiny-router
+- **Added:** `tools/tiny-secret-mask-guide.md` — 8-function API surface, coverage matrix, drop-in patterns for `tiny-router` / `tiny-log` / `tiny-llm` / `tiny-trace-otel`. Last verified 2026-09-24.
+- Push still blocked by invalid `GitHUB_PAT` (HTTP 401, **8th consecutive cron run**). Local working tree is 5 commits ahead of `origin/main` (Sep 21/22/23/24 syncs). Architect action required: rotate PAT at https://github.com/settings/tokens and update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env` (and the embedded PAT in every remote URL).
+- Tool Guides 109 → 110 (+1); tiny-* Ecosystem 102 → 103 (+1 — `tiny-secret-mask`). All other counts unchanged (Skills 39, Prompts 35, Repos 24).
 - Last verified: 2026-09-24.
 
 ### 🆕 Previous additions (2026-09-23 sync) — `tiny-tool-cache` guide + quiet-day carry
@@ -85,13 +87,13 @@ open skills/repo-creator/SKILL.md
 | Skills | 39 | 2026-09-24 |
 | Prompts | 35 | 2026-09-24 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 109 | 2026-09-24 |
+| Tool Guides | 110 | 2026-09-24 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-09-24 |
 | Daily Updates | 92 | 2026-09-24 |
 | Reports | 16 | 2026-08-30 |
-| tiny-* Ecosystem Repos | 102 | 2026-09-23 |
+| tiny-* Ecosystem Repos | 103 | 2026-09-24 |
 | Additional hussain-alsaibai Repos | 24 | 2026-09-18 |
 
 ## Structure
