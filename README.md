@@ -2,12 +2,17 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
-### 🆕 Latest additions (2026-09-25 sync) — quiet day, PAT still blocked (9th consecutive)
-- Quiet day — no new ships, prompts, skills, or tool guides. Only action: increment Daily Updates count and roll forward Last Updated dates.
-- Daily Updates 92 → 93. All other counts unchanged (Skills 39, Prompts 35, Tool Guides 110, tiny-* 103, Repos 24).
-- Push still blocked by invalid `GitHUB_PAT` (HTTP 401, **9th consecutive cron run**). Local working tree is **6 commits ahead** of `origin/main` (Sep 21/22/22 v2/23/24/25 syncs). Architect action required: rotate PAT at https://github.com/settings/tokens (fine-grained PAT with `repo` + `workflow` scopes, explicit access to all `hussain-alsaibai/*` repos in flight) and update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`.
+### 🆕 Latest additions (2026-09-25 sync) — 2 ships + 2 tool guides, PAT still blocked (10th consecutive)
+- **`tiny-router` v0.5.0** — local commit `3f79955` — `openapi_endpoint(router)` + `jwt_refresh_pair()` + `jwt_refresh_exchange()`. Built-in `GET /openapi.json`, paired access/refresh JWT minting with `typ=refresh` enforcement, refresh-to-access exchange. 15 new tests, combined suite **101/101**. Last verified 2026-09-25. https://github.com/hussain-alsaibai/tiny-router
+- **`tiny-cli-progress` v0.1.0** — NEW repo, local commit `38fe36c` — stdlib-only progress bars + spinners. 375 LOC main + 295 LOC tests, MIT, zero deps. MultiProgress manager, context managers, iterable wrappers, no-op TTY fallback, thread-safe. Last verified 2026-09-25. https://github.com/hussain-alsaibai/tiny-cli-progress
+- **Added:** `tools/tiny-router-v0.5-guide.md` — openapi_endpoint + jwt_refresh_pair + jwt_refresh_exchange with quick-start example.
+- **Added:** `tools/tiny-cli-progress-guide.md` — BarConfig/spinners/MultiProgress/API surface, when-to-use vs tqdm/rich.
+- Push still blocked by invalid `GitHUB_PAT` (HTTP 401, **10th consecutive cron run**). Local working tree is **7 commits ahead** of `origin/main` (Sep 21/22/22 v2/23/24/25 quiet/25 ship syncs). Architect action required: rotate PAT at https://github.com/settings/tokens (fine-grained PAT with `repo` + `workflow` scopes, explicit access to all `hussain-alsaibai/*` repos in flight) and update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`.
+- Tool Guides 110 → 112 (+2); tiny-* Ecosystem 103 → 104 (+1 — `tiny-cli-progress`). Daily Updates 93 → 94. All other counts unchanged (Skills 39, Prompts 35, Repos 24).
 - See `daily-updates/2026-09-25.md` for full activity review + open-item carry-forward list.
 - Last verified: 2026-09-25.
+
+### 🆕 Previous additions (2026-09-25 sync) — quiet day, PAT still blocked (9th consecutive)
 
 ### 🆕 Previous additions (2026-09-24 sync) — 2 ships + 1 tool guide
 - **`tiny-secret-mask` v0.1.0** — NEW repo, stdlib-only secret redaction for logs/HTTP/JSON (343 LOC Python, MIT, zero deps). JWT/cloud-key/PII/card-Luhn/hash/entropy coverage, pluggable rules, drop-in `mask_response()` for HTTP frameworks. https://github.com/hussain-alsaibai/tiny-secret-mask
