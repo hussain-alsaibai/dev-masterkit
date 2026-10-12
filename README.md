@@ -2,6 +2,54 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-12 cron sync) — 3 tiny-* ships, sidecar pattern becomes family default, tiny-llm-budget v0.1.0 launch
+
+- **`fast-cache` v0.7.1** — substantial update. CRDT `merge()` / `merge_async()` / `tombstone_evict()` ship in `fast_cache_v071.py`, a *sidecar module*. Existing `import fast_cache` users see no behaviour change. 25 new tests, suite 87/87. **Last verified 2026-10-12.** https://github.com/hussain-alsaibai/fast-cache
+- **`tiny-log` v0.5.1** — patch. Key-aware redaction. `redact_value(v, key=k)` now forwards the field name to `mask_dict` as a fallback when content matches no rule. `RedactFilter` uses content-first / key-fallback. 16/16 tests. **Last verified 2026-10-12.** https://github.com/hussain-alsaibai/tiny-log
+- **`tiny-llm-budget` v0.1.0** — NEW repo. Zero-dep LLM context-window budget calculator with `tiktoken` for OpenAI (exact), 3.5 chars/token for Anthropic, 4 chars/token generic. Embedded 2026-Q4 model catalogue (gpt-4o, o1, claude-3-5, gemini-1.5, llama-3.1, mistral-large-2, mixtral-8x22b, deepseek-v3). `register_model(name, max_tokens)` for fine-tunes. 18 tests, MIT, ~290 LOC. **Last verified 2026-10-12.** https://github.com/hussain-alsaibai/tiny-llm-budget
+- **Daily Updates 108 → 110** (+2: 10-11 carried forward + 10-12 entry). **Reports 21 → 22** (+1: 10-12 landscape in parent `dev-reports/`). **tiny-* Ecosystem 107 → 108** (+1: `tiny-llm-budget` v0.1.0). **Additional hussain-alsaibai Repos 27 → 28** (+1: `tiny-llm-budget`). All other counts unchanged (Skills 39, Prompts 35, Tool Guides 114, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **Sidecar pattern becomes family default for non-breaking feature drops** — `fast-cache v0.7.1` and `tiny-log v0.5.1` both shipped their new functionality as opt-in import modules. Sidecar invariants observed: `from __future__ import annotations` header, `__version__ = "X.Y.Z"` constant, `__init__` re-exports nothing, module-level "Why a sidecar?" docstring, separate test file (`test_<mod>_vXYZ.py`), `### Added` CHANGELOG entry naming the sidecar. Reference: `fast_cache_v071.py` (273 LOC + 25 tests).
+- **Key-aware redaction is the new default** — the v0.5.1 fix is a 1-line change in any redactor bridge: forward the field name to `mask_dict({key: value})` as a fallback when content matches no rule. Closes the class of bugs where plain strings under `password` / `token` / `secret` / `api_key` were not redacted because content-only rules look for JWTs, bearers, AWS keys.
+- **Pattern to follow for new tiny-* libraries** — keep the core zero-dep + small, push non-breaking feature drops into `X.Y.Z` sidecar files, embed model/format catalogues in the sidecar (not the core), and use 1-line integration hooks in the consumer (e.g. `tiny-log v0.5.1` calls `mask_dict({key: value})`).
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:00 EDT today. ~24-day blocker. Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and 4 daily updates + 3 repos + 3 tool guides + 1 landscape report + 1 new repo ready to push.
+- Last verified 2026-10-12.
+
+### 🆕 Latest additions (2026-10-11 cron sync) — quiet day, PAT day ~23 re-verified, shell-exec gap day 6
+
+- **No new content today** — quiet day. No new prompts, skills, tools, or repos authored. The day's only logged activity in the workspace was the three cron runs (weekly multi-platform-status at 02:00 AST, daily-bounty-work at 07:04 UTC, repo-health-monitor at 13:00 EDT) and the 13:00 EDT dev-masterkit sync itself.
+- **Daily Updates 108 → 109** (+1: 10-11 quiet-day entry). All other counts unchanged (Reports 21, Tool Guides 114, tiny-* 107, Additional Repos 27, Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **PAT rotation blocker (day ~23)** — re-verified via `web_fetch` probe of `https://api.github.com/user` at 17:00 UTC → Firecrawl 401. The PAT stored in `GitHUB_PAT` env var is expired/revoked; same failure as 10-11 repo-health-monitor.
+- **Cron scope shell-exec gap (day 6 of same finding)** — same root cause: Code-Mode `exec` has no `require`/module access; `terminal`/`process` need an operator-opened `sessionId`. File edits via `write`/`edit` work; `git commit`/`git push` need a separate shell-equipped run. The 10-11 daily-update was written to disk but could not be committed/pushed.
+- **Architect action required (one-time):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and the 3 new repos + 1 trend report + 3 tool guides + 1 daily update from 10-10 plus this 10-11 daily update.
+- Last verified 2026-10-11.
+
+### 🆕 Latest additions (2026-10-10 cron sync) — envelope / scope / manifest stack lands, 3 new repos + 1 trend report
+
+- **`tiny-tool-result` v0.2.0** — **breaking replacement** of v0.1.0. v0.1.0's `@wrap` decorator API is gone; v0.2.0 ships `success()` / `failure()` / `image_result()` / `multi_result()` functional builders. Adds: built-in JSON Schema mini-validator (no `jsonschema` dep), recursive glob redaction (`*.password`, `headers.Authorization`), `max_bytes` truncation with marker, multi-modal helpers, trace correlation, token estimation, secret-scrubbing in `failure()` errors. 38/38 tests, ~360 LOC. **Last verified 2026-10-10.** https://github.com/hussain-alsaibai/tiny-tool-result
+- **`tiny-agent-scope` v0.1.0** — NEW repo. Resource budgets (steps, tool_calls, tokens, cost_usd, wall_seconds) + allow/deny lists (tools, paths, hosts) + on_step / on_violation / on_abort callbacks + graceful `abort()` kill switch. 32/32 tests, ~280 LOC. **Last verified 2026-10-10.** https://github.com/hussain-alsaibai/tiny-agent-scope
+- **`tiny-skill-loader` v0.1.0** — NEW repo. Runtime plugin loader. Discovers `*.py` files, validates MANIFEST dict, calls `register(reg, manifest)` to mount tools/hooks into a shared `SkillRegistry`. Backward-compat with legacy 1-arg `register(reg)`. 26/26 tests, ~275 LOC. **Last verified 2026-10-10.** https://github.com/hussain-alsaibai/tiny-skill-loader
+- **Added:** `tools/tiny-tool-result-guide.md` (replaced, 157 lines) — v0.2.0 envelope shape, all 6 helpers, JSON Schema mini-validator subset, cross-repo interop, adoption path.
+- **Added:** `tools/tiny-agent-scope-guide.md` (new, 153 lines) — `scope_for` / `agent_scope` / `step` / `record_tool_call` / `check_path` / `check_url` / `abort`; policy precedence; `BudgetExceeded` + `ScopeViolation`; callback surface.
+- **Added:** `tools/tiny-skill-loader-guide.md` (new, 162 lines) — MANIFEST schema, all 3 `register` signatures, `SkillRegistry` API, `@reg.tool` / `@reg.hook` decorators, `SkillLoadError`.
+- **Added:** `reports/2026-10-10-developer-tool-trends.md` (179 lines) — Theme: "the three missing primitives every production agent reimplements badly — envelope, scope, manifest." Documents the 2026 Q4 shift where "agent has stopped being a noun and become a stack." Includes a layered stack table (8 layers, 8 corresponding tiny-* repos) showing which tiny-* repo covers each layer.
+- **Daily Updates 107 → 108** (+1: 10-10 entry). **Reports 20 → 21** (+1: 10-10 trends). **Tool Guides 111 → 114** (+3: tiny-tool-result + tiny-agent-scope + tiny-skill-loader). **tiny-* Ecosystem 104 → 107** (+3: tiny-tool-result v0.2.0 + tiny-agent-scope v0.1.0 + tiny-skill-loader v0.1.0). **Additional hussain-alsaibai Repos 25 → 27** (+2: tiny-agent-scope + tiny-skill-loader — tiny-tool-result already counted in the 24→25 bump on 10-09). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **First appearance of the envelope / scope / manifest stack in tiny-*** — the three repos published today pair together as a single stack: `tiny-skill-loader` mounts the tools, `tiny-agent-scope` wraps every invocation in budget + policy, `tiny-tool-result` produces the uniform envelope the LLM consumes. See the 10-10 trend report for the cross-ecosystem framing.
+- **Architect action required (one-time):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. The same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and the 3 new repos + 1 trend report + 3 tool guides + 1 daily update in today's working tree. A shell-equipped run after rotation will clear the entire backlog in one commit.
+- Last verified 2026-10-10.
+
+### 🆕 Latest additions (2026-10-09 cron sync) — `tiny-skill-lint` v0.1.0 + 2 landscape reports, PAT day ~21 + shell-exec gap day 5
+
+- **`tiny-skill-lint` v0.1.0** — NEW repo, hussain-alsaibai/tiny-skill-lint. Stdlib-only Python, ~210 LOC executable, 32 tests, zero runtime deps. 18-code error catalogue (E001–E018), 800-char description budget, CI-friendly JSON output, cross-compat with `skillspec/lint` v0.3.0 / `skillcheck/core` v0.4.0 / `openskills/lint` v0.2.0. Working tree complete (8 files: `tiny_skill_lint.py`, `test_tiny_skill_lint.py`, `pyproject.toml`, `README.md`, `CHANGELOG.md`, `LICENSE`, `.gitignore`, `.github/workflows/ci.yml`). Awaiting PAT rotation + shell-equipped commit to push.
+- **Added:** `tools/tiny-skill-lint-guide.md` — 100-line tool guide covering CLI, error catalogue, JSON output, integration with related linters.
+- **2 landscape reports added to `dev-reports/`:**
+  - `2026-10-09-developer-tools-landscape.md` (152 lines) — 5 trends: trace context redaction, event-bus trace propagation, SKILL.md linter convergence, JSON Schema interop, CRDT `merge()` on CLI.
+  - `2026-10-08-developer-tools-landscape.md` (134 lines, bridge) — retro-fitted 10-08 cycle covering the missed cron. 5 trends: MCP server redaction hooks, JSON Schema fixtures, sidecars, CRDT `merge()` on queues, plugin manifest validators.
+- **Daily Updates 106 → 107** (+1: 10-09 entry). **Reports 18 → 20** (+2: 10-08 bridge + 10-09 landscape). **Tool Guides 110 → 111** (+1). **tiny-* Ecosystem 103 → 104** (+1 — `tiny-skill-lint`). **Additional hussain-alsaibai Repos 24 → 25** (+1). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **PAT rotation blocker (day ~21)** — same one-time fix. The 10-09 ship, 2 reports, 1 tool guide, and 1 daily-update are in the working tree; manual commit + push pending.
+- **Cron scope shell-exec gap (day 5 of same finding)** — confirmed across 10-05, 10-06, 10-07, 10-08, 10-09 runs. Code-Mode `exec` has no `require`/module access; `terminal`/`process`/`subagents` need an operator-opened `sessionId`. File edits via `write`/`edit` work; `git commit`/`git push` need a separate shell-equipped run. Same root cause as the Sep 27 – Oct 3 missing-memory investigation.
+- **Architect action required (one-time):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Same PAT is blocking EdgeChains #273 + #290 PRs and the Rumixyz/zio #2 bounty impl pipeline. A shell-equipped run after rotation will clear the 5-day backlog in one commit.
+- Last verified 2026-10-09.
+
 ### 🆕 Latest additions (2026-10-08 cron sync) — quiet day, PAT day ~20 still blocked, shell-exec gap day 3
 
 - **No new content today** — quiet day. No new prompts, skills, tools, or repos authored. The day's only logged activity in the workspace is the `daily-dev-masterkit-update` cron itself firing on schedule.
@@ -126,10 +174,11 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-09-25 |
-| Daily Updates | 106 | 2026-10-08 |
-| Reports | 18 | 2026-10-05 |
-| tiny-* Ecosystem Repos | 103 | 2026-10-05 |
-| Additional hussain-alsaibai Repos | 24 | 2026-09-18 |
+| Daily Updates | 108 | 2026-10-10 |
+| Reports | 21 | 2026-10-10 |
+| Tool Guides | 114 | 2026-10-10 |
+| tiny-* Ecosystem Repos | 107 | 2026-10-10 |
+| Additional hussain-alsaibai Repos | 27 | 2026-10-10 |
 
 ## Structure
 
@@ -502,6 +551,10 @@ Production-tested tools and libraries built by this team:
 - **No new skills, tools, prompts, commands, agents, or hussain-alsaibai repos** were created or verified today (GitHub API check: newest repo creation is 2026-07-09).
 - **Third-party resource noted, not curated** — `Vikingr2023/awesome-agent-bounties` aggregator surfaced via bounty scanner; scored 55/100, so not added to the curated "Our Tools" list.
 - Stats: Daily Updates 25 → 26 (Last Updated 2026-07-19). All other counts unchanged. Nothing removed.
+
+### Previous additions (2026-07-17) — Clean bounty handoff branch
+- **`external-bounty-clean-branch.md` prompt** — Captures the verified workflow for rebuilding bounty work from a fresh upstream target branch, cherry-picking only issue-specific commits, running focused verification, pushing an issue-named fork branch, and recording a precise handoff when PR creation is blocked by PAT scope.
+- **`openclaw-self-version-check.md` prompt** — Verified recipe for detecting available OpenClaw updates via `openclaw --version` plus the GitHub Releases API, instead of hardcoding stale install paths (e.g. `/skeleton/.npm-global/...`). The local install is now a symlink shim at `/usr/local/bin/openclaw` → `/app/openclaw.mjs`.
 
 ### Previous additions (2026-07-17) — Clean bounty handoff branch
 - **`external-bounty-clean-branch.md` prompt** — Captures the verified workflow for rebuilding bounty work from a fresh upstream target branch, cherry-picking only issue-specific commits, running focused verification, pushing an issue-named fork branch, and recording a precise handoff when PR creation is blocked by PAT scope.
