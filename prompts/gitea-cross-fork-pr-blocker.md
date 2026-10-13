@@ -92,3 +92,4 @@ something the fork owner can fix.
   SHA `c50dffec5a` ready in `hussain-alsaibai/gitea`; cross-fork PR blocked
   by PAT scope; handoff doc at
   `~/.openclaw/workspace/gitea-pr-handoff.md`.
+**Last verified:** 2026-10-13

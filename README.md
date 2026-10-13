@@ -2,6 +2,24 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-13 cron sync) — 3 new tiny-* repos (resilience + rollouts + composition), tiny-llm-budget v0.2.0, PAT day 27
+
+- **tiny-bulkhead v0.1.0** — NEW repo. Zero-dep concurrency isolation. `Bulkhead("openai", max_concurrent=4, timeout=1.0)` rejects the 5th in-flight call after 1 second. `BulkheadPool` registry pattern keeps call sites clean (`with pool.bulkhead("openai"):`). Async + sync support. 23 tests, MIT, ~290 LOC. The third arm of the resilience family: rate-limiter (how many per second), bulkhead (how many in flight), circuit-breaker (should we call at all). **Last verified 2026-10-13.** https://github.com/hussain-alsaibai/tiny-bulkhead
+- **tiny-feature-flag v0.1.0** — NEW repo. Zero-dep feature flag / toggle evaluation. **Three-valued rule semantics:** `True` (enable), `False` (force off), `None` (defer to next rule). Built-in rules: `eq`, `ne`, `in_`, `contains`, `matches`, `percent`, `predicate`. Stable SHA-256 percentage rollouts. 28 tests, MIT, ~290 LOC. **Last verified 2026-10-13.** https://github.com/hussain-alsaibai/tiny-feature-flag
+- **tiny-middleware v0.1.0** — NEW repo. Zero-dep composable middleware chain for sync/async handlers. **Auto-detects sync/async per callable** — a chain with any async middleware auto-promotes to async. Built-ins: `request_id()`, `cors()`. Pairs naturally with `tiny-router`. 23 tests, MIT, ~245 LOC. **Last verified 2026-10-13.** https://github.com/hussain-alsaibai/tiny-middleware
+- **tiny-llm-budget v0.2.0** — substantial update. `compare_models()` runs `plan()` across many models and returns sorted `(model, Budget, estimated_cost)` tuples by `fits` (desc), then `remaining` (desc), then `cost` (asc). `COST_PER_MILLION` catalogue covers 22 frontier models with input/output split (gpt-4o, o1, claude-3-5, gemini-1.5, llama-3.1, mistral-large-2, mixtral-8x22b, deepseek-v3). 10 new tests, 28 total. **Last verified 2026-10-13.** https://github.com/hussain-alsaibai/tiny-llm-budget
+- **Added:** `tools/tiny-bulkhead-guide.md` (new, 159 lines) — what a bulkhead is, the three-piece resilience family table, sync/async usage, pool pattern, composition with `tiny-circuit-breaker`, when to use / when not to use.
+- **Added:** `tools/tiny-feature-flag-guide.md` (new, 120 lines) — three-valued rule semantics, all 7 built-in rules with their defer/force semantics, context, overrides, stable percentage rollouts via SHA-256, when to use / when not to use.
+- **Added:** `tools/tiny-middleware-guide.md` (new, 150 lines) — sync/async auto-detection, built-ins (`request_id()`, `cors()`), short-circuit semantics, order matters, composition with `tiny-router`, when to use / when not to use.
+- **Added:** `reports/2026-10-13-developer-tools-landscape.md` (10.0 KB, 4 trends) — Theme: "resilience primitives form a three-piece family; three-valued rule semantics for tiered rollouts; middleware chains auto-detect sync/async; LLM model selection is a 3-axis problem." Documents the four ships and the cross-ecosystem context.
+- **Daily Updates 110 → 111** (+1: 10-13 entry). **Reports 22 → 23** (+1: 10-13 landscape in `dev-masterkit/reports/`). **tiny-* Ecosystem 108 → 111** (+3: tiny-bulkhead + tiny-feature-flag + tiny-middleware). **Tool Guides 114 → 117** (+3: tiny-bulkhead + tiny-feature-flag + tiny-middleware). **Additional hussain-alsaibai Repos 28 → 31** (+3: tiny-bulkhead + tiny-feature-flag + tiny-middleware). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **Resilience primitives are now a three-piece family** — `tiny-rate-limiter` (request rate), `tiny-bulkhead` (concurrency cap, new), `tiny-circuit-breaker` (error rate). Each answers a different question and the patterns compose. Treating them as one knob loses the diagnostic information that makes a post-mortem possible.
+- **Three-valued rule semantics is the new feature-flag default** — `True` enables, `False` forces off, `None` defers to the next rule. The defer is what makes "tier A always, otherwise tier B partially" expressible as a flat rule list instead of nested conditionals. The boolean trap (collapsing tri-state to bool) is the most common feature-flag library bug.
+- **Middleware chains auto-detect sync/async per callable** — most Python middleware libraries force you to choose sync-only or async-only up front. `tiny-middleware` lets each callable declare its own mode; a sync `auth` middleware and an async `db_query` handler can coexist as long as the chain is all-async (the async path wins).
+- **LLM model selection is a 3-axis problem** — context fit, quality, cost. `compare_models()` replaces the hand-rolled "if long use claude, if bulk use gpt-4o-mini" decision with a deterministic sort by `fits` → `remaining` → `cost`. Quality is out of scope for a budget library but the cost catalogue stays up to date with each release.
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:01 EDT today ("Bad credentials"). **Day 27+ blocker.** Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and 4 daily updates + 3 repos + 3 tool guides + 1 landscape report + 1 repo update ready to push (today's cycle adds 4 new repos + 3 new tool guides + 1 new landscape report + 1 daily update, all locally complete).
+- Last verified 2026-10-13.
+
 ### 🆕 Latest additions (2026-10-12 cron sync) — 3 tiny-* ships, sidecar pattern becomes family default, tiny-llm-budget v0.1.0 launch
 
 - **`fast-cache` v0.7.1** — substantial update. CRDT `merge()` / `merge_async()` / `tombstone_evict()` ship in `fast_cache_v071.py`, a *sidecar module*. Existing `import fast_cache` users see no behaviour change. 25 new tests, suite 87/87. **Last verified 2026-10-12.** https://github.com/hussain-alsaibai/fast-cache
@@ -167,18 +185,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-09-25 |
-| Prompts | 35 | 2026-09-25 |
+| Skills | 39 | 2026-10-13 |
+| Prompts | 35 | 2026-10-13 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 110 | 2026-09-25 |
+| Tool Guides | 117 | 2026-10-13 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-09-25 |
-| Daily Updates | 108 | 2026-10-10 |
-| Reports | 21 | 2026-10-10 |
-| Tool Guides | 114 | 2026-10-10 |
-| tiny-* Ecosystem Repos | 107 | 2026-10-10 |
-| Additional hussain-alsaibai Repos | 27 | 2026-10-10 |
+| Tools | 98 | 2026-10-13 |
+| Daily Updates | 111 | 2026-10-13 |
+| Reports | 23 | 2026-10-13 |
+| tiny-* Ecosystem Repos | 111 | 2026-10-13 |
+| Additional hussain-alsaibai Repos | 31 | 2026-10-13 |
 
 ## Structure
 

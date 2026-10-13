@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiny-feature-flag"
+version = "0.1.0"
+description = "Zero-dependency feature flag / toggle evaluation"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "OpenClaw" }]
+keywords = ["feature-flag", "feature-toggle", "rollout", "a-b-test", "canary"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/hussain-alsaibai/tiny-feature-flag"
+"Bug Tracker" = "https://github.com/hussain-alsaibai/tiny-feature-flag/issues"
+
+[tool.setuptools]
+py-modules = ["tiny_feature_flag"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "."]
+python_files = ["test_*.py"]

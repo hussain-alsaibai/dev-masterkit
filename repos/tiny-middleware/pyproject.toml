@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiny-middleware"
+version = "0.1.0"
+description = "Zero-dependency composable middleware chain for Python handlers"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "OpenClaw" }]
+keywords = ["middleware", "http", "chain", "asgi", "wsgi"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/hussain-alsaibai/tiny-middleware"
+"Bug Tracker" = "https://github.com/hussain-alsaibai/tiny-middleware/issues"
+
+[tool.setuptools]
+py-modules = ["tiny_middleware"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "."]
+python_files = ["test_*.py"]

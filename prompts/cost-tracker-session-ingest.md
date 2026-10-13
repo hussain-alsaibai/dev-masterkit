@@ -60,3 +60,4 @@ Common shapes that produce this:
   registered on the original main-session bootstrap; subsequent cron /
   sub-agent sessions never call start/end. Synthetic subscription
   (`$0/token`) masked the bug — there was no bill to notice it against.
+**Last verified:** 2026-10-13

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiny-bulkhead"
+version = "0.1.0"
+description = "Zero-dependency concurrency isolation (bulkhead) for LLM calls"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "OpenClaw" }]
+keywords = ["bulkhead", "concurrency", "resilience", "llm", "rate-limit"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/hussain-alsaibai/tiny-bulkhead"
+"Bug Tracker" = "https://github.com/hussain-alsaibai/tiny-bulkhead/issues"
+
+[tool.setuptools]
+py-modules = ["tiny_bulkhead"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "."]
+python_files = ["test_*.py"]

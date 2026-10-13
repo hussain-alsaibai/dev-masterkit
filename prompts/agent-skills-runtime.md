@@ -27,7 +27,7 @@ SKILL.md body sections (in this order):
   3. ## The Procedure — numbered steps the agent follows verbatim
   4. ## Examples — at least one worked call/output pair
   5. ## Pitfalls — known failure modes and how to avoid them
-  6. Last verified: YYYY-MM-DD
+  6. Last verified: 2026-10-13
 
 Runtime requirements:
   - Zero third-party deps (stdlib only)

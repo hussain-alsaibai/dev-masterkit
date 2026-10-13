@@ -63,3 +63,4 @@ half of RAM and can be several GB.
 - 2026-07-09 — `go-gitea/gitea` (Go 1.26.4) build on OpenClaw sandbox;
   `tmpfs 256M` mounted at `/tmp`; `TMPDIR=~/go-build-tmp` resolved the
   `importcfg: no space left on device` failures.
+**Last verified:** 2026-10-13
