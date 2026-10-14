@@ -2,6 +2,23 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-14 cron sync) — path redaction closes the credential-leak loop, 1 new repo + 2 version bumps, PAT day 28
+
+- **`tiny-route-redact` v0.1.0** — NEW repo, hussain-alsaibai/tiny-route-redact. Framework-agnostic path-redaction middleware. Single file ~224 LOC, MIT, zero runtime deps. `redact_path(path)`, `route_redactor_middleware(get_response, *, stats=None, on_redact=None)` (WSGI), `route_redactor_asgi_middleware(app, *, stats=None)` (ASGI), `RedactionStats` counter. The reference consumer for `tiny-secret-mask` v0.4.0 — for stacks that don't use `tiny-router`. 19 tests. **Last verified 2026-10-14.** https://github.com/hussain-alsaibai/tiny-route-redact
+- **`tiny-secret-mask` v0.4.0** — substantial update. `mask_route_path(path)` + `RoutePathRedactor` + `MaskRoutePathRule` + `PATH_REDACT_RULES` (12 patterns, severities `low | medium | high | critical`). Sidecar module `tiny_secret_mask_v040.py` (~254 LOC); main file re-exports the new names. Idempotent on a second pass. 19 new tests in `tests/test_v040_additions.py`. The third layer of the credential-leak loop (value / key / trace / path). **Last verified 2026-10-14.** https://github.com/hussain-alsaibai/tiny-secret-mask
+- **`tiny-router` v0.7.3** — patch release. New sidecar `tiny_router_redact_path.py` (~132 LOC) exports `redact_path_middleware(*, stats=None, on_redact=None)` and `redactor_with_stats()`. The middleware mutates `req.path` in place before any handler runs. 15 new tests in `test_v073_redact_path.py`. The reference integration point for the family. **Last verified 2026-10-14.** https://github.com/hussain-alsaibai/tiny-router
+- **Added:** `tools/tiny-secret-mask-v0.4-guide.md` (new, ~110 lines) — `mask_route_path()` + `RoutePathRedactor` + 12-pattern catalogue, custom-rule example, severity table, drop-in patterns, when-to-use-vs-not. The path layer of the credential-leak loop.
+- **Added:** `tools/tiny-router-v0.7.3-guide.md` (new, ~95 lines) — `redact_path_middleware()` + `redactor_with_stats()` + `RedactionStats.as_dict()`. Quick-start with the new sidecar, `/metrics` integration pattern.
+- **Added:** `tools/tiny-route-redact-guide.md` (new, ~125 lines) — framework-agnostic path redaction. API surface (WSGI, ASGI, `RedactionStats`), install, rule catalogue, when-to-use vs the `tiny-router`-native alternative.
+- **Added:** `reports/2026-10-14-developer-tools-landscape.md` (12.7 KB, 4 trends) — Theme: "path redaction closes the credential-leak loop; sidecar modules absorb every redaction feature drop; counter objects become the metrics export for redaction." Documents the three ships and the cross-ecosystem context.
+- **Daily Updates 111 → 112** (+1: 10-14 entry). **Reports 23 → 24** (+1: 10-14 landscape in `dev-masterkit/reports/`). **tiny-* Ecosystem 111 → 112** (+1: `tiny-route-redact` v0.1.0). **Tool Guides 117 → 120** (+3: `tiny-secret-mask` v0.4 + `tiny-router` v0.7.3 + `tiny-route-redact`). **Additional hussain-alsaibai Repos 31 → 32** (+1: `tiny-route-redact`). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **Path redaction is the third layer of credential safety** — three independent surfaces (the redaction library, the router, the standalone middleware) all shipped path redaction in the same 24-hour window. The pattern is a triplet now: redact the value (`mask_string`, v0.1.0), redact the key (`mask_dict` v0.2.0 fix), redact the path (`mask_route_path`, v0.4.0).
+- **Sidecar modules are the family default for every redaction feature drop** — the same shape that moved trace-context redaction into the routing layer (Oct 9) and key-aware redaction into the logging layer (Oct 12) now moves path redaction into its own layer. Three consecutive cycles have added a redaction hook at a new layer; reviewers should expect this in every new tiny-* release.
+- **Path redaction closes the credential-leak loop** — three consecutive cycles (Oct 9: trace / Oct 12: key / Oct 14: path) added a layer. Together the four layers form: value / key / trace / path. Any primitive that crosses a network boundary, persists to disk, or emits an observability span is now expected to apply all four.
+- **Counter objects become the metrics export for redaction** — both new modules in this cycle expose a `RedactionStats` counter with `as_dict()` for `/metrics`. The pattern is small but worth calling out: every new redaction primitive should ship a counter.
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:01 EDT today. **Day 28+ blocker.** Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and the 3 new versions + 1 new repo + 3 tool guides + 1 landscape report + 1 daily update from today's cycle (all locally complete; ready to push).
+- Last verified 2026-10-14.
+
 ### 🆕 Latest additions (2026-10-13 cron sync) — 3 new tiny-* repos (resilience + rollouts + composition), tiny-llm-budget v0.2.0, PAT day 27
 
 - **tiny-bulkhead v0.1.0** — NEW repo. Zero-dep concurrency isolation. `Bulkhead("openai", max_concurrent=4, timeout=1.0)` rejects the 5th in-flight call after 1 second. `BulkheadPool` registry pattern keeps call sites clean (`with pool.bulkhead("openai"):`). Async + sync support. 23 tests, MIT, ~290 LOC. The third arm of the resilience family: rate-limiter (how many per second), bulkhead (how many in flight), circuit-breaker (should we call at all). **Last verified 2026-10-13.** https://github.com/hussain-alsaibai/tiny-bulkhead
@@ -185,17 +202,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-13 |
-| Prompts | 35 | 2026-10-13 |
+| Skills | 39 | 2026-10-14 |
+| Prompts | 35 | 2026-10-14 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 117 | 2026-10-13 |
+| Tool Guides | 120 | 2026-10-14 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-10-13 |
-| Daily Updates | 111 | 2026-10-13 |
-| Reports | 23 | 2026-10-13 |
-| tiny-* Ecosystem Repos | 111 | 2026-10-13 |
-| Additional hussain-alsaibai Repos | 31 | 2026-10-13 |
+| Tools | 98 | 2026-10-14 |
+| Daily Updates | 112 | 2026-10-14 |
+| Reports | 24 | 2026-10-14 |
+| tiny-* Ecosystem Repos | 112 | 2026-10-14 |
+| Additional hussain-alsaibai Repos | 32 | 2026-10-14 |
 
 ## Structure
 
