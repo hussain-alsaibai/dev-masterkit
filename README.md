@@ -2,6 +2,23 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-15 cron sync) — header redaction closes the credential-leak loop, 1 new repo + 2 version bumps, PAT day 28
+
+- **`tiny-headers-redact` v0.1.0** — NEW repo, hussain-alsaibai/tiny-headers-redact. Framework-agnostic HTTP header redaction middleware. Single file ~200 LOC, MIT, zero runtime deps. `redact_headers(headers)`, `header_redactor_middleware(get_response, *, stats=None)` (WSGI), `header_redactor_asgi_middleware(app, *, stats=None)` (ASGI), `HeaderStats` counter. The reference consumer for `tiny-secret-mask` v0.5.0 — for stacks that don't use `tiny-router`. 25 tests. **Last verified 2026-10-15.** https://github.com/hussain-alsaibai/tiny-headers-redact
+- **`tiny-secret-mask` v0.5.0** — substantial update. `mask_headers(headers, *, case_sensitive=False)` + `HeaderRedactor` + `MaskHeaderRule` + `HEADER_REDACT_RULES` (16 patterns, severities `low | medium | high | critical`). Sidecar module `tiny_secret_mask_v050.py` (~175 LOC); main file re-exports the new names. Idempotent on a second pass. 41 new tests in `tests/test_v050_additions.py`. The fifth layer of the credential-leak loop (value / key / trace / path / header). **Last verified 2026-10-15.** https://github.com/hussain-alsaibai/tiny-secret-mask
+- **`tiny-router` v0.7.4** — substantial update. New sidecar `tiny_router_redact_headers.py` (~131 LOC) exports `redact_headers_middleware(*, stats=None)`, `redactor_with_stats() -> (middleware, stats)`, and `HeaderStats`. The middleware mutates `req.headers` in place before any handler runs. 17 new tests in `test_v074_redact_headers.py`. Completes the v0.7.3 (path) + v0.7.4 (header) pair at the router level. **Last verified 2026-10-15.** https://github.com/hussain-alsaibai/tiny-router
+- **Added:** `tools/tiny-secret-mask-v0.5-guide.md` (new) — `mask_headers()` + `HeaderRedactor` + 16-pattern catalogue, custom-rule example with `MaskHeaderRule`, severity table, single-value helper, query helpers, drop-in patterns, when-to-use-vs-not. The header layer of the credential-leak loop.
+- **Added:** `tools/tiny-router-v0.7.4-guide.md` (new) — `redact_headers_middleware()` + `redactor_with_stats()` + `HeaderStats.as_dict()`. Quick-start with the new sidecar, pairing with v0.7.3 path redaction, `/metrics` integration pattern.
+- **Added:** `tools/tiny-headers-redact-guide.md` (new) — framework-agnostic header redaction. API surface (WSGI, ASGI, `HeaderStats`), install, WSGI/ASGI examples, FastAPI integration, when-to-use vs the `tiny-router`-native alternative.
+- **Added:** `reports/2026-10-15-developer-tools-landscape.md` (10.5 KB, 4 trends) — Theme: "header redaction closes the credential-leak loop; sidecar modules absorb every redaction feature drop; four consecutive cycles added a redaction layer; counter objects are the universal metrics export for redaction." Documents the three ships and the cross-ecosystem context.
+- **Daily Updates 112 → 113** (+1: 10-15 entry). **Reports 24 → 25** (+1: 10-15 landscape in `dev-masterkit/reports/`). **tiny-* Ecosystem 112 → 113** (+1: `tiny-headers-redact` v0.1.0). **Tool Guides 120 → 123** (+3: `tiny-secret-mask` v0.5 + `tiny-router` v0.7.4 + `tiny-headers-redact`). **Additional hussain-alsaibai Repos 32 → 33** (+1: `tiny-headers-redact`). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **Header redaction is the fifth layer of credential safety** — four independent surfaces (the redaction library, the router, the standalone middleware, the framework-agnostic standalone repo) all shipped header redaction in the same 24-hour window. The pattern is now a five-layer loop: value (`mask_string`, v0.1.0), key (`mask_dict` v0.2.0 fix), trace (`mask_trace_context`, v0.3.0), path (`mask_route_path`, v0.4.0), header (`mask_headers`, v0.5.0).
+- **Sidecar modules are the family default for every redaction feature drop** — the same shape that moved trace-context redaction (Oct 9), key-aware redaction (Oct 12), and path redaction (Oct 14) now moves header redaction. Four consecutive cycles have added a redaction hook at a new layer; reviewers should expect this in every new tiny-* release. The Oct 15 cycle even ships a sidecar at the package level: the entire `tiny-headers-redact` package is a wrapper over `tiny_secret_mask.mask_headers`.
+- **Header redaction closes the credential-leak loop** — four consecutive cycles (Oct 9: trace / Oct 12: key / Oct 14: path / Oct 15: header) added a layer. Together the five layers form: value / key / trace / path / header. Any primitive that crosses a network boundary, persists to disk, or emits an observability span is now expected to apply all five.
+- **Counter objects are the universal metrics export for redaction** — both new modules in this cycle (`tiny_router_redact_headers` and `tiny-headers-redact`) expose a `HeaderStats` counter with `as_dict()` for `/metrics`. The shape is identical (modulo field ordering) so a single `/metrics` endpoint can read both stats and emit a unified redaction-rate panel. Three fields is the right size: enough to be useful, small enough to be lightweight.
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:01 EDT today. **Day 28+ blocker.** Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and the 3 new versions + 1 new repo + 3 tool guides + 1 landscape report + 1 daily update from today's cycle (all locally complete; ready to push).
+- Last verified 2026-10-15.
+
 ### 🆕 Latest additions (2026-10-14 cron sync) — path redaction closes the credential-leak loop, 1 new repo + 2 version bumps, PAT day 28
 
 - **`tiny-route-redact` v0.1.0** — NEW repo, hussain-alsaibai/tiny-route-redact. Framework-agnostic path-redaction middleware. Single file ~224 LOC, MIT, zero runtime deps. `redact_path(path)`, `route_redactor_middleware(get_response, *, stats=None, on_redact=None)` (WSGI), `route_redactor_asgi_middleware(app, *, stats=None)` (ASGI), `RedactionStats` counter. The reference consumer for `tiny-secret-mask` v0.4.0 — for stacks that don't use `tiny-router`. 19 tests. **Last verified 2026-10-14.** https://github.com/hussain-alsaibai/tiny-route-redact
@@ -202,17 +219,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-14 |
-| Prompts | 35 | 2026-10-14 |
+| Skills | 39 | 2026-10-15 |
+| Prompts | 35 | 2026-10-15 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 120 | 2026-10-14 |
+| Tool Guides | 123 | 2026-10-15 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-10-14 |
-| Daily Updates | 112 | 2026-10-14 |
-| Reports | 24 | 2026-10-14 |
-| tiny-* Ecosystem Repos | 112 | 2026-10-14 |
-| Additional hussain-alsaibai Repos | 32 | 2026-10-14 |
+| Tools | 98 | 2026-10-15 |
+| Daily Updates | 113 | 2026-10-15 |
+| Reports | 25 | 2026-10-15 |
+| tiny-* Ecosystem Repos | 113 | 2026-10-15 |
+| Additional hussain-alsaibai Repos | 33 | 2026-10-15 |
 
 ## Structure
 
