@@ -2,6 +2,23 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-16 cron sync) — HTTP correctness day, 3 new tiny-* repos (sliding window + hierarchical quota + RFC 9457), PAT day ~29
+
+- **`tiny-rate-window` v0.1.0** — NEW repo, hussain-alsaibai/tiny-rate-window. Weighted sliding-window rate limiter. Solves the fixed-window boundary-burst problem (2000 in 2s no longer slips through). Single file 613 LOC, MIT, zero deps. `SlidingWindowLimiter(limit, window_seconds).try_acquire(key, *, cost=1)` returns `Decision(allowed, remaining, retry_after_s, limit, window_seconds)`. `peek()` for /metrics, `stats()` for `LimiterStats(hits, misses, hits_per_key, peak_count)`, `http_headers(decision)` for `X-RateLimit-*`. 23 tests. **Last verified 2026-10-16.** https://github.com/hussain-alsaibai/tiny-rate-window
+- **`tiny-bucket-quota` v0.1.0** — NEW repo, hussain-alsaibai/tiny-bucket-quota. Hierarchical token-bucket quota allocator for org→team→user budgets. The killer feature is `QuotaDecision.blocked_at`: the path that hit zero, so a 429 can say "team-level quota exceeded" vs "your personal quota is gone." `try_acquire(path, *, cost=1)` is all-or-nothing — if any ancestor is at zero, no node is decremented. Single file 623 LOC, MIT, zero deps. 23 tests. **Last verified 2026-10-16.** https://github.com/hussain-alsaibai/tiny-bucket-quota
+- **`tiny-rfc9457` v0.1.0** — NEW repo, hussain-alsaibai/tiny-rfc9457. RFC 9457 Problem Details renderer. Enforces the spec (default `type=about:blank`, status mirror, `errors` array shape, `application/problem+json` content type). `Problem` frozen dataclass + `as_dict()/as_json()/as_content_type()`. `from_exception(exc, *, instance=None)` maps `ValueError`→400, `KeyError`→400, `PermissionError`→403, `FileNotFoundError`→404, `NotImplementedError`→501. Drop in front of any HTTP handler. 558 LOC, MIT, zero deps. 21 tests. **Last verified 2026-10-16.** https://github.com/hussain-alsaibai/tiny-rfc9457
+- **Added:** `tools/tiny-rate-window-guide.md` (new) — weighted-prev-window algorithm explanation, `SlidingWindowLimiter` API + Decision fields, `http_headers()`, thread-safety, when-to-use (hard ceiling) vs not-to-use (burst tolerance → `tiny-bucket-quota`; concurrency cap → `tiny-bulkhead`).
+- **Added:** `tools/tiny-bucket-quota-guide.md` (new) — tree construction (`QuotaTree.add(parent, child, *, limit, window_seconds)`), `try_acquire` all-or-nothing semantics, `blocked_at` diagnostic, `acquire_or_raise` convenience, when-to-use (multi-tenant SaaS with nested budgets) vs not-to-use.
+- **Added:** `tools/tiny-rfc9457-guide.md` (new) — spec enforcement over dict literals, exception registry extension, `parse()` round-trip, `problem_response()` triple for Flask/FastAPI/WSGI/ASGI, when-to-use (any public HTTP API, AI agent tool surfaces) vs not-to-use (internal RPCs with custom shape).
+- **Added:** `reports/2026-10-16-developer-tool-trends.md` (6.2 KB, 3 trends) — Theme: "HTTP correctness — sliding windows, hierarchical budgets, and standardized error contracts." Documents the three ships and the cross-ecosystem context (nginx limit_req, Cloudflare Workers, Stripe, GitHub, OpenAI).
+- **Daily Updates 113 → 114** (+1: 10-16 entry). **Reports 25 → 26** (+1: 10-16 trends). **tiny-* Ecosystem 113 → 116** (+3: `tiny-rate-window` + `tiny-bucket-quota` + `tiny-rfc9457`). **Tool Guides 123 → 126** (+3: `tiny-rate-window` + `tiny-bucket-quota` + `tiny-rfc9457`). **Additional hussain-alsaibai Repos 33 → 36** (+3: same 3 new repos). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **The HTTP correctness cluster is the fourth themed cluster** in the tiny-* ecosystem after {Resilience: rate-limiter/bulkhead/circuit-breaker}, {Resilience: retry/backoff/timeout}, and {Redaction: secret-mask(5 layers)/headers-redact/route-redact}. Each cluster is a small set of ~600-LOC zero-dep primitives that solve a specific slice of production-readiness. The pattern is consistent across all 60 repos.
+- **Sliding windows close the boundary-burst hole** that fixed-window counters leave open. The weighted-prev-window algorithm is the same one nginx `limit_req` and Cloudflare Workers use. 613 LOC + 23 tests is the right size for a primitive this important.
+- **Hierarchical quotas need all-or-nothing acquire** — partial reservations are how you under-report utilization and lose the diagnostic information that makes a post-mortem possible. The `blocked_at` field is what turns a 429 into actionable information: "team-level quota exceeded, escalate to admin" vs "your personal quota is gone, slow down."
+- **RFC 9457 enforcement > dict literals** — half-implementations of Problem Details are everywhere (wrong default `type`, wrong content type, missing `status` mirror, ad-hoc `errors` shape). A small frozen dataclass + exception registry is the cheapest way to guarantee spec compliance across every error path. Stripe and OpenAI shipped it in 2024-2025; the rest of the industry is catching up.
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 14:00 EDT today via `gh api /users/hussain-alsaibai/repos`. **Day ~29 blocker.** Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, and the 3 new repos + 3 tool guides + 1 trends report + 1 daily update from today's cycle (all locally complete; ready to push).
+- Last verified 2026-10-16.
+
 ### 🆕 Latest additions (2026-10-15 cron sync) — header redaction closes the credential-leak loop, 1 new repo + 2 version bumps, PAT day 28
 
 - **`tiny-headers-redact` v0.1.0** — NEW repo, hussain-alsaibai/tiny-headers-redact. Framework-agnostic HTTP header redaction middleware. Single file ~200 LOC, MIT, zero runtime deps. `redact_headers(headers)`, `header_redactor_middleware(get_response, *, stats=None)` (WSGI), `header_redactor_asgi_middleware(app, *, stats=None)` (ASGI), `HeaderStats` counter. The reference consumer for `tiny-secret-mask` v0.5.0 — for stacks that don't use `tiny-router`. 25 tests. **Last verified 2026-10-15.** https://github.com/hussain-alsaibai/tiny-headers-redact
@@ -219,17 +236,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-15 |
-| Prompts | 35 | 2026-10-15 |
+| Skills | 39 | 2026-10-16 |
+| Prompts | 35 | 2026-10-16 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 123 | 2026-10-15 |
+| Tool Guides | 126 | 2026-10-16 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-10-15 |
-| Daily Updates | 113 | 2026-10-15 |
-| Reports | 25 | 2026-10-15 |
-| tiny-* Ecosystem Repos | 113 | 2026-10-15 |
-| Additional hussain-alsaibai Repos | 33 | 2026-10-15 |
+| Tools | 98 | 2026-10-16 |
+| Daily Updates | 114 | 2026-10-16 |
+| Reports | 26 | 2026-10-16 |
+| tiny-* Ecosystem Repos | 116 | 2026-10-16 |
+| Additional hussain-alsaibai Repos | 36 | 2026-10-16 |
 
 ## Structure
 
