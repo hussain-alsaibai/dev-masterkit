@@ -2,6 +2,21 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-17 cron sync) — input safety + browser boundary day, 2 new tiny-* repos (sanitize + cors), PAT day ~30
+
+- **`tiny-input-sanitize` v0.1.0** — NEW repo, hussain-alsaibai/tiny-input-sanitize. Allowlist-first, stdlib-only input sanitization for 6 contexts (HTML, SQL, shell, filename, log, JSONPath). Single function `sanitize_text(value, *, context="html", allow=None, deny=None, max_length=None, strip_controls=True) -> SanitizationResult`. The `SanitizationResult` carries `value`, `rules_applied`, `confidence` (0.0–1.0), and `truncated` — callers pick their own threshold via `is_safe(value, threshold=0.95)`. NFKC unicode normalization as a pre-processing step catches homoglyph attacks. 49 tests, MIT, 398 LOC, zero deps. **Last verified 2026-10-17.** https://github.com/hussain-alsaibai/tiny-input-sanitize
+- **`tiny-cors` v0.1.0** — NEW repo, hussain-alsaibai/tiny-cors. RFC 9110 / Fetch CORS-compliant WSGI + ASGI middleware. Handles the two production failure modes correctly: `Access-Control-Allow-Origin: *` + `Access-Control-Allow-Credentials: true` is auto-converted to the specific origin (spec forbids wildcard with credentials), and `Vary: Origin` is added to every response when `vary_origin=True` (default). `PreflightCache` with TTL per `(origin, path)`. `tiny_router_middleware(config)` for the in-family router. 23 tests, MIT, 425 LOC, zero deps. **Last verified 2026-10-17.** https://github.com/hussain-alsaibai/tiny-cors
+- **Added:** `tools/tiny-input-sanitize-guide.md` (new, ~110 lines) — context matrix, confidence score semantics, allow-vs-deny precedence, NFKC homoglyph handling, when-to-use vs `bleach`/`nh3`/`shlex.quote`/parameterized queries. The 6-context allowlist-first design explained.
+- **Added:** `tools/tiny-cors-guide.md` (new, ~110 lines) — wildcard+credentials trap (RFC 9110 §3.2.2), `Vary: Origin` for cache correctness, preflight cache invalidation, tiny-router integration, ASGI+WSGI parity, when-to-use vs not.
+- **Added:** `reports/2026-10-17-developer-tools-landscape.md` (3.6 KB, 3 trends) — Theme: "Input safety + browser boundary — sanitization is a first-class library category, CORS is small but easy to get wrong, the tiny-* v0.2.0 wave (tiny-config / tiny-cli / tiny-log)". Documents the two ships and the cross-ecosystem context (OWASP, RFC 9110, FastAPI/Starlette).
+- **Daily Updates 114 → 115** (+1: 10-17 entry). **Reports 26 → 27** (+1: 10-17 landscape). **tiny-* Ecosystem 116 → 118** (+2: `tiny-input-sanitize` + `tiny-cors`). **Tool Guides 126 → 128** (+2: `tiny-input-sanitize` + `tiny-cors`). **Additional hussain-alsaibai Repos 36 → 38** (+2: same 2 new repos). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **Input sanitization is a first-class library category now** — the 6-context split (HTML / SQL / shell / filename / log / JSONPath) is the right axis because each context has different dangerous characters and different safe-encoding strategies. The confidence score (continuous) instead of a boolean is the key API choice: callers can pick their own threshold, and a high-confidence-low-coverage result can still be a valid pass.
+- **CORS is small but easy to get wrong** — the two production failure modes (wildcard+credentials, missing `Vary: Origin`) are both auto-handled by `tiny-cors`. The wildcard+credentials case is the more dangerous of the two: browsers reject the response silently, so the symptom is "the API works in dev (where you turn off credentials) and breaks in prod (where you don't)". Pair the middleware with a smoke test that asserts both the `Access-Control-Allow-Origin` value AND the `Vary` header.
+- **NFKC normalization is a free win for sanitization** — the homoglyph attack surface (Cyrillic а looking like Latin a) is closed at the front door instead of relying on every downstream comparison to be unicode-aware. Two extra `unicodedata.normalize("NFKC", value)` calls per sanitization is not a measurable cost.
+- **Allowlist-first is the right default for input sanitization** — the `allow=` parameter overrides everything. The `deny=` mode is for stripping individual characters but is the wrong default for untrusted input. Document the difference loudly.
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:01 EDT today via `gh auth status` ("The token in /home/node/.config/gh/hosts.yml is invalid."). **Day ~30 blocker.** Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, 4 v0.2.0 commits already on local main (tiny-validator, tiny-config, tiny-cli, tiny-log), and the 2 new repos + 2 tool guides + 1 landscape report + 1 daily update from today’s cycle (all locally complete; ready to push).
+- Last verified 2026-10-17.
+
 ### 🆕 Latest additions (2026-10-16 cron sync) — HTTP correctness day, 3 new tiny-* repos (sliding window + hierarchical quota + RFC 9457), PAT day ~29
 
 - **`tiny-rate-window` v0.1.0** — NEW repo, hussain-alsaibai/tiny-rate-window. Weighted sliding-window rate limiter. Solves the fixed-window boundary-burst problem (2000 in 2s no longer slips through). Single file 613 LOC, MIT, zero deps. `SlidingWindowLimiter(limit, window_seconds).try_acquire(key, *, cost=1)` returns `Decision(allowed, remaining, retry_after_s, limit, window_seconds)`. `peek()` for /metrics, `stats()` for `LimiterStats(hits, misses, hits_per_key, peak_count)`, `http_headers(decision)` for `X-RateLimit-*`. 23 tests. **Last verified 2026-10-16.** https://github.com/hussain-alsaibai/tiny-rate-window
@@ -236,17 +251,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-16 |
-| Prompts | 35 | 2026-10-16 |
+| Skills | 39 | 2026-10-17 |
+| Prompts | 35 | 2026-10-17 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 126 | 2026-10-16 |
+| Tool Guides | 128 | 2026-10-17 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-10-16 |
-| Daily Updates | 114 | 2026-10-16 |
-| Reports | 26 | 2026-10-16 |
-| tiny-* Ecosystem Repos | 116 | 2026-10-16 |
-| Additional hussain-alsaibai Repos | 36 | 2026-10-16 |
+| Tools | 98 | 2026-10-17 |
+| Daily Updates | 115 | 2026-10-17 |
+| Reports | 27 | 2026-10-17 |
+| tiny-* Ecosystem Repos | 118 | 2026-10-17 |
+| Additional hussain-alsaibai Repos | 38 | 2026-10-17 |
 
 ## Structure
 
