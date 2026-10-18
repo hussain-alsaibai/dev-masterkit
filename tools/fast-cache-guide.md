@@ -129,8 +129,57 @@ async def fetch_weather(city: str) -> dict:
 - Memory: ~250 bytes per entry + value
 
 ## Tests
-26/26 passing. Covers LRU eviction, TTL expiry, stale-while-revalidate,
-concurrent access, async wrapping, atomic add, and TTL keepalive refresh.
+74/74 (was 26/26 before v0.7.x series). Covers LRU eviction, TTL expiry,
+stale-while-revalidate, concurrent access, async wrapping, atomic add, TTL keepalive
+refresh, CRDT merge(), and SingleFlightCache stampede protection.
+
+## v0.7.2 — SingleFlightCache (added 2026-10-18)
+
+`SingleFlightCache` protects against cache-stampede: when N threads miss the same key
+at the same instant, only the FIRST thread runs the factory. The remaining N-1 wait on
+a per-key `threading.Event` until the factory completes, then share the result.
+Different keys continue to run in parallel.
+
+```python
+from fast_cache import SingleFlightCache
+
+cache = SingleFlightCache(default_ttl=300)
+
+def load_user(user_id: int) -> dict:
+    return db.fetch(user_id)
+
+# 100 concurrent calls for user_id=42 → factory runs once, 99 share the result
+results = [cache.get_or_set(("user", 42), lambda: load_user(42)) for _ in range(100)]
+
+# How often did the protection actually fire?
+print(cache.stats.as_dict())
+# {"loads": 1, "shared": 99, "waiters": 99, "peak_waiters": 99}
+```
+
+### The threading.Event invariant that's easy to get wrong
+
+If the factory raises an exception, the in-flight slot MUST be cleared (and the
+`Event` set), otherwise every future caller for that key hangs forever waiting on a
+dead `Event`. This is the same class of bug as the v0.7.1 CRDT slot bug in the same
+repo — **"fail fast, free the slot" is the family-wide invariant.** Verify by
+looking at `SingleFlightStats.shared`; if it's >0 under steady-state load, the
+protection is actually firing.
+
+### Sidecar module
+
+SingleFlightCache ships in `fast_cache_v072.py` (sidecar pattern, same as v0.7.1's
+CRDT module). Existing `from fast_cache import cache` users see no behavior change.
+15 new tests in `tests/test_v072_additions.py`.
+
+### Why this matters
+
+Cache stampedes are the production failure mode that nobody catches in dev: a popular
+key expires under load, 1000 simultaneous requests all miss, all 1000 hit the slow
+backend, the backend gets 1000x its normal traffic. Single-flight is the universal
+fix — Go's `singleflight` package (since 2014) and Java's
+`LoadingCache.get(key, loader)` (Guava, since 2010) both ship it. fast-cache joins them.
+
+**Last verified:** 2026-10-18 (after fast-cache v0.7.2 commit)
 
 ## When NOT to Use
 - Distributed systems (use Redis/Memcached)

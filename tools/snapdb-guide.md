@@ -66,10 +66,48 @@ results = docs.find({
 
 | Version | Date | Features |
 |---------|------|----------|
+| v0.18.0 | 2026-10-18 | Index-aware query planning (HashIndex + RangeIndex), Query.between(), Query.explain(), 213/213 tests |
 | v0.3.1 | 2026-06-28 | Batch insert optimization, pre-fetched column refs, null-skipping aggregates |
 | v0.3.0 | 2026-06-28 | Columnar engine, metrics, CDC, 47/47 tests |
 | v0.2.0 | 2026-06-25 | Query engine, DocumentStore, hash indexes, WAL |
 | v0.1.0 | 2026-06-23 | Initial release, key-value API |
+
+## v0.18.0 — Index-aware query planning (added 2026-10-18)
+
+The query engine now walks the available **HashIndex** (equality) and **RangeIndex**
+(gt/gte/lt/lte) before falling back to a linear scan. **31.5x speedup** on a 50K-row
+narrow range scan (500 matches). No API change for callers; the new `Query.between()`
+shortcut and `Query.explain()` introspection are the only surface additions.
+
+```python
+from snapdb import DocumentStore
+
+docs = DocumentStore("docs.db")
+
+# Range query — picks RangeIndex, ~31x faster than linear scan
+results = docs.find({"age": {"$gte": 18, "$lte": 65}})
+
+# Equality query — picks HashIndex when one exists on 'status'
+results = docs.find({"status": "active"})
+
+# New shortcut — same as $gte/$lte pair but more discoverable
+results = docs.find({"created_at": Query.between("2026-01-01", "2026-12-31")})
+
+# New introspection — confirm the planner picked the right index
+plan = docs.find({"age": {"$gte": 18}}).explain()
+print(plan.strategy)   # "range_index" | "hash_index" | "linear"
+print(plan.indexed)    # True if an index was used
+print(plan.matched)    # number of rows matched
+```
+
+**Why it matters:** `Query.explain()` is the cheapest way to make the planner
+observable — without it the planner is a black box and the next contributor can't tune it.
+`SingleFlightStats` reports the same thing for cache-stampede protection (fast-cache v0.7.2).
+Any primitive that picks a strategy should ship a way to ask "what strategy did you pick?".
+
+**Tests:** 33 new tests, all 213/213 pass.
+
+**Last verified:** 2026-10-18 (after snapdb v0.18.0 commit)
 
 ## Benchmarks (100K rows, 5 engines)
 

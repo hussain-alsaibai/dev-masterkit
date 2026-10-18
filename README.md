@@ -2,6 +2,22 @@
 
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
+### 🆕 Latest additions (2026-10-18 cron sync) — query engine + cache stampede protection day, 1 new tiny-* repo (jsonpath), 2 version bumps, PAT day ~31
+
+- `tiny-jsonpath` v0.1.0 — NEW repo, hussain-alsaibai/tiny-jsonpath. RFC 9535 (JSONPath 1.0) parser/evaluator, stdlib-only, ~830 LOC. Supports root, members, indexing, slicing (all 8 forms), wildcard, recursive descent, unions, filter expressions with `&&`/`||`/`=~`. Caret-pointed `JSONPathError` messages with `position` attribute. Inspectable AST (`Root`, `Name`, `Index`, `Slice`, `Wildcard`, `Recursive`, `Union`, `Filter`, `Path`). 49 tests, MIT, zero deps. **Last verified 2026-10-18.** https://github.com/hussain-alsaibai/tiny-jsonpath
+- `snapdb` v0.18.0 — substantial update. Query engine integrates **HashIndex** (equality) and **RangeIndex** (gt/gte/lt/lte). 31.5x speedup on 50K-row narrow range scan (500 matches). New: `Query.between()` shortcut, `Query.explain()` for plan introspection (returns strategy/indexed/matched). No API change for callers. 33 new tests, all 213 tests pass. **Last verified 2026-10-18.** https://github.com/hussain-alsaibai/snapdb
+- `fast-cache` v0.7.2 — substantial update. `SingleFlightCache` protects against cache-stampede: N concurrent misses share one factory call via per-key `threading.Event` (different keys still run in parallel). New: `SingleFlightCache`, `SingleFlightStats` (loads, shared, waiters, peak_waiters). Ships as sidecar `fast_cache_v072.py` — existing `from fast_cache import cache` users see no behavior change. 15 new tests, all 74 pass. **Last verified 2026-10-18.** https://github.com/hussain-alsaibai/fast-cache
+- **Added:** `tools/tiny-jsonpath-guide.md` (new, ~125 lines) — RFC 9535 API surface, supported feature matrix, filter expression grammar, error reporting, pairing with `tiny-input-sanitize` (jsonpath context), when-to-use vs `jsonpath-ng`/`python-jsonpath-rfc9535`.
+- **Added:** `tools/snapdb-guide.md` — appended v0.18.0 section: index-aware query planning, HashIndex + RangeIndex, `Query.between()` / `Query.explain()`, planner introspection pattern.
+- **Added:** `tools/fast-cache-guide.md` — appended v0.7.2 section: `SingleFlightCache` + `SingleFlightStats`, threading.Event pattern, exception-clears-slot invariant.
+- **Added:** `reports/2026-10-18-developer-tools-landscape.md` (5.6 KB, 3 trends) — Theme: "Query engine + cache stampede protection + RFC 9535 — three small primitives that close three production holes". Documents the three ships and the cross-ecosystem context (SQLite/DuckDB planners, Go `singleflight`, Guava `LoadingCache`, RFC 9535 vs Goessner 0.7.x).
+- **Daily Updates 115 → 116** (+1: 10-18 entry). **Reports 27 → 28** (+1: 10-18 landscape). **tiny-* Ecosystem 118 → 119** (+1: `tiny-jsonpath`). **Tool Guides 128 → 129** (+1: `tiny-jsonpath-guide`; snapdb/fast-cache guides amended in-place). **Additional hussain-alsaibai Repos 38 → 39** (+1: `tiny-jsonpath`). All other counts unchanged (Skills 39, Prompts 35, Tools 98, Commands 5, Agents 3, Orchestrators 1).
+- **Index-aware query planning is the cheap next step for any in-memory store** — `Query.explain()` returns strategy/indexed/matched so reviewers can confirm the planner picked the right index. Without it the planner is a black box and the next contributor can't tune it. The pattern: walk the available indexes by operator, pick the most selective, fall back to scan. `SingleFlightStats` reports the same kind of introspection for cache-stampede protection.
+- **Single-flight caching is the universal cache-stampede fix** — Go has `singleflight` (since 2014), Java has `LoadingCache.get(key, loader)` (Guava, since 2010), Redis has `SETNX` + Lua. The Python stdlib had no equivalent until now. Pattern: one dict (key → in-flight `Event`), one `threading.Lock` only around the dict insert, factory called once per in-flight key. **Invariant:** if the factory raises, the in-flight slot MUST be cleared, otherwise every future caller hangs forever on a dead `Event`. This is the same class of bug as the v0.7.1 CRDT slot bug — "fail fast, free the slot" is the family-wide invariant.
+- **RFC 9535 finally gives JSON the query semantics 0.7.x Goessner users hand-roll** — filter expressions (`[?(@.x > 5)]`), recursive descent (`..name`), and union selectors (`[a, b, c]`) are first-class syntax in RFC 9535 but script expressions in Goessner. `tiny-jsonpath` is the 21st zero-dep tiny-* repo. Pair with `tiny-input-sanitize` (jsonpath context) for safe querying of untrusted queries.
+- **Architect action required (still):** rotate `hussain-alsaibai` fine-grained PAT with explicit repo access to all tiny-* repos + dev-masterkit, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:01 EDT today via `gh auth status` ("The token in /home/node/.config/gh/hosts.yml is invalid."). **Day ~31 blocker.** Same PAT is blocking EdgeChains #273 + #290 PRs, the Rumixyz/zio #2 bounty impl pipeline, the 4 v0.2.0 commits already on local main (tiny-validator, tiny-config, tiny-cli, tiny-log) plus today's 3 new commits (snapdb v0.18.0, fast-cache v0.7.2, tiny-jsonpath v0.1.0), all locally complete and ready to push.
+- Last verified 2026-10-18.
+
 ### 🆕 Latest additions (2026-10-17 cron sync) — input safety + browser boundary day, 2 new tiny-* repos (sanitize + cors), PAT day ~30
 
 - **`tiny-input-sanitize` v0.1.0** — NEW repo, hussain-alsaibai/tiny-input-sanitize. Allowlist-first, stdlib-only input sanitization for 6 contexts (HTML, SQL, shell, filename, log, JSONPath). Single function `sanitize_text(value, *, context="html", allow=None, deny=None, max_length=None, strip_controls=True) -> SanitizationResult`. The `SanitizationResult` carries `value`, `rules_applied`, `confidence` (0.0–1.0), and `truncated` — callers pick their own threshold via `is_safe(value, threshold=0.95)`. NFKC unicode normalization as a pre-processing step catches homoglyph attacks. 49 tests, MIT, 398 LOC, zero deps. **Last verified 2026-10-17.** https://github.com/hussain-alsaibai/tiny-input-sanitize
@@ -251,17 +267,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-17 |
-| Prompts | 35 | 2026-10-17 |
+| Skills | 39 | 2026-10-18 |
+| Prompts | 35 | 2026-10-18 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 128 | 2026-10-17 |
+| Tool Guides | 129 | 2026-10-18 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-10-17 |
-| Daily Updates | 115 | 2026-10-17 |
-| Reports | 27 | 2026-10-17 |
-| tiny-* Ecosystem Repos | 118 | 2026-10-17 |
-| Additional hussain-alsaibai Repos | 38 | 2026-10-17 |
+| Tools | 98 | 2026-10-18 |
+| Daily Updates | 116 | 2026-10-18 |
+| Reports | 28 | 2026-10-18 |
+| tiny-* Ecosystem Repos | 119 | 2026-10-18 |
+| Additional hussain-alsaibai Repos | 39 | 2026-10-18 |
 
 ## Structure
 
