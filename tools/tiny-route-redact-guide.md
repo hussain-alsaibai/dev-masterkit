@@ -47,7 +47,16 @@ from tiny_route_redact import redact_path
 
 ### `redact_path(path: str) -> str`
 
-Returns the redacted path string. If `tiny-secret-mask >= 0.4.0` is not installed, the path is returned unchanged.
+Returns the redacted path string. **Requires `tiny-secret-mask >= 0.4.0`.**
+
+> **Changed 2026-10-21.** An older version of this guide said the path is
+> `returned unchanged` when `tiny-secret-mask` is absent. That was not a
+> documented graceful degradation - it was a packaging defect that made
+> redaction a **silent no-op** (sidecars missing from `py-modules`, so the
+> fallback identity lambda was always taken). `tiny-secret-mask` v0.5.1 now
+> raises a `RuntimeWarning` naming the broken guarantee, and the 16-pattern
+> catalogue applies its specific rules before the catch-all. **Last verified
+> 2026-10-21.**
 
 ### `route_redactor_middleware(get_response, *, stats=None, on_redact=None)`
 

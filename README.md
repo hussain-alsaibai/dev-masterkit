@@ -3,6 +3,23 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-10-21 cron sync) — the credential-redaction stack was decorative. `tiny-secret-mask` v0.5.1 fixes 5 root causes; 10 latent defects across 3 repos
+
+- **`tiny-secret-mask` v0.5.1** — security correctness release. The v0.4.0/v0.5.0 sidecars were **never added to `pyproject.toml py-modules`**, so every install fell through `except ImportError` into an **identity lambda**. `mask_route_path()` and `mask_headers()` returned their input unchanged — route and header redaction had never run in any install. No exception, no log line, no metric. **Last verified 2026-10-21.** https://github.com/hussain-alsaibai/tiny-secret-mask
+- **Five root causes fixed:** (1) `py-modules` listed 2 of 4 modules; (2) both fallback paths are identity lambdas — now each raises a `RuntimeWarning` naming the broken guarantee and the repair command; (3) `base64url_20` sat 4th in `PATH_REDACT_RULES` and pre-empted `aws_access_key`, `github_pat`, `jwt_fragment`, `slack_token`, `stripe_live`, `openai_key`, `google_api_key` — moved last and tightened; (4) `safe_repr(depth=0)` returned `""` for containers, making truncation invisible; (5) 6 catalogue patterns shipped elided examples matching nothing, and `bearer` was case-sensitive so its own documented example never matched.
+- **Tests 114 passed / 10 failed → 124 passed / 0 failed.** Also fixed 3 stale version pins (package asserted `== "0.1.0"/"0.2.0"/"0.4.0"`) → assert the sidecar version plus `>=` on the package.
+- **`tiny-router`** — `test_tiny_router.py` pinned `__version__ == "0.6.0"` against a 0.7.4 package; replaced with a floor assertion. **All 7 suites now pass**, including `test_v073_redact_path` and `test_v074_redact_headers`, which had been failing since they were written. **Last verified 2026-10-21.**
+- **`tiny-log` v0.5.x** audited as a secret-mask consumer — 16/16 pass, no impact. **Last verified 2026-10-21.**
+- **Independently re-verified** (test-run, not trusted): fast-cache v0.7.2 `SingleFlightCache` 15/15, snapdb v0.18.0 index planner 33/33, tiny-validator v0.4.0+v0.5.0 95/95, tiny-semver v0.2.0 and tiny-graceful v0.1.0 both green. **Last verified 2026-10-21.**
+- **Rewritten:** `tools/tiny-secret-mask-guide.md` (83 -> 206 lines) — silent-no-op defect anatomy, the five fixes, rule-ordering failure with side-by-side wrong/right output, verified redaction matrix, when-to-use.
+- **Added:** `prompts/silent-security-control-audit.md` (new, ~99 lines) — checklist for auditing redaction/validation/auth primitives that degrade to silent no-ops. Includes the critical detail that the import must be verified **from outside the source directory**, or the loose source file masks the defect.
+- **Added:** `reports/2026-10-21-developer-tools-landscape.md` (~12.5 KB) — Theme: streaming as the new default for AI endpoints (tiny-router v0.4.0 SSE), cache stampedes (`SingleFlightCache`), sum-type validation as the missing combinator. The repo previously held a 42-byte stub.
+- **Daily Updates 118 → 119.** **Reports 11 → 12.** **Tool Guides 131 (unchanged; tiny-secret-mask-guide rewritten in place).** **Prompts 35 → 36.** **tiny-* Ecosystem 64 → 64** (no new repos; `tiny-secret-mask` corrected to v0.5.1).
+- **A `try/except ImportError` around a *security* primitive is a design smell** — It was added for single-file convenience and converted a hard failure into a silent success. Capability degradation is fine for optional formatting; it is not fine for a control whose entire job is to be unfalsifiable. The tell: the fallback returned *plausible output* rather than *raising*. Had `mask_*` raised, this would have surfaced in one run instead of six days and three repos.
+- **In an ordered regex catalogue, rule order *is* the rule.** `base64url_20` ran before seven specific rules, so every one of them reported the wrong redaction tag. The secret was still hidden — which is why it never looked like a failure — but the operator lost the ability to tell *what* leaked or which severity it carried. Rule: exactly one catch-all, always last, and every rule asserted to fire **by name** on its own example.
+- **Green test suites are a claim, not evidence.** The 5 failing router tests had been failing since the day they were written and were in no CI run. Today's entire finding came from running a suite that was already known-broken. If a test fails, the default hypothesis should be "the product is wrong", not "the test is stale" — the stale-pin excuse is real (this repo had 4 of them) but it is not free.
+- **Architect action required (still, day ~33):** rotate the `hussain-alsaibai` fine-grained PAT with explicit access to tiny-secret-mask, tiny-router, tiny-log, dev-masterkit and the tiny-* family, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. All of today's work is committed locally and unpushed.
+- Last verified 2026-10-21.
 ### 🆕 Latest additions (2026-10-20 cron sync) — graceful shutdown + semver hardening day, 1 new tiny-* repo (graceful), 4 silent-bug fixes in tiny-semver, PAT day ~33
 
 - `tiny-graceful` v0.1.0 — NEW repo, hussain-alsaibai/tiny-graceful. Zero-dependency cross-platform graceful shutdown for threaded and asyncio services, ~280 LOC, 55 tests (including AST test that fails on any non-stdlib import). Shipped `Shutdown`/`AsyncShutdown` (one-shot, idempotent trigger), `@shutdown.hook(priority=N)` (reverse-order LIFO), `coordinator()` context manager (SIGINT/SIGTERM), `serve()` / `async_serve()` (worker pools + shutdown in one call, with injectable `shutdown=` so admin/test/signal paths converge). Verified end-to-end via `timeout -s TERM python3 example.py`: hooks fired in exact reverse order with `StopReason.SIGTERM`. **Last verified 2026-10-20.** https://github.com/hussain-alsaibai/tiny-graceful
@@ -283,16 +300,16 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 39 | 2026-10-18 |
-| Prompts | 35 | 2026-10-18 |
+| Prompts | 36 | 2026-10-21 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 129 | 2026-10-18 |
+| Tool Guides | 131 | 2026-10-21 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-10-18 |
-| Daily Updates | 116 | 2026-10-18 |
-| Reports | 28 | 2026-10-18 |
-| tiny-* Ecosystem Repos | 119 | 2026-10-18 |
-| Additional hussain-alsaibai Repos | 39 | 2026-10-18 |
+| Daily Updates | 119 | 2026-10-21 |
+| Reports | 12 | 2026-10-21 |
+| tiny-* Ecosystem Repos | 64 | 2026-10-21 |
+| Additional hussain-alsaibai Repos | 40 | 2026-10-20 |
 
 ## Structure
 

@@ -1,6 +1,6 @@
 # tiny-headers-redact v0.1.0 — Framework-Agnostic Header-Redaction Middleware
 
-> NEW REPO. Framework-agnostic HTTP header redaction middleware. Single file ~200 LOC, MIT, zero runtime deps. Wraps `tiny-secret-mask` v0.5.0 `mask_headers()` and exposes WSGI + ASGI adapters plus a `HeaderStats` counter.
+> NEW REPO. Framework-agnostic HTTP header redaction middleware. Single file ~200 LOC, MIT, zero runtime deps. Wraps `tiny-secret-mask` v0.5.1 `mask_headers()` and exposes WSGI + ASGI adapters plus a `HeaderStats` counter.
 > Last verified: 2026-10-15 | Version 0.1.0 | hussain-alsaibai/tiny-headers-redact
 
 ## What's in v0.1.0 (Oct 2026)
@@ -12,7 +12,8 @@ A brand-new repo, the framework-agnostic standalone answer to "I want header red
 - **`header_redactor_asgi_middleware(app, *, stats=None)`** — ASGI-style middleware that rewrites the `headers` scope key. Returns a coroutine callable. Compatible with FastAPI, Starlette, Quart, Sanic, and any other ASGI stack.
 - **`HeaderStats`** — counter object (`headers_seen`, `redactions`, `last_redacted_header`) with `as_dict()`. Same shape as `tiny_router_redact_headers.HeaderStats` for cross-compat.
 - **25 tests** in `tests/test_tiny_headers_redact.py`. Suite passes locally.
-- **Single file, ~200 LOC.** MIT-licensed, no third-party runtime deps, only `tiny-secret-mask >= 0.5.0` as a soft optional (the middleware no-ops when not installed).
+- **Single file, ~200 LOC.** MIT-licensed, no third-party runtime deps. `tiny-secret-mask >= 0.5.0` is **required for redaction to work** - if absent, tiny-secret-mask v0.5.1+ raises a `RuntimeWarning` and the middleware passes headers through **unredacted**. Do not ship without it.
+- > **Amended 2026-10-21.** This guide previously described the no-op as intended ("the middleware no-ops when not installed"). It was a packaging defect: `tiny_secret_mask_v050` was never listed in `py-modules`, so header redaction never ran in any install. Fixed in tiny-secret-mask v0.5.1. **Last verified 2026-10-21.**
 
 ## Quick Start
 
