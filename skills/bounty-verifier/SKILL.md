@@ -1,12 +1,13 @@
 ---
 name: bounty-verifier
-description: Two-stage bounty issue verification — hard filters + behavioral signals — to refuse scam/fork issues before picking them. Last verified: 2026-07-08.
+description: Two-stage bounty issue verification — hard filters + behavioral signals — to refuse scam/fork issues before picking them. Last verified: 2026-10-22.
 ---
 
 # Bounty Verifier
 
-> **Last verified:** 2026-07-08
+> **Last verified:** 2026-10-22
 > Born from the July 1, 2026 Opire scam flood (18/18 issues from 10 throwaway-account fork repos).
+> Re-checked 2026-07-08 and again 2026-10-22 — see the dated sections below.
 > See: [`bounty-scanner`](../bounty-scanner/SKILL.md) for the upstream scanner; this skill is the verification gate.
 
 ## When to Use
@@ -87,6 +88,39 @@ The same hard filters still held during the July 8 daily scan:
 - Creator names again looked auto-generated or low-reputation (`qxrtjdggj653`, `Markp1598M`, `MariauqmpsA333`)
 
 Do not relax the star/age/fork filters just because the issue includes a plausible USD amount.
+
+## 2026-10-22 Re-check — the filters are correct, the scorer bypassed them
+
+Stage 1 and Stage 2 both held up today. What failed was upstream of them: the
+scorer fed them bad data and awarded points for it.
+
+**Three defects found on a 348-issue scan:**
+
+1. **`no_stars` fired on a 429-star repo.** The star lookup is
+   unauthenticated and throttled, so it returns 0 on rate limit and the
+   scorer reads that as "zero stars" — which is exactly the signal the
+   filter is supposed to trust. **A signal the scorer cannot read must not
+   be treated as a signal that failed.** Fail closed: no data means
+   unverifiable, not clean.
+2. **`competing_prs=0` on an issue with 5+ real PRs.** That is 25 unearned
+   points on the #1 pick — the competition factor was the largest single
+   term in the score and it was pure fiction.
+3. **Ranks 2, 3 and 4 were all scam-shaped**, despite Stage 1 existing:
+   `Kristywvs22/gin`, `RoseMark45/echo`, `Tylerx3udv/go-github` — every one
+   created 2026-07, zero pushes after creation, not forks, zero stars.
+   All three cleared the star gate because the gate read zero for a
+   throttled reason.
+
+**The #1 pick was real:** `arakoodev/EdgeChains` — 429 stars, 253 forks,
+created 2023, pushed 2026-10-20.
+
+**Procedure change.** Enforce a min-stars and min-age gate **before**
+scoring rather than after, and make the star lookup fail closed. Then verify
+the top pick by hand against `api.github.com` directly, every run, even
+when the scanner says PASS. Verified: all 348 issues scanned, 168 filtered,
+10 rejected as scam.
+
+**Last verified: 2026-10-22.**
 
 ## Procedure
 

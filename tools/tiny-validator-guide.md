@@ -93,16 +93,38 @@ reason to accept them.
 - Add tests for missing required fields, wrong types, and nested invalid data.
 - Treat schemas as boundary contracts, not documentation-only hints.
 
+## Schema Export Must Record, Not Reconstruct
+
+`to_json_schema()` and `to_openapi_schema()` are contract surfaces: whatever
+they omit becomes an unconstrained field in every downstream consumer's
+generated docs and tool definition.
+
+Until v0.6.0 they recovered field constraints by parsing the validator's own
+error message strings. That failed in both directions:
+
+- **Silent loss.** `String(choices=[...])` and `pattern` never appeared in the
+  exported schema, so an OpenAPI consumer saw a bare `string` and an MCP
+  client sent anything.
+- **Silent invention.** Arbitrary validator prose containing `must be at least
+  999 characters of prose` produced a `minLength: 999` that no caller ever
+  declared. A constraint read out of prose is not a constraint.
+
+The fix is `Field.set_constraint()`, which records the constraint when the
+field is constructed. The exporter reads the record. Backward compatible, and
+it removes the entire class: no string parsing anywhere in the export path.
+
+**When you add a constraint keyword, add it to the recorded set, not to a
+parser.** Any constraint that exists only as text inside an error message is
+one refactor away from being invented for a field that never had it.
+
 ## Tests
 
-34/34 passing after adding the JSON Schema bridge.
+114 passing as of v0.6.0 (95 before this cycle, plus 19 new).
 
-## Last verified: 2026-07-15
+## Last verified: 2026-10-22
 
 - Repo: `hussain-alsaibai/tiny-validator`
-- Commit: `84b0f8d` (schema-drift field note; JSON Schema bridge remains at
-  `296079e`)
-- Verification: local field note
-  `reports/2026-07-15-typed-tool-boundaries.md` was reviewed during the July
-  15 developer-tools report run; no new code was required for the typed
-  boundary procedure.
+- Version: v0.6.0, commit `f0b4bb2`
+- Verification: 114/114 by test run on 2026-10-22, plus a hand audit of the
+  exporter confirming constraints are read from `Field` records rather than
+  from validator error strings.

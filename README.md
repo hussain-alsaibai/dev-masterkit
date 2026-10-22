@@ -3,6 +3,27 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-10-22 cron sync) — the MCP supply chain got a number attached. `tiny-mcp-audit` v0.1.0 (NEW) + `tiny-validator` v0.6.0 schema-export fix; a bounty suite collecting 0 tests while reporting green
+
+- **The MCP gap is measurable now.** OX Security crawled **15,465 publicly indexed MCP servers** across 5 registries (5,095 unique hostnames). Findings: **2.3% on expired domains anyone can register for $4-12/year**, 15.6% resolving outside the US, 0.45% reachable only through consumer tunnels on personal machines. The 2.3% is the sharp edge — trust is extended while the hostname is legitimate, and the attack lands later with no reconfiguration and no error. Source: The Hacker News, 2026-10-22.
+- **`tiny-mcp-audit` v0.1.0** — NEW repo, hussain-alsaibai/tiny-mcp-audit. Zero-dependency static auditor for MCP server manifests. 19 checks across 7 groups (`identity, secrets, transport, resources, tools, prompts, annotations`), 5 severities, 0-100 score with an A-F grade, `has_blocking` gate for CI, text/JSON/SARIF 2.1.0 output. **59 tests passing** (verified by run). Findings carry the matched *shape* and never the matched value — asserted by a test and documented in SECURITY.md, which is what makes the report safe to publish. Audited both shipped examples by hand: risky = score 0 / F / 11 findings, clean = 100 / A / 0. **Repo does not exist upstream yet** (`GET /repos/hussain-alsaibai/tiny-mcp-audit` → 404, 2026-10-22) — local clone only. **Last verified 2026-10-22.**
+- **`tiny-validator` v0.6.0** — fixes a silent data-loss bug. `to_json_schema()` recovered field constraints by *parsing its own validator error message strings*, which failed in both directions: `choices` and `pattern` were silently dropped (OpenAPI/MCP consumers saw unconstrained fields), AND arbitrary validator prose containing `must be at least 999 characters of prose` invented a `minLength` that was never declared. Fix: `Field.set_constraint()` records constraints at construction; the exporter reads the record. **114 tests passing** (verified by run). **Last verified 2026-10-22.** https://github.com/hussain-alsaibai/tiny-validator
+- **`arakoodev/EdgeChains` #290** (bounty) — the AWS Comprehend PII redaction implementation existed, and its test suite used **jest globals in a vitest project** (`package.json` `test` script = vitest). It collected **0 tests** and exited 0, so the bounty criterion "add testcases" was unmet while the repo looked complete. Converted to vitest (0 → 17 passing), removed fake AWS creds that were making live calls and falling back silently, fixed an undefined `messageOption` type, removed dead `signRequest()` + unused imports, gave the example a `package.json` and a correct `@arakoodev/edgechains.js/ai` import path. Local only (`ec32a586`, branch `pr/comprehend-290`) — no PR until the PAT works.
+- **Added:** `prompts/mcp-manifest-trust-gate.md` (new, 99 lines) — pre-connection checklist for third-party MCP servers: 7 questions about the declaration, the 3 things a manifest can never tell you, the controls that actually hold (pin by digest, least-privilege creds, egress allow-list, runtime redaction, CI audit), and a written-verdict format. **Last verified 2026-10-22.**
+- **Added:** `prompts/zero-tests-ran-is-a-failure.md` (new, 68 lines) — how a suite collects zero tests and still reports green, the 3 signals that distinguish it from a real pass (count, duration, coverage), the CI guard (`--passWithNoTests=false`), and the adjacent case where fake credentials made every test pass by asserting a silent fallback. **Last verified 2026-10-22.**
+- **Added:** `prompts/safe-file-write-append.md` (new, 50 lines) — `write({append:true})` silently replaces the file and reports `changed: true`. Write parts to separate files, `cat` them, `wc -l` after every concatenate. Plus the `edit` anchor hazard and the `git diff --stat` check. **Last verified 2026-10-22.**
+- **Added:** `tools/tiny-mcp-audit-guide.md` (new, 139 lines) — API surface, the 7 check groups, the verified finding-code table (MCP002/MCP011/MCP020/MCP031/MCP041/MCP043/MCP050/MCP004/MCP060/MCP042 with real output), grading formula, CI integration, when-not-to-use.
+- **Updated:** `tools/tiny-validator-guide.md` (108 → 130 lines) — was stale three ways (`Last verified: 2026-07-15`, `34/34 passing`, a July commit pin). Refreshed to 2026-10-22 / v0.6.0 / 114 tests with a new "Schema Export Must Record, Not Reconstruct" section covering the defect and the fix.
+- **Updated:** `skills/bounty-verifier/SKILL.md` (117 → 151 lines) — new 2026-10-22 re-check section. The filters held; the scorer bypassed them. `no_stars` fired on a 429-star repo (throttled lookup returns 0, which the scorer reads as "zero stars" — exactly the signal the filter trusts), `competing_prs=0` on an issue with 5+ real PRs (25 unearned points on the #1 pick), and ranks 2/3/4 were all scam-shaped repos that cleared the star gate for the same throttled reason. Procedure change: enforce min-stars and min-age *before* scoring, make the star lookup fail closed, hand-verify the top pick every run.
+- **Added:** `reports/2026-10-22-developer-tools-landscape.md` (12.3 KB) — from the 09:00 cycle. Trend 1: MCP governance as a measurable gap (with the census table). Trend 2: schema export is a contract surface and a data-loss bug there is silent in both directions. Trend 3: zero-dependency-as-position.
+- **Daily Updates 119 → 120. Reports 12 → 13. Tool Guides 131 → 132** (+1 `tiny-mcp-audit-guide`; `tiny-validator-guide` amended in place so single increment). **Prompts 36 → 39.** **Skills 39 → 39** (bounty-verifier amended). **tiny-* Ecosystem 64 → 65** (+1 `tiny-mcp-audit`). **Additional hussain-alsaibai Repos 40 → 41.**
+- **A manifest is a claim, not a review.** The manifest is the only artifact an agent reads before it decides to trust a server, and nothing in the stack vets it. Code review does not substitute: a remote MCP server runs backend code that need not match its public repo, which is why marketplace star counts are not a security signal either.
+- **A green exit code is a claim about the runner, not about the code.** Two findings this week share the shape. On 10-21, route and header redaction never ran in any install — the control was inert. On 10-22, a test suite collected zero tests while the bounty criterion "add testcases" went unmet. In both cases the defect hid behind a zero. The fix in both cases was to make the invisible quantity explicit: a test count, a counter, a `has_blocking` flag.
+- **Constraints must be recorded, never reconstructed from prose.** `to_json_schema()` parsed its own error strings to recover `choices` and `pattern`, and lost them — while inventing a `minLength` from a sentence that merely contained the words. Anything a layer infers from human-readable text is a constraint that can be lost and a constraint that can be fabricated, in the same mechanism.
+- **A signal the scorer cannot read must not be treated as a signal that failed.** `no_stars` fired on a 429-star repo because an unauthenticated, throttled lookup returns 0. The filter then treated "I could not check" as "checked, and failed" — while three scam repos with genuinely zero stars passed the same gate. Fail closed, or the gate is decoration.
+- **Thin is not dead.** Five guides looked like dead stubs today (7, 7, 14, 40, 85 lines) and were removed before the upstream API was checked. `tiny-mcp`, `tiny-mcp-server`, `tiny-mcp-client`, `tiny-events`, and `tiny-eventbus` all return HTTP 200 — five distinct existing projects. All five restored. Verify existence before deleting; the expensive direction of that error is the delete.
+- **Architect action required (still, day ~34):** rotate the `hussain-alsaibai` fine-grained PAT with explicit access to tiny-mcp-audit, tiny-validator, dev-masterkit and the tiny-* family, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:0x EDT today. All of today's work is committed locally and unpushed, including the EdgeChains #290 fix.
+- Last verified 2026-10-22.
 ### 🆕 Latest additions (2026-10-21 cron sync) — the credential-redaction stack was decorative. `tiny-secret-mask` v0.5.1 fixes 5 root causes; 10 latent defects across 3 repos
 
 - **`tiny-secret-mask` v0.5.1** — security correctness release. The v0.4.0/v0.5.0 sidecars were **never added to `pyproject.toml py-modules`**, so every install fell through `except ImportError` into an **identity lambda**. `mask_route_path()` and `mask_headers()` returned their input unchanged — route and header redaction had never run in any install. No exception, no log line, no metric. **Last verified 2026-10-21.** https://github.com/hussain-alsaibai/tiny-secret-mask
@@ -299,17 +320,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-18 |
-| Prompts | 36 | 2026-10-21 |
+| Skills | 39 | 2026-10-22 |
+| Prompts | 39 | 2026-10-22 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 131 | 2026-10-21 |
+| Tool Guides | 132 | 2026-10-22 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-10-18 |
-| Daily Updates | 119 | 2026-10-21 |
-| Reports | 12 | 2026-10-21 |
-| tiny-* Ecosystem Repos | 64 | 2026-10-21 |
-| Additional hussain-alsaibai Repos | 40 | 2026-10-20 |
+| Daily Updates | 120 | 2026-10-22 |
+| Reports | 13 | 2026-10-22 |
+| tiny-* Ecosystem Repos | 65 | 2026-10-22 |
+| Additional hussain-alsaibai Repos | 41 | 2026-10-22 |
 
 ## Structure
 
@@ -343,7 +364,10 @@ dev-masterkit/
 │   ├── silent-failure-detection.md   # Monitoring design patterns — active probes vs state-file lies [NEW 2026-07-30]
 │   ├── opire-scam-fingerprint.md     # Opire fork-scam detection (same-day accounts + Hello Bounty Hunter!) [NEW 2026-07-30]
 │   ├── bounty-freeze-detection.md     # Detect frozen/closed bounties before wasting effort [NEW 2026-08-05]
-│   └── bounty-pivot-after-N-attempts.md # Hard-pivot decision rule after N≥3 init-only async attempts [NEW 2026-09-11]
+│   ├── bounty-pivot-after-N-attempts.md # Hard-pivot decision rule after N≥3 init-only async attempts [NEW 2026-09-11]
+│   ├── mcp-manifest-trust-gate.md    # Pre-connection gate for third-party MCP servers            [NEW 2026-10-22]
+│   ├── zero-tests-ran-is-a-failure.md # A suite can collect 0 tests and still report green         [NEW 2026-10-22]
+│   └── safe-file-write-append.md     # write({append:true}) replaces the file; verify every write   [NEW 2026-10-22]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -817,6 +841,7 @@ Production-tested tools and libraries built by this team:
 | [tiny-chain Guide](tools/tiny-chain-guide.md) | LLM streaming processor — retries, model fallbacks, function calling, JSON extraction | 2026-07-22 |
 | [tiny-workflow Guide](tools/tiny-workflow-guide.md) | Async DAG orchestrator — retry, approval gates, dead-letter queue, state persistence | 2026-07-22 |
 | [tiny-git-pr-workflow Guide](tools/tiny-git-pr-workflow-guide.md) | Cherry-pick workflow for external-repo PRs, fine-grained PAT setup, compare URL workaround | 2026-08-15 |
+| [tiny-mcp-audit Guide](tools/tiny-mcp-audit-guide.md) | Static MCP manifest security audit — 19 checks, 7 groups, SARIF/CI gate (v0.1.0) | 2026-10-22 |
 | [tiny-agentskills Guide](tools/tiny-agentskills-guide.md) | Zero-dep Python runtime for Anthropic-style SKILL.md bundles (v0.1.0) | 2026-09-11 |
 | [tiny-router v0.4 Guide](tools/tiny-router-v0.4-guide.md) | Async + `Depends()` + structured errors (v0.4.0 force-push) | 2026-09-11 |
 | [dev-tools-trends-2026-q3 Guide](tools/dev-tools-trends-2026-q3-guide.md) | 10 shifts that mattered for dev tools in Q3 2026 | 2026-09-11 |
