@@ -642,6 +642,7 @@ Production-tested tools and libraries built by this team:
 | [dev-tooling-trends-2026](https://github.com/hussain-alsaibai/dev-tooling-trends-2026) | Living report on AI agent tooling, MCP, A2A, zero-dep ecosystem trends | ⭐0 | Markdown |
 | [tiny-cost](https://github.com/hussain-alsaibai/tiny-cost) | Token cost tracking + budget enforcement for Python agents — built-in pricing, circuit breaker, zero deps | ⭐0 | Python |
 | [tiny-mcp-server](https://github.com/hussain-alsaibai/tiny-mcp-server) | Build MCP servers with @tool decorator — stdio + SSE transports, auto JSON Schema, zero deps | ⭐0 | Python |
+| [tiny-mcp-audit](https://github.com/hussain-alsaibai/tiny-mcp-audit) | Static security auditor for MCP server manifests — 19 checks / 7 groups, 0-100 score + A-F grade, SARIF 2.1.0, zero deps | ⭐0 | Python |
 
 *All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **41 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~23,800+ LOC lib + ~890+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
