@@ -1,48 +1,50 @@
 # tiny-cost-ledger Guide
 
-**Repository:** https://github.com/hussain-alsaibai/tiny-cost-ledger
-**Last verified:** 2026-09-22
-**License:** MIT
-**Dependencies:** Zero (Python stdlib only)
+## Repo
+https://github.com/hussain-alsaibai/tiny-cost-ledger
 
-## What it does
+## One-liner
+Zero-dependency cost ledger with pricing tables, period rollups, and budget
+alerts. Pure Python stdlib. MIT.
 
-Itemized LLM cost ledger with multi-period budgets and alert hooks. Tracks per-call LLM spend (input/output tokens, model, time), enforces per-period budgets (daily/weekly/monthly), and emits structured alerts when thresholds are crossed.
+## Status
+**Repo does not exist upstream yet** (`https://github.com/hussain-alsaibai/tiny-cost-ledger`
+-> HTTP 404, checked 2026-10-23). Local clone only.
 
-## When to use
+## Last Verified
+2026-10-23
 
-Drop into any autonomous agent, cron, or batch pipeline that calls closed-source LLM APIs. Distinct from `tiny-cost-tracker` (which is in-memory, per-session); this is a persistent, multi-period ledger with alerting.
+## API Correction (2026-10-23)
 
-## Quick start
+The previous version of this guide documented `from tiny_cost_ledger import
+CostLedger, Model, Period`. **Neither `CostLedger` nor `Model` exists.**
+Verified against the local clone:
 
-```python
-from tiny_cost_ledger import CostLedger, Model, Period
-
-ledger = CostLedger(periods=[Period.DAILY, Period.WEEKLY, Period.MONTHLY])
-
-@ledger.record(model=Model.GPT_4O_MINI)
-def call_llm(prompt):
-    ...
-
-# Thresholds + alert hooks
-ledger.on_threshold(usd=5.0, period=Period.DAILY, callback=alert_team)
+```
+AlertLevel, Period, CostEntry, ModelPrice, PricingTable, Ledger,
+Budget, CostTracker
 ```
 
-## Key features
+The ledger is **`Ledger`**, the pricing table is **`PricingTable`** (with
+`ModelPrice` records), the period enum is **`Period`**, alerts use
+**`AlertLevel`**, and there is a **`Budget`** type plus a **`CostTracker`**.
 
-- **Multi-period budgets** — daily, weekly, monthly envelopes
-- **Default pricing 2026 Q3** — GPT, Claude, Gemini, Grok
-- **Strict mode** — refuse uncategorized models
-- **Alert hooks** — callback on threshold breach
-- **Persistent JSON** — survives across sessions
-- **Single file** — auditable in one sitting
+## Quick Example
+```python
+from tiny_cost_ledger import Ledger, ModelPrice, PricingTable, Period
 
-## Integration pattern
+pricing = PricingTable([ModelPrice(model="gpt-5", input_per_1k=0.01, output_per_1k=0.03)])
+ledger = Ledger(pricing=pricing)
+ledger.record(model="gpt-5", input_tokens=1200, output_tokens=400)
+print(ledger.total(Period.MONTH))
+```
 
-Stack on top of `tiny-cost-tracker` (per-session, in-memory) for a full spend picture: tracker handles a single agent's runtime budget; ledger handles org/team-level multi-period caps.
+## Key Features
+- Per-model pricing tables with period-aware currency
+- Period rollups (day / week / month)
+- Budget objects with `AlertLevel` thresholds
+- 14 tests passing (verified by run, 2026-10-23)
 
-## Notes
-
-- Created 2026-09-22 as part of the tiny-* ecosystem
-- MIT licensed, zero dependencies
-- Tests in `tests/`
+## Related
+- `tools/tiny-cost-tracker-guide.md` — `tiny-cost-tracker` (upstream, simpler)
+- `tools/tiny-llm-budget-guide.md` — runtime budget enforcement

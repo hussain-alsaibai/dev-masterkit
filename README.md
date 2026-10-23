@@ -3,6 +3,33 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-10-23 cron sync) — a deadlock with no error message, and a filter that was armed and disarmed at the same time. `tiny-hll` v0.1.0 (NEW) + `fast-cache` v0.8.0 + 29 stale guides corrected
+
+- **`Cache.info()` deadlocked permanently.** `CacheStats.to_dict()` held a plain `threading.Lock` and then called `self.hit_rate`, which re-acquired the same lock. Every call hung the calling thread forever — no error, no timeout, no traceback. The README's "check your hit rate" instruction was an infinite hang. Found because the legacy suite also hung: `test_info` never returned, the suite printed all dots and stopped. Fixed with `RLock` + inline `hit_rate`. **Second instance of this bug class in two days** (the first was `tiny-mcp-registry`'s `export()`).
+- **`fast-cache` v0.8.0** — ships `SwrCache` (stale-while-revalidate, per-key coalescing) and `namespaced()` (key-prefix isolation) in the `_v080.py` sidecar, plus a scalar fast path for size accounting. `set` 22K -> 57K ops/sec, hits 591K -> 1,445K. **54 tests passing** (verified by run). SWR and namespacing verified live: `fresh_hit`/`stale_hit`/`expired_miss` all confirmed, background refresh observed landing.
+- **The old benchmark table was fabricated.** It cited cachetools and `functools.lru_cache` numbers for SWR on "Apple M3, Python 3.12" that were never measured, and claimed 2.2M ops/sec on a path that does not reach it. `benchmark_swr.py` now reproduces every figure. The honest table says `lru_cache` is **~14x faster on a pure hit** — that is now stated plainly, which is what makes the other four rows believable.
+- **`tiny-hll` v0.1.0** — NEW repo. Zero-dependency HyperLogLog distinct counting, 128 bytes fixed. Ships `merge()` so global counts can be built from per-shard partials. Bias under 2.5% at every precision from 32 to 16384 registers over 12 independent sketches of 50k items; spread tracks 1.04/sqrt(m). **25 tests passing** (verified by run). **Repo does not exist upstream yet** (`https://github.com/hussain-alsaibai/tiny-hll` -> HTTP 404, 2026-10-23) — local clone only. https://github.com/hussain-alsaibai/tiny-hll
+- **The bounty's anti-scam filter was disarmed by its own error handling.** A 348-issue scan surfaced 20 picks, **all 20 carrying `no_stars`**, 18 of them 1-star forks of gin/chi/grpc-go/gorm/CockroachDB/vault/minio/etcd/mysql/jwt/gitea/go-redis with $10 labels. Root cause: `httpGet('.../repos/X').catch(() => null)` returned `null` on a 403 rate-limit, so `detectScam()` got `repo || {}` — an empty object produces exactly **one** flag instead of two, and therefore sailed past the `>= 2 flags = reject` rule. Fixed with a persistent `repo-cache.json` (successful fetches only, 7-day TTL, stale-on-failure), an `unverified_repo` red flag, a fork:star ratio compared against `stars` instead of `watchers_count`, and a `MIN_STARS=5` selection gate. **Rejections 161 -> 241, surfaces 20 -> 9**, and the old #1 pick (`javelin-anticheat/py-workedtask`, 1 star, 51 forks, born and abandoned the same day) was rejected.
+- **Added:** `tools/tiny-hll-guide.md` (new, ~175 lines) — usage, merging, the precision table with the realised-vs-nominal error caveat, measured bias/spread table, caveats, and how it works.
+- **Added:** `tools/fast-cache-v0.8.0-guide.md` (new, ~214 lines) — the deadlock anatomy, the verified API surface, SWR state table, namespacing, the honest benchmark table, and the sidecar docstring that records the four APIs the README advertised for two months that did not exist.
+- **Added:** `tools/fast-cache-operator-note.md` (new, ~115 lines) — operator lease caches, cache ROI checklist, `SingleFlightCache` stampede protection, and the API corrections (`from fast_cache import cache` never worked; `add()`/`touch()`/`update()`/`peek()` are not on v0.8.0's `Cache`).
+- **Added:** `prompts/reentrant-lock-discipline.md` (new, ~140 lines) — why a plain `Lock` is not reentrant, the "all dots then hangs forever" symptom, the three rules (RLock, snapshot-then-build, never hold a lock across caller-supplied code), and the family table of three lock/slot defects across two repos in two days.
+- **Added:** `prompts/fail-closed-on-unavailable-data.md` (new, ~127 lines) — the three failure shapes (null-collapse, zero-substitution, silent-skip), why `stars = data.stargazers_count ?? 0` is the most seductive and most dangerous form, and the before/after measurements.
+- **Added:** `prompts/readme-claims-must-be-runnable.md` (new, ~132 lines) — the four documentation failure modes, the import-based symbol check (a grep for `class Cache` will not tell you the constructor signature), the three-clones version-pinning trap, and the upstream-drift problem.
+- **Added:** `prompts/assert-invariants-not-fixed-values.md` (new, ~126 lines) — why three tiny-hll test assertions were wrong, the fix (average over independent samples), the balanced form (invariant+tolerance vs exact equality), and the PyPI numbers behind the practice.
+- **Added:** `reports/2026-10-23-developer-tools-landscape.md` (new, ~188 lines) — 6 findings from the PyPI downloads API, 30 packages, all measured. Explicitly refutes the 2026-10-19 Q4 report's "caching demand is rising" claim (diskcache -3.1%, cachetools +4.6%).
+- **Amended:** `skills/bounty-scanner/SKILL.md` — the scanner now self-diagnoses (`[WARN] GitHub token rejected (401) - continuing ANONYMOUS`) instead of silently returning zero issues, plus the repo-metadata cache documentation and the 2026-10-23 verification notes. **A "0 official bounty issues" result must now be read alongside that warning.**
+- **Amended:** `skills/bounty-verifier/SKILL.md` — added the 2026-10-23 re-check: the filters were correct, the signal path into them was broken. Measured before/after.
+- **Amended — 29 guides corrected, 2 more amended.** A systematic audit extracted every import and symbol from all 90 guides and checked it against upstream source (or the local clone where upstream is 404). **35 guides had drifted**; 29 were corrected in place with an explicit "API Correction (2026-10-23)" section naming the wrong symbol and the real one. Examples: `tiny-http` was documented as a **server** (`serve`, `json_response`) but is a **client** (`Client`, `get`/`post`/`put`/`delete`/`patch`); `tiny-events` has `EventBus`, not `EventEmitter`; `tiny-state` has `FSM`/`AsyncFSM`, not `StateMachine`; `tiny-rate`'s decorator is `limit`, not `rate_limit`; `tiny-worker` has `task`, not `job`; `tiny-graph` has `PropertyGraph`, not `Graph`; `tiny-stream` has `StreamParser`/`LLMStream`, not `stream_openai`/`stream_anthropic`; `tiny-trace` has no module-level `tracer`; `tiny-secret` has no `secret()` function; `tiny-circuit` is a **Node.js** package, not pip-installable Python; `tiny-safeexec` upstream actually ships `tiny-sandbox`; `tiny-agent-eval` has `EvalSuite`, not `Benchmark`/`Eval`.
+- **Amended:** `tools/tiny-router-guide.md` — was stuck at v0.3.0 (2026-08-17); now documents the v0.7.4 surface verified by run (177 tests passing) and states plainly that upstream `main` is still at v0.1.0. `tools/tiny-router-v0.5-guide.md` — verified `openapi_endpoint`/`openapi_spec` still present in v0.7.4, with exact signatures.
+- **Added to Our Tools:** `tiny-hll`. **Daily Updates 120 -> 121. Reports 13 -> 14. Tool Guides 132 -> 135** (+3: `tiny-hll-guide`, `fast-cache-v0.8.0-guide`, `fast-cache-operator-note`). **Prompts 39 -> 43** (+4). **Skills 39 -> 39** (both bounty skills amended in place). **tiny-* Ecosystem 65 -> 66** (+1 `tiny-hll`). **Additional hussain-alsaibai Repos 41 -> 42**.
+- **Nothing was removed.** 18 tool guides carry no `Last verified` date; all 18 repos were checked upstream and **all 18 exist** (HTTP 200). Per the 2026-10-22 lesson — *verify existence before deleting; an unverified delete is the expensive direction of that error* — all were kept and given a corrected API section instead.
+- **A deadlock is a correctness bug with no symptom.** There is no exception to catch and no log line to read; the only evidence is that time stopped. Any code path holding a lock across a call it does not control needs a bounded test to prove it returns.
+- **A gate that cannot distinguish "passed" from "not checked" is not a gate.** The anti-scam filter existed, was correct, and did nothing — because a rate-limit 403 and a genuinely empty repo were indistinguishable, and "no data" scored as "clean". When a safety net depends on data that can fail to arrive, the unavailable state must be a first-class value and the default must be rejection.
+- **README accuracy is a growth lever, not housekeeping.** A fabricated benchmark table destroys the only asset a small library has, which is trust. The 2026-10-23 PyPI data agrees: growth tracks whether a tool makes CI faster and failure louder, and nothing in this quarter's report grows because it replaced a removed package.
+- **Architect action required (still, day ~35):** rotate the `hussain-alsaibai` fine-grained PAT with explicit repo access to dev-masterkit and the tiny-* family, then update `GitHUB_PAT` in `/home/node/.openclaw/workspace/.env`. Re-verified HTTP 401 at 13:0x EDT today on all four credential paths (`GitHUB_PAT`, `~/.config/gh/hosts.yml`, the embedded remote token, and `~/.git-credentials` is 0 bytes); no SSH key. All of today's work is committed locally and unpushed — **27 commits** ahead of `origin/main` (remote still at `e542096`, 2026-09-17).
+- Last verified 2026-10-23.
+
 ### 🆕 Latest additions (2026-10-22 cron sync) — the MCP supply chain got a number attached. `tiny-mcp-audit` v0.1.0 (NEW) + `tiny-validator` v0.6.0 schema-export fix; a bounty suite collecting 0 tests while reporting green
 
 - **The MCP gap is measurable now.** OX Security crawled **15,465 publicly indexed MCP servers** across 5 registries (5,095 unique hostnames). Findings: **2.3% on expired domains anyone can register for $4-12/year**, 15.6% resolving outside the US, 0.45% reachable only through consumer tunnels on personal machines. The 2.3% is the sharp edge — trust is extended while the hostname is legitimate, and the attack lands later with no reconfiguration and no error. Source: The Hacker News, 2026-10-22.
@@ -320,17 +347,17 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-22 |
-| Prompts | 39 | 2026-10-22 |
+| Skills | 39 | 2026-10-23 |
+| Prompts | 43 | 2026-10-23 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 132 | 2026-10-22 |
+| Tool Guides | 135 | 2026-10-23 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-10-18 |
-| Daily Updates | 120 | 2026-10-22 |
-| Reports | 13 | 2026-10-22 |
-| tiny-* Ecosystem Repos | 65 | 2026-10-22 |
-| Additional hussain-alsaibai Repos | 41 | 2026-10-22 |
+| Daily Updates | 121 | 2026-10-23 |
+| Reports | 14 | 2026-10-23 |
+| tiny-* Ecosystem Repos | 66 | 2026-10-23 |
+| Additional hussain-alsaibai Repos | 42 | 2026-10-23 |
 
 ## Structure
 
@@ -643,8 +670,9 @@ Production-tested tools and libraries built by this team:
 | [tiny-cost](https://github.com/hussain-alsaibai/tiny-cost) | Token cost tracking + budget enforcement for Python agents — built-in pricing, circuit breaker, zero deps | ⭐0 | Python |
 | [tiny-mcp-server](https://github.com/hussain-alsaibai/tiny-mcp-server) | Build MCP servers with @tool decorator — stdio + SSE transports, auto JSON Schema, zero deps | ⭐0 | Python |
 | [tiny-mcp-audit](https://github.com/hussain-alsaibai/tiny-mcp-audit) | Static security auditor for MCP server manifests — 19 checks / 7 groups, 0-100 score + A-F grade, SARIF 2.1.0, zero deps | ⭐0 | Python |
+| [tiny-hll](https://github.com/hussain-alsaibai/tiny-hll) | HyperLogLog distinct counting — 128 bytes fixed, merge() for global counts from per-shard partials, zero deps | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **41 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~23,800+ LOC lib + ~890+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **42 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~23,800+ LOC lib + ~890+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
 
 ### 🆕 Latest additions (2026-08-31) — tiny-semantic-cache + tiny-workflow-engine + tiny-ai-workflow
 - **tiny-semantic-cache** — Vector-similarity cache with BM25+cosine scoring, auto-threshold, TTL, LRU eviction. ~580 LOC · 38 tests · MIT. https://github.com/hussain-alsaibai/tiny-semantic-cache

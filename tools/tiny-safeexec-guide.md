@@ -1,47 +1,66 @@
-# tiny-safeexec — Safe Python Code Execution via Subprocess Isolation
+# tiny-safeexec — Safe Python Code Execution
 
 **Source:** [hussain-alsaibai/tiny-safeexec](https://github.com/hussain-alsaibai/tiny-safeexec)
-**License:** MIT | **Language:** Python 3.8+ | **Last verified:** 2026-08-27
+**License:** MIT | **Language:** Python 3.8+ | **Last verified:** 2026-10-23
+
+## Status
+**The upstream repository is named `tiny-safeexec` but its contents are
+`tiny-sandbox`.** The upstream README's own title is "tiny-sandbox", and the
+only Python module shipped is `tiny_sandbox.py`. There is no `tiny_safeexec.py`.
+
+## API Correction (2026-10-23)
+
+The previous version of this guide documented `from tiny_safeexec import
+safe_exec` with a `safe_exec(code=..., timeout=5, memory_mb=64)` call.
+**`tiny_safeexec` does not exist and `safe_exec` does not exist.** Verified
+upstream `tiny_sandbox.py`:
+
+```
+SandboxError, TimeoutException, SandboxStats, SandboxResult,
+SafeASTTransformer, SandboxedImport, Sandbox, execute
+```
+
+The entry points are the **`Sandbox`** class and the module-level **`execute`**
+function.
 
 ## When to use
 
 - Running untrusted Python code in agent/tool contexts
 - Safer alternative to `eval()` or `exec()` for dynamic code execution
-- Sandboxed code execution where you need stronger isolation than AST transformation alone
+- Sandboxed code execution where you need more than AST transformation alone
 
 ## What it does
 
-Safe Python code execution for AI agents via subprocess isolation. Spawns a child Python process with restricted environment, capturing stdout/stderr and enforcing resource limits.
+Safe Python code execution for AI agents via AST validation plus resource
+guards. Rejects dangerous imports and calls, enforces timeouts and memory
+limits, and captures stdout/stderr and the return value.
 
 ## Quick start
 
 ```python
-from tiny_safeexec import safe_exec
+from tiny_sandbox import execute
 
-result = safe_exec(
-    code="print(sum(range(100)))",
-    timeout=5,
-    memory_mb=64
-)
-print(result.stdout)   # "4950\n"
-print(result.returncode) # 0
+result = execute("print(sum(range(100)))")
+print(result.stdout)       # "4950\n"
+print(result.returncode)   # 0
 ```
 
 ## Key features
 
-- Subprocess-based isolation (stronger than AST alone)
-- Timeout and memory limits via `resource` module
+- AST-level safety validation (`SafeASTTransformer`)
+- Timeout and memory guards
 - Captures stdout, stderr, return value
 - Blocks network, filesystem, and dangerous imports
 - Zero dependencies beyond stdlib
 
 ## Security model
 
-Subprocess isolation via `subprocess.run()` with restricted environment variables and resource limits. Complementary to `tiny-sandbox`'s AST approach — use both for defense in depth.
+AST validation plus resource limits — **not** subprocess isolation, despite the
+repo name. For a real process boundary use `subprocess` with a restricted
+environment, or a container.
 
-## Ecosystem context
+## Related
 
-Part of the **tiny-*** zero-dependency Python ecosystem focused on AI agent infrastructure. Related: `tiny-sandbox` (AST-based), `tiny-eval` (agent evaluation), `tiny-checkpoint` (crash recovery).
-
-## Last Verified
-2026-08-27
+- `tools/tiny-sandbox-guide.md` — `tiny-sandbox`, the separate Python repo with
+  the same `Sandbox` / `execute` API
+- `tools/tiny-eval-guide.md` — agent evaluation harness

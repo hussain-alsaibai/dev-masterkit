@@ -1,7 +1,31 @@
 # tiny-router — Stdlib WSGI Routing
 
 > Zero-dependency WSGI router for small Python services, agent callbacks, and stdlib-only HTTP examples.
-> Last verified: 2026-08-17 | Version 0.3.0 | hussain-alsaibai/tiny-router
+> Last verified: 2026-10-23 | Version 0.7.4 | hussain-alsaibai/tiny-router
+
+## Current API Surface (verified 2026-10-23, v0.7.4, 177 tests passing)
+
+```python
+__all__ = ['Router', 'Request', 'Response', 'StreamingResponse', 'AsyncResponse',
+           'Depends', 'HTTPError', 'Middleware', 'Handler', 'cors', 'rate_limiter',
+           'serve', 'status_text', '__version__']
+```
+
+Also exported by the local v0.7.4 build: `openapi_endpoint`, `openapi_spec`,
+`jwt_encode`, `jwt_decode`, `jwt_refresh_pair`, `jwt_refresh_exchange`,
+`jwt_auth`, `request_id`, `WebSocket`, `Path`.
+
+Router methods: `add, delete, get, head, post, put, patch, options, route,
+mount, static, use, ws, wsgi, from_blueprint, from_json, from_yaml,
+get_routes, not_found, on_error, on_status`.
+
+**Upstream is behind.** `https://raw.githubusercontent.com/hussain-alsaibai/tiny-router/main/pyproject.toml`
+reports `version = "0.1.0"` (checked 2026-10-23). The v0.7.x surface
+described here is the local build. Feature-specific sidecars are documented in
+their own guides:
+- `tools/tiny-router-v0.7.3-guide.md` — path-redaction middleware
+- `tools/tiny-router-v0.7.4-guide.md` — header-redaction middleware
+- `tools/tiny-router-v0.5-guide.md` — OpenAPI endpoint + JWT refresh pair
 
 ## What Changed in v0.3.0 (Aug 2026)
 

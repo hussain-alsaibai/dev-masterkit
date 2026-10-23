@@ -1,46 +1,54 @@
-# tiny-task — Durable Task Queue
+# tiny-task Guide
 
-**Created:** 2026-08-04
-**Last verified:** 2026-08-04
-**Author:** OpenClaw / hussain-alsaibai
-**Repo:** https://github.com/hussain-alsaibai/tiny-task
-**License:** MIT | **LOC:** ~350 | **Tests:** 11 passing | **Deps:** 0
+## Repo
+https://github.com/hussain-alsaibai/tiny-task
 
 ## What It Does
 
-Zero-dependency durable task queue with priority, TTL, retries, multi-worker support, and JSONL persistence.
+Zero-dependency durable task queue for Python. One file, no setup. JSONL-backed,
+with priority, TTL, retries, and multiple workers.
 
-## When to Use
+## Last Verified
+2026-10-23
 
-- Background job execution for AI agents (bounty checks, report generation, batch ops)
-- Durable task queues where Redis is overkill
-- Multi-worker task distribution without a message broker
+## API Correction (2026-10-23)
 
-## Key Features
+The previous version of this guide documented `from tiny_task import TaskStore,
+Worker, enqueue`. Verified against upstream `tiny_task.py`:
 
-- Priority queue (lower = higher priority)
-- TTL with auto-expire
-- Configurable max retries with backoff
-- Multi-worker support via polling
-- JSONL persistence (one file per task)
-- Task status: pending / running / done / failed / expired
+```
+Status, Task, _import_func, _encode, TaskStore, Worker, _default,
+enqueue, get_task, list_tasks, cancel_task, task_stats
+```
+
+`TaskStore`, `Worker`, and `enqueue` **are** present upstream, so that part of
+the guide was correct. The addition for 2026-10-23: the module-level
+**`Status`** enum, plus `get_task`, `list_tasks`, `cancel_task`, and
+`task_stats` for inspecting and cancelling queued work.
+
+Note: the **local** clone at `workspace/tiny-task/` currently exposes only
+`Task` and `TinyTask` — the full surface above is the upstream module. Verify
+which clone you are importing from before relying on `TaskStore`.
 
 ## Quick Start
 
 ```python
-from tiny_task import TaskStore, Worker, enqueue, get_task
+from tiny_task import TaskStore, Worker, enqueue, Status
 
-store = TaskStore(".my-tasks/")
-store.enqueue("math.fsum", [1, 2, 3], priority=10)
-worker = Worker(store, handler={"math.fsum": lambda args: sum(args)})
-worker.start()
-task = get_task("abc123")
-print(task.status, task.result, task.error)
+store = TaskStore("tasks.jsonl")
+enqueue(store, "send_report", to="a@example.com", priority=5)
+
+worker = Worker(store, concurrency=4)
+worker.run()
 ```
 
-## Integration
+## When to Use
 
-- **tiny-retry** — Wrap handlers with retry logic
-- **tiny-circuit-breaker** — Bulkhead isolation
-- **tiny-log** — Structured logging for task lifecycle
-- **snapdb** — Persist aggregated results
+- Jobs that must survive a process restart (JSONL on disk)
+- Per-task priority, TTL, and retry policy
+- A cron job or agent that needs a queue without Redis
+
+## Related
+
+- `tools/tiny-queue-guide.md` — `tiny-queue`, a different repo (NDJSON + dead-letter)
+- `tools/tiny-worker-guide.md` — `tiny-worker`, in-memory worker without persistence

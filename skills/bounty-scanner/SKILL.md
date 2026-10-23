@@ -47,7 +47,26 @@ node scanner.js top
 - `last-scan.json` — cached results from last run (auto-managed)
 
 ## Token
-Uses `hussain-alsaibai` token from `~/.git-credentials` automatically.
+Uses the `hussain-alsaibai` token from `~/.git-credentials` automatically.
+
+**If the token is rejected the scanner now self-diagnoses.** It prints
+`[WARN] GitHub token rejected (401) - continuing ANONYMOUS` and falls back to
+the unauthenticated API (10 search req/min, 60 core req/h). **A "0 official
+bounty issues" result must be read alongside that warning** — under a dead
+token, zero issues and total auth failure look identical.
+
+Anonymous mode has a hard consequence: repo metadata comes from the **core**
+API while issue search uses the **search** API, so core requests hit the
+60/h cap first and start returning 403. That 403 is indistinguishable from
+"no data", so every metadata-driven signal degrades. The scanner now
+mitigates this with a persistent cache and a fail-closed flag — see the
+2026-10-23 section below.
+
+## Repo Metadata Cache
+
+`repo-cache.json` (7-day TTL) caches **successful** repo metadata lookups only,
+so a transient rate limit cannot poison it, and a failed live fetch returns
+stale data rather than `null`. Currently holds 29 verified repo records.
 
 ## Scam Detection Patterns
 | Pattern | Description |
@@ -84,4 +103,35 @@ When this pattern appears:
    even at lower raw scores, or (b) attach an explicit `saturated_warning`
    flag so the human caller can decide whether to override.
 
-## Last Verified: 2026-08-24
+## 2026-10-23 Verification Notes
+
+- **The anti-scam filters were correct; the signal path into them was
+  broken.** A 348-issue scan surfaced 20 picks and all 20 carried
+  `no_stars`; 18 were 1-star forks with $10 labels. The root cause was
+  `httpGet('.../repos/X').catch(() => null)` returning `null` on a 403
+  rate-limit, so `detectScam()` received `repo || {}` — an empty object
+  that produces exactly one flag instead of two, and therefore passed the
+  `>= 2 flags = reject` rule.
+- **Fixes:** persistent `repo-cache.json` (successful fetches only, 7-day
+  TTL, stale-on-failure), an `unverified_repo` red flag for missing
+  metadata, fork:star ratio compared against `stars` instead of
+  `watchers_count`, and a `MIN_STARS=5` selection gate that demotes rather
+  than hard-rejects. `stars` and `repo_age_days` are now on each record.
+- **Measured:** rejections 161 -> 241, surfaces 20 -> 9, and the #1 pick
+  (`javelin-anticheat/py-workedtask`, 1 star, 51 forks, born and abandoned
+  the same day) was rejected. Every survivor was a 0-1 star fork farm aged
+  93-99 days. `[GATE] WARNING: no repo met 5 stars - market is likely all
+  farms` was emitted.
+- **Auth:** all four credential paths return HTTP 401; `~/.git-credentials`
+  is 0 bytes; no SSH key. The scanner self-diagnoses and continues
+  anonymously rather than returning zero issues silently.
+- **Verification:** `node --check scanner.js` plus a 4-case unit test
+  (known scam -> scam, real 429-star repo -> clean, unavailable metadata ->
+  scam, known fork farm -> scam). Backup at
+  `scanner.js.bak-20261023-070714`.
+- **EdgeChains #290 was deliberately not started.** `arakoodev/EdgeChains`
+  is genuine (429 stars, org bounty posted by `sandys`) and was the only
+  non-farm candidate, but it is dead: 75 PRs mention Comprehend and at least
+  5 target #290 alone on an issue with 95 comments.
+
+## Last Verified: 2026-10-23

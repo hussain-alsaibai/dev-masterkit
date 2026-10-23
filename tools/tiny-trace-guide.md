@@ -1,80 +1,58 @@
-# tiny-trace — Zero-Dependency OpenTelemetry-Compatible Tracing
+# tiny-trace Guide
 
 ## Repo
 https://github.com/hussain-alsaibai/tiny-trace
 
-## One-liner
-OpenTelemetry-API-compatible subset. W3C `traceparent` / `tracestate` propagation,
-4 samplers (AlwaysOn/Off, TraceIdRatio, ParentBased), 3 exporters (Console, InMemory, JSONL).
+## What It Does
 
-## Install
-```bash
-pip install tiny-trace
+Zero-dependency OpenTelemetry-API-compatible tracing. One file, no setup.
+W3C trace context, samplers, and pluggable exporters.
+
+## Last Verified
+2026-10-23
+
+## API Correction (2026-10-23)
+
+The previous version of this guide documented `from tiny_trace import tracer,
+ConsoleExporter, AlwaysOn` — including a **module-level `tracer` instance**.
+**There is no module-level `tracer`.** Verified against upstream `tiny_trace.py`:
+
+```
+__all__ = ['Tracer', 'Span', 'SpanContext', 'TraceFlags', 'SpanKind', 'Status',
+           'StatusCode', 'SamplingResult', 'Sampler', 'AlwaysOn', 'AlwaysOff',
+           'TraceIdRatio', 'ParentBased', 'Exporter']
 ```
 
-## Quick Example
+You construct a `Tracer` yourself. Also note there is **no `ConsoleExporter`**
+in `tiny-trace` — see `tiny-trace-otel` for `StdoutExporter`.
+
+## Key Features
+
+- `Tracer` / `Span` / `SpanContext` — the core tracing API
+- `SpanKind` / `Status` / `StatusCode` — OTel-compatible enums
+- Samplers: `AlwaysOn`, `AlwaysOff`, `TraceIdRatio`, `ParentBased`
+- `Exporter` — the exporter interface
+
+## Quick Start
 
 ```python
-from tiny_trace import tracer, ConsoleExporter, AlwaysOn
+from tiny_trace import Tracer, AlwaysOn, SpanKind
 
-tracer.set_exporter(ConsoleExporter())
-tracer.set_sampler(AlwaysOn())
+tracer = Tracer(sampler=AlwaysOn(), exporter=my_exporter)
 
-with tracer.start_as_current_span("http.request") as span:
-    span.set_attribute("http.url", url)
-    span.set_attribute("http.status", resp.status_code)
-    resp = fetch(url)
-
-# W3C propagation across services
-headers = {"traceparent": tracer.current_traceparent()}
-# ...on the other side:
-ctx = tracer.extract({"traceparent": incoming})
-with tracer.start_as_current_span("downstream", parent=ctx):
+with tracer.start_as_current_span("db.query", kind=SpanKind.CLIENT) as span:
+    span.set_attribute("db.system", "postgresql")
     ...
 ```
 
-## Components
+## When to Use
 
-| Component | What it does |
-|-----------|--------------|
-| `Tracer` / `tracer` | Global tracer instance; `start_as_current_span` context manager |
-| `AlwaysOn` / `AlwaysOff` | Sample every span or none |
-| `TraceIdRatio(rate)` | Probabilistic sampling |
-| `ParentBased(root)` | Honor parent's sampling decision |
-| `ConsoleExporter` | Pretty-prints to stdout (dev) |
-| `InMemoryExporter` | Holds spans in a list (tests) |
-| `JSONLExporter` | Append-only JSON-Lines file (prod-friendly) |
+- Instrumenting an agent or service when you want OTel-shaped spans without
+  the OpenTelemetry dependency
+- Propagating W3C `traceparent` across process boundaries
+- Sampling decisions you control (unlike most SDK defaults)
 
-## W3C `traceparent` format
+## Related
 
-```
-00-<32hex-trace-id>-<16hex-span-id>-<2hex-flags>
-```
-
-- Version field: must be `00`. Anything else → parent is ignored (`INVALID_SPAN_CONTEXT`).
-- Flags: `01` = sampled, `00` = not sampled.
-- IDs must be valid hex; reject any non-hex input.
-
-## Testing
-
-- **57/57 tests passing**
-- 802 LOC + 537 test LOC
-- 0 dependencies, 0 transitive deps
-- Includes a W3C-spec sample validating `traceparent` round-trips
-
-## Gotcha — invalid `traceparent` must not be used silently
-
-The first implementation required 4 components but didn't validate `version == "00"`.
-Invalid parents (e.g. version `ff`) silently got used as if they were valid.
-
-```python
-# Wrong
-m = re.match(r"^([0-9a-f]{2})-([0-9a-f]{32})-...$", s)
-if m: return SpanContext(...)
-
-# Right
-if version != "00":
-    return INVALID_SPAN_CONTEXT
-```
-
-Last verified: 2026-07-02
+- `tools/tiny-trace-otel-guide.md` — `tiny-trace-otel`, which ships the actual
+  `OTLPHttpExporter` and `BatchSpanProcessor`

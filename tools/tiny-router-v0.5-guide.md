@@ -1,7 +1,17 @@
 # tiny-router v0.5.0 — OpenAPI Endpoint + JWT Refresh Pair/Exchange
 
 > Zero-dependency WSGI router. v0.5.0 adds a built-in `/openapi.json` endpoint and a complete JWT refresh-token pair/exchange flow.
-> Last verified: 2026-09-25 | Version 0.5.0 | hussain-alsaibai/tiny-router
+> Last verified: 2026-10-23 | Version 0.5.0 | hussain-alsaibai/tiny-router
+>
+> **Still present in v0.7.4** — verified against the local build (177 tests
+> passing): `openapi_endpoint` and `openapi_spec` are both exported. Upstream
+> `main` is still at `version = "0.1.0"` and does **not** have them.
+>
+> Signatures (verified 2026-10-23):
+> `openapi_endpoint(router, *, title='API', version='1.0.0', description='', servers=None, path='/openapi.json', methods=('GET',))`
+> `openapi_spec(router, *, title='API', version='1.0.0', description='', servers=None) -> dict`
+> `jwt_refresh_pair(access_payload, refresh_payload, *, secret, access_ttl_seconds=900, refresh_ttl_seconds=2592000, now=None)`
+> `jwt_refresh_exchange(refresh_token, *, secret, audience=None, issuer=None, leeway=0, access_ttl_seconds=900, now=None)`
 
 ## What Changed in v0.5.0 (Sep 2026)
 

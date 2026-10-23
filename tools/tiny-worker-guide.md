@@ -1,44 +1,59 @@
-# tiny-worker — Zero-Dependency Background Worker
+# tiny-worker Guide
 
 ## Repo
 https://github.com/hussain-alsaibai/tiny-worker
 
 ## What It Does
 
-Zero-dependency background worker for Python. Like a lightweight Celery or RQ — submit jobs, workers pick them up, results stored in a file or SQLite.
+Zero-dependendency background task worker for Python. One file, no setup.
+Thread-pool worker with retries, rate limiting, and task objects.
 
-## When to Use
+## Last Verified
+2026-10-23
 
-- Background job processing without Redis/Celery overhead
-- Simple async task queues for agents and scrapers
-- Cron replacement for periodic background tasks
+## API Correction (2026-10-23)
+
+The previous version of this guide documented `from tiny_worker import Worker,
+job` — the `job` decorator does not exist in the shipped module.
+Verified against upstream `tiny_worker.py`:
+
+```
+__all__ = ['Worker', 'Task', 'RetryPolicy', 'RateLimiter']
+```
+
+Top-level names: `Worker`, `Task`, `RetryPolicy`, `RateLimiter`, and a
+**`task`** function (singular, not `job`).
 
 ## Key Features
 
-- Pure stdlib: `threading`, `queue`, `sqlite3`, `json`
-- Submit jobs via function call or CLI
-- Persistent job queue survives restarts
-- Result storage with TTL expiry
-- Retry support with backoff
-- Dead-letter queue for failed jobs
+- `Worker` — runs submitted tasks on a thread pool
+- `Task` — a unit of work with args/kwargs
+- `RetryPolicy` — retry configuration
+- `RateLimiter` — built-in throttle for task submission
 
 ## Quick Start
 
 ```python
-from tiny_worker import Worker, job
+from tiny_worker import Worker, task
 
-@job
-def process(item):
-    return item * 2
+worker = Worker(max_workers=4)
 
-# Submit
-result = process.submit([1, 2, 3])  # returns job_id
-print(process.get_result(result.job_id))  # [2, 4, 6]
+@task(retries=3)
+def send_email(to: str, body: str) -> None:
+    ...
 
-# Worker
-worker = Worker(queue="default")
-worker.run()  # blocks, processes jobs
+worker.submit(send_email, to="a@example.com", body="hi")
+worker.join()
 ```
 
-## Last Verified
-2026-07-23
+## When to Use
+
+- Running background work from an agent or a CLI without Celery
+- Needing retries with a policy, per-job rate limiting, and a single-file
+  dependency-free implementation
+- Jobs that must finish before the process exits (`worker.join()`)
+
+## Related
+
+- `tools/tiny-queue-guide.md` — durable job queue (JSONL, DLQ) when jobs must survive a restart
+- `tools/tiny-task-guide.md` — `tiny-task`, a different repo with a `TaskStore`

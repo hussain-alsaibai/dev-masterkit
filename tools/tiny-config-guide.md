@@ -1,59 +1,56 @@
-# tiny-config — Zero-Dependency Config Loader
+# tiny-config Guide
 
 ## Repo
 https://github.com/hussain-alsaibai/tiny-config
 
-## One-liner
-JSON / YAML (subset) / INI / .env / CLI flags, layered: defaults < file < env < CLI.
+## What It Does
 
-## Install
-```bash
-# Zero deps — just copy or pip install
-pip install tiny-config
+Zero-dependency layered configuration loader for Python. One file, no setup.
+JSON, YAML, INI, `.env`, and env-var sources with dotted-key access, merging,
+and profile support.
+
+## Last Verified
+2026-10-23
+
+## API Correction (2026-10-23)
+
+The previous version of this guide documented `from tiny_config import
+load_config`. **There is no `load_config` function.** Verified against upstream
+`tiny_config.py`:
+
+```
+__all__ = ['load', 'load_file', 'get', 'set', 'merge', 'from_env', 'validate',
+           'get_secret', 'load_profile', 'ConfigError']
 ```
 
-## Layered Precedence (low → high)
-1. Defaults passed to `load_config(defaults={...})`
-2. Config file (JSON, YAML subset, INI, .env)
-3. Environment variables (`MYAPP_FOO_BAR` → `foo.bar`)
-4. CLI flags (`--foo-bar=...`)
+The entry point is **`load`** (or **`load_file`** for a single file). The
+`get` / `set` helpers operate on dotted paths.
 
-Higher-numbered sources override lower-numbered ones.
+## Quick Start
 
-## Quick Example
 ```python
-from tiny_config import load_config
+from tiny_config import load, get
 
-cfg = load_config(
-    defaults={"port": 8000, "debug": False, "db": {"host": "localhost"}},
-    files=["config.yaml", ".env"],
-    env_prefix="MYAPP_",
-    argv=True,
-)
-print(cfg["port"], cfg["db"]["host"])
+cfg = load("config.yaml", env_prefix="APP_")
+print(get(cfg, "server.port"))
 ```
 
-## What Works
-- JSON ✅ full
-- YAML ✅ subset (mappings, sequences, scalars, comments, multi-line strings)
-- INI ✅ standard `key=value` + sections
-- .env ✅ `KEY=value` plus `export` prefix
-- CLI flags ✅ `--key=value`, `--key value`, `--flag` (bool)
+## Key Features
 
-## Gotchas
-- **YAML subset returns tuples.** `_yaml_parse_block` returns `(value, pos)`.
-  Callers must unpack: `parsed, _ = _yaml_parse_block(...)`. Otherwise
-  `isinstance(parsed, dict)` is always False → `ValueError`.
-- **Env var mapping:** nested keys via `__` separator: `MYAPP_DB__HOST` → `db.host`
-- **CLI overrides win:** even if `--port=9000` is passed, env vars are
-  shadowed (this is by design — explicit > implicit).
+- JSON, YAML (built-in mini-parser), INI, `.env` file formats
+- `from_env` overlay with a prefix
+- `merge` for layering config sources
+- `validate` with a schema
+- `get_secret` for values that must not be logged
+- `load_profile` for per-environment overrides
+- `ConfigError` for typed failures
 
-## Benchmarks
-- File load: ~35 µs (faster than `python-decouple`, comparable to pydantic-settings
-  on warm cache)
-- Cold start: < 5 ms
+## When to Use
 
-## Tests
-15/15 passing.
+- A service that needs layered config (file + env + profile) without PyYAML
+  or pydantic-settings as a dependency
+- Reading config in a CLI or cron job where the working directory varies
 
-## Last Verified: 2026-06-30
+## Related
+
+- `tools/tiny-secret-guide.md` — secret loading with value-hiding objects

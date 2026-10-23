@@ -1,39 +1,47 @@
 # tiny-graph Guide
 
-**Repo:** [hussain-alsaibai/tiny-graph](https://github.com/hussain-alsaibai/tiny-graph)  
-**Size:** ~450 LOC | **Deps:** 0 (stdlib-only) | **Last verified:** 2026-07-24
+## Repo
+https://github.com/hussain-alsaibai/tiny-graph
 
-> Zero-dependency, stdlib-only in-memory property graph for Python.
+## What It Does
 
-## What it does
+Zero-dependency property graph for Python. One file, no setup. Nodes, edges, and
+property-based traversal.
 
-An in-memory property graph implementation using only Python's standard library. Nodes and edges support arbitrary properties, and the graph provides traversal and query operations.
+## Last Verified
+2026-10-23
 
-## When to use
+## API Correction (2026-10-23)
 
-- **Knowledge graphs** for AI agent context — build a graph of facts, traverse to find related entities
-- **Relationship mapping** — social graphs, dependency graphs, entity linking
-- **Graph-based reasoning** — path finding, reachability queries, property-based filtering
-- **Lightweight graph DB replacement** — when you don't want to deploy Neo4j
+The previous version of this guide documented `from tiny_graph import Graph`.
+**There is no `Graph` class.** Verified against upstream `tiny_graph.py`:
 
-## Key patterns
+```
+Node, Edge, PropertyGraph
+```
+
+The container is **`PropertyGraph`**; `Node` and `Edge` are the element types.
+
+## Quick Start
 
 ```python
-from tiny_graph import Graph
+from tiny_graph import PropertyGraph
 
-g = Graph()
-g.add_node("Alice", role="engineer", team="backend")
-g.add_node("Bob", role="manager")
-g.add_edge("Alice", "Bob", type="reports_to")
-g.add_edge("Alice", "Charlie", type="collaborates_with")
+g = PropertyGraph()
+a = g.add_node("a", label="service")
+b = g.add_node("b", label="service")
+g.add_edge(a, b, type="calls")
 
-# Traverse
-for node in g.neighbors("Alice", edge_type="reports_to"):
-    print(node)
+for node in g.neighbors(a, direction="out"):
+    print(node.props)
 ```
+
+## When to Use
+
+- Modelling relationships between agents, tools, services, or documents
+- Traversal with per-node and per-edge properties
+- Dependency-free graph algorithms where a full graph library is overkill
 
 ## Related
 
-- `tiny-memory` — agent memory that could use a graph backend for structured knowledge
-- `tiny-chain` — LLM chain that can extract graph relationships from text
-- `tiny-embed` — embeddings that can augment graph similarity searches
+- `tools/dev-tools-comparison-guide.md` — ecosystem-level positioning

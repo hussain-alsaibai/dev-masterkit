@@ -1,38 +1,49 @@
 # tiny-pipeline Guide
 
-**Repo:** [hussain-alsaibai/tiny-pipeline](https://github.com/hussain-alsaibai/tiny-pipeline)  
-**Size:** ~1300 LOC | **Deps:** 0 (stdlib-only) | **Last verified:** 2026-07-24
+## Repo
+https://github.com/hussain-alsaibai/tiny-pipeline
 
-> UNIX pipes, but for Python iterators. With async.
+## What It Does
 
-## What it does
+Zero-dependency streaming data pipeline for Python. One file, no setup. Chained
+processing stages with a sync and an async variant.
 
-A tiny, zero-dependency streaming data pipeline builder. Chain sources, transforms, and sinks using Python iterators — with native async support.
+## Last Verified
+2026-10-23
 
-## When to use
+## API Correction (2026-10-23)
 
-- **ETL pipelines** that need to process large datasets without loading everything into memory
-- **Streaming AI pipelines** — chunk documents, process with LLM, store results
-- **Data transformation chains** — filter, map, reduce on large iterables
-- **Async data flows** — WebSocket streams → transform → database writes
+The previous version of this guide documented `from tiny_pipeline import
+Pipeline, source, sink`. **There are no `source` or `sink` helpers.** Verified
+against upstream `tiny_pipeline.py`:
 
-## Key patterns
+```
+__all__ = ['Pipeline', 'AsyncPipeline', 'PipelineStats']
+```
+
+`Pipeline` is the sync pipeline, `AsyncPipeline` the async variant, and
+`PipelineStats` carries the counters.
+
+## Quick Start
 
 ```python
-from tiny_pipeline import Pipeline, source, sink, step
+from tiny_pipeline import Pipeline
 
-pipe = (
-    Pipeline()
-    .source(my_generator)
-    .step(filter_fn)
-    .step(transform_fn)
-    .sink(save_fn)
-)
-pipe.run()
+p = Pipeline()
+p.add_stage("parse", lambda raw: raw.splitlines())
+p.add_stage("count", lambda lines: len(lines))
+
+result = p.run(raw_text)
+print(p.stats.processed)
 ```
+
+## When to Use
+
+- Chaining pure transformations over a stream of items
+- Needing stage-level stats without a framework
+- The async variant, when stages perform I/O
 
 ## Related
 
-- `tiny-chain` — LLM processing chain, can feed into pipeline for structured output handling
-- `tiny-workflow` — DAG orchestration for multi-step workflows with retry/approval gates
-- `tiny-eventbus` — durable event streams, can serve as pipeline source or sink
+- `tools/tiny-workflow-guide.md` — DAG orchestration with retries and approval gates
+- `tools/tiny-watch-guide.md` — file watching that can trigger a pipeline

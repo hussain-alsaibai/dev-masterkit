@@ -1,48 +1,48 @@
-# tiny-circuit — Circuit Breaker for Fault Tolerance
+# tiny-circuit — Zero-Dep Circuit Breaker (Node.js)
 
 ## Repo
 https://github.com/hussain-alsaibai/tiny-circuit
 
 ## One-liner
-Zero-dep circuit breaker with CLOSED → OPEN → HALF_OPEN state machine. Protects against cascading failures in multi-step workflows.
+Zero-dependency **circuit breaker for Node.js**. Plain JS, ~250 lines, 25+
+tests. Fails fast when a downstream service starts failing and recovers
+automatically.
 
-## Install
-```bash
-pip install tiny-circuit
+## Last Verified
+2026-10-23
+
+## API Correction (2026-10-23)
+
+The previous version of this guide documented a **Python** API —
+`pip install tiny-circuit` and `from tiny_circuit import circuit_breaker, Result`.
+**Neither exists.** `tiny-circuit` is a **JavaScript/Node.js** package
+(`circuit.js`, `index.js`, `circuit.test.js`, `package.json` upstream — no
+Python files at all). It is not installable with pip.
+
+Verified upstream layout:
+
+```
+README.md
+circuit.js
+circuit.test.js
+index.js
+package.json
 ```
 
-## Quick Example
-```python
-from tiny_circuit import circuit_breaker, Result
+Use it from Node, not Python:
 
-@circuit_breaker(failure_threshold=5, recovery_timeout=60)
-async def call_api(url: str) -> dict:
-    async with httpx.AsyncClient() as client:
-        return await client.get(url)
-
-# Use Result pattern for explicit success/failure
-try:
-    return Result.success(data)
-except Exception:
-    return Result.failure(exc)
+```js
+const { circuitBreaker } = require("tiny-circuit");
 ```
 
-## State Machine
-- **CLOSED** — normal operation, failures counted
-- **OPEN** — circuit tripped, calls fail fast (after `recovery_timeout`)
-- **HALF_OPEN** — probe call to test recovery
+## Why It Matters
 
-## Key Features
-- **`@circuit_breaker` decorator** — sync and async functions
-- **`Result.success(value)` / `Result.failure(exc)`** — explicit outcome pattern
-- **Manual overrides** — `force_open()` / `force_close()`
-- **Configurable** — `failure_threshold`, `recovery_timeout`, `half_open_max_calls`
+When a downstream service (AI API, database, queue) starts failing, stop
+hammering it. Fail fast, recover automatically, and surface the failure as a
+structured error your agent can reason about.
 
-## When to Use
-- Multi-step agent workflows calling external APIs
-- Any call chain where one failure should fail fast and prevent cascading calls
-- Bounded concurrency + circuit breaking = resilient parallel tool execution
-
-## Last Verified: 2026-07-26
-- Repo: tiny-circuit (created 2026-07-26)
-- Status: Initial commit, no starred activity
+## Related
+- `tools/tiny-circuit-breaker-guide.md` — `tiny-circuit-breaker`, the **Python**
+  equivalent with `CircuitBreaker` / `CircuitOpen`
+- `tools/tiny-retry-guide.md` — retries with backoff plus a circuit breaker
+- `tools/tiny-sentinel-guide.md` — combined circuit breaker + rate limiter + timeout

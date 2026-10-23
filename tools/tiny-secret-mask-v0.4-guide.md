@@ -32,7 +32,7 @@ A path like that can carry a session UUID and a leaked token by accident. v0.4.0
 ## Quick Start
 
 ```python
-from tiny_secret_mask import mask_route_path
+from tiny_secret_mask import mask_route_path   # re-exported at the top level
 
 >>> mask_route_path("/users/550e8400-e29b-41d4-a716-446655440000/profile")
 '/users/[REDACTED:uuid]/profile'

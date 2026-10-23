@@ -1,15 +1,32 @@
 # tiny-callback Guide
 
-**Repo:** [hussain-alsaibai/tiny-callback](https://github.com/hussain-alsaibai/tiny-callback)  
-**Deps:** 0 (stdlib-only) | **Last verified:** 2026-07-24
+## Repo
+https://github.com/hussain-alsaibai/tiny-callback
 
-> Zero-dependency async callbacks, promise pattern, and event emitter for Python.
+## What It Does
 
-## What it does
+Zero-dependency async callbacks, promise-style deferreds, and an event emitter for Python. One file, no setup.
 
-Provides async callback registration, promise-style futures, and event emitter patterns — all in pure Python stdlib with zero external dependencies.
+## Last Verified
+2026-10-23
 
-## When to use
+## API Correction (2026-10-23)
+
+The previous version of this guide documented `from tiny_callback import
+EventEmitter, Promise` and a `Promise()` object with `.then()` / `.catch()` /
+`.resolve()`. **There is no `Promise` class.** Verified against upstream
+`tiny_callback.py`:
+
+```
+__all__ = ['Callback', 'EventEmitter', 'deferred', 'emit', 'on', 'once']
+```
+
+Top-level names: `Callback`, `EventEmitter`, `deferred`, `emit`, `on`, `once`,
+plus internal `_Deferred` and `_Handler`.
+
+The promise-style object is **`deferred()`**, not `Promise`.
+
+## When to Use
 
 - **Async callback chaining** — register callbacks on async operations without third-party async libs
 - **Promise/Deferred pattern** — represent pending async results as first-class objects
@@ -19,7 +36,7 @@ Provides async callback registration, promise-style futures, and event emitter p
 ## Key patterns
 
 ```python
-from tiny_callback import EventEmitter, Promise
+from tiny_callback import EventEmitter, deferred, on, emit, once
 
 emitter = EventEmitter()
 
@@ -28,15 +45,14 @@ def handle_data(data):
     print(f"Got: {data}")
 
 emitter.emit("data", {"key": "value"})
-
-# Promise pattern
-promise = Promise()
-promise.then(lambda x: x * 2).catch(lambda e: print(f"Error: {e}"))
-promise.resolve(21)
 ```
+
+`deferred()` returns a pending-result object with a resolver, for the
+promise/deferred pattern. `on()` and `once()` are module-level subscription
+helpers; `once()` auto-unsubscribes after the first call.
 
 ## Related
 
-- `tiny-eventbus` — durable pub/sub with replay (topic-based, persistent)
-- `tiny-chain` — LLM processor with callback hooks for streaming responses
-- `tiny-workflow` — DAG orchestrator using callbacks for step completion
+- `tools/tiny-events-guide.md` — `tiny-events`, a different repo with an `EventBus`
+- `tools/tiny-event-emitter-guide.md` — `tiny-event-emitter`, also distinct
+- `tools/tiny-event-bus-guide.md` — durable pub/sub with replay

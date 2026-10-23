@@ -12,7 +12,7 @@
 - **`redact_header_value(name, value, *, case_sensitive=False)`** — single-value redaction; useful when only one header pair is in hand.
 - **`header_pattern_names()` / `header_pattern_by_severity(level)`** — query helpers for the catalogue.
 - **`install_header_default()`** — bridges the default rule set into custom engines.
-- **Sidecar module:** `tiny_secret_mask_v050.py` (~175 LOC). Main file re-exports the new names so `from tiny_secret_mask import mask_headers` works.
+- **Sidecar module:** `tiny_secret_mask_v050.py` (~175 LOC). Main file re-exports the new names so `from tiny_secret_mask import mask_headers   # re-exported at the top level` works.
 - **41 new tests** in `tests/test_v050_additions.py`. Suite passes locally (CI will verify when PAT is restored).
 
 ## The 16-Pattern Catalogue
@@ -39,7 +39,7 @@
 ## Quick Start
 
 ```python
-from tiny_secret_mask import mask_headers
+from tiny_secret_mask import mask_headers   # re-exported at the top level
 
 incoming = {
     "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9....",
@@ -94,7 +94,7 @@ header_pattern_by_severity("critical")  # ['authorization', 'proxy_authorization
 
 ## Why a Sidecar?
 
-Same pattern as v0.2.0, v0.3.0, v0.4.0: the sidecar module (`tiny_secret_mask_v050.py`) ships new functionality as an opt-in import. Users on `tiny-secret-mask < 0.5.0` see no behaviour change when they upgrade — `mask_headers` is only available on v0.5.0+. The `__init__` re-exports the new names so `from tiny_secret_mask import mask_headers` works.
+Same pattern as v0.2.0, v0.3.0, v0.4.0: the sidecar module (`tiny_secret_mask_v050.py`) ships new functionality as an opt-in import. Users on `tiny-secret-mask < 0.5.0` see no behaviour change when they upgrade — `mask_headers` is only available on v0.5.0+. The `__init__` re-exports the new names so `from tiny_secret_mask import mask_headers   # re-exported at the top level` works.
 
 ## When to Use / When to Use Something Else
 

@@ -1,44 +1,53 @@
 # tiny-bounty-queue Guide
 
-**Repository:** https://github.com/hussain-alsaibai/tiny-bounty-queue
-**Last verified:** 2026-09-22
-**License:** MIT
-**Dependencies:** Zero (Python stdlib only)
+## Repo
+https://github.com/hussain-alsaibai/tiny-bounty-queue
 
-## What it does
+## One-liner
+Zero-dependency bounty issue queue with pluggable scoring and dispatch.
+Pure Python stdlib. MIT.
 
-Score, filter, queue, and dispatch GitHub bounty issues from Algora, Opire, Gitcoin, and label-based OSS bounties. Deterministic scoring formula, anti-scam defaults, and auditable dispatch order. Built for autonomous coding agents that need to decide *which issue to work next, in what order, under what budget*.
+## Status
+**Repo does not exist upstream yet** (`https://github.com/hussain-alsaibai/tiny-bounty-queue`
+-> HTTP 404, checked 2026-10-23). Local clone only.
 
-## When to use
+## Last Verified
+2026-10-23
 
-An autonomous agent or cron that crawls bounty boards and wants a deterministic, auditable way to pick the next issue. Replaces ad-hoc shell scripts and spreadsheets.
+## API Correction (2026-10-23)
 
-## Quick start
+The previous version of this guide documented `from tiny_bounty_queue import
+BountyQueue, Score`. **Neither name exists.** Verified against the local clone:
 
-```python
-from tiny_bounty_queue import BountyQueue, Score
-
-q = BountyQueue()
-q.add(issue)                          # scored automatically
-top = q.top(n=5)                      # top 5 by score, anti-scam filtered
-for issue in top:
-    dispatch(issue)                   # work in order
+```
+BountyIssue, ScoreBreakdown, ScoredBounty, QueuedBounty,
+Filter, Scorer, Queue, Dispatch, parse_github_issue, to_json
 ```
 
-## Key features
+The queue is **`Queue`**, the scoring engine is **`Scorer`**, and the score
+decomposition is **`ScoreBreakdown`**. `BountyIssue` is the raw issue,
+`ScoredBounty` / `QueuedBounty` the scored forms, `Filter` the rejection
+rules, and `Dispatch` the action layer.
 
-- **Deterministic score formula** — same input → same rank
-- **Anti-scam defaults** — filter obvious low-quality / dead / duplicate bounties
-- **Multi-source** — Algora, Opire, Gitcoin, GitHub labels
-- **Budget-aware dispatch** — refuses to over-claim
-- **Single file** — auditable in one sitting
+## Quick Example
+```python
+from tiny_bounty_queue import Queue, Scorer, parse_github_issue
 
-## Integration pattern
+issue = parse_github_issue(raw_issue_json)
+scorer = Scorer()
+scored = scorer.score(issue)
 
-Pair with `tiny-bounty-workflow` (full workflow with PR, review, merge) and `tiny-bounty` (issue board scraper). The queue decides *what*; the workflow decides *how*.
+q = Queue()
+q.add(scored)
+print(q.next())
+```
 
-## Notes
+## Key Features
+- Per-issue scoring with a transparent breakdown
+- Filter rules for rejecting ineligible issues
+- Dispatch layer separate from scoring
+- 18 tests passing (verified by run, 2026-10-23)
 
-- Created 2026-09-22 as part of the tiny-* ecosystem
-- MIT licensed, zero dependencies
-- Tests + examples in `tests/` and `examples/`
+## Related
+- `tools/tiny-bounty-guide.md` — target tracking CLI
+- `tools/tiny-bounty-workflow-guide.md` — end-to-end workflow with anti-scam filters

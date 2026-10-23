@@ -1,44 +1,51 @@
 # tiny-skill-md Guide
 
-**Repository:** https://github.com/hussain-alsaibai/tiny-skill-md
-**Last verified:** 2026-09-22
-**License:** MIT
-**Dependencies:** Zero (Python stdlib only)
+## Repo
+https://github.com/hussain-alsaibai/tiny-skill-md
 
-## What it does
+## One-liner
+Zero-dependency SKILL.md parser, validator, renderer, and scorer. Pure Python
+stdlib. MIT.
 
-Single-file SKILL.md parser, validator, renderer, and quality scorer — no PyYAML. Handles strict-subset YAML frontmatter (flat keys, scalars, lists, block scalars `|`/`>`, inline lists) with stable error codes and a heuristic quality score for ranking skill catalogs.
+## Status
+**Repo does not exist upstream yet** (`https://github.com/hussain-alsaibai/tiny-skill-md`
+-> HTTP 404, checked 2026-10-23). Local clone only.
 
-## When to use
+## Last Verified
+2026-10-23
 
-Index, lint, and ship skill catalogs without taking on a YAML dependency. Built for OpenClaw's `tiny-agentskills` indexer and any agent framework using SKILL.md.
+## API Correction (2026-10-23)
 
-## Quick start
+The previous version of this guide documented `from tiny_skill_md import
+parse_skill, validate, score`. **`parse_skill` does not exist.** Verified
+against the local clone:
 
-```python
-from tiny_skill_md import parse_skill, validate, score
-
-text = open("SKILL.md").read()
-skill = parse_skill(text)             # strict-subset YAML frontmatter + body
-errors = validate(skill)              # stable codes: missing_name, etc.
-q = score(skill)                      # 0..1 heuristic quality score
+```
+Issue, SkillDoc, parse, parse_file, validate, render_frontmatter, render,
+score, discover, to_dict
 ```
 
-## Key features
+The parser is **`parse`** (or **`parse_file`** for a path). `validate` and
+`score` are correct. `SkillDoc` is the parsed document, `Issue` a validation
+problem, and `discover` walks a directory of skills.
 
-- **Zero deps** — pure stdlib
-- **Strict-subset YAML** — flat keys, scalars, lists, block scalars, inline lists
-- **Stable validation codes** — `missing_name`, `missing_description`, etc.
-- **Heuristic quality score** — ranks catalogs
-- **Render back to markdown** — round-trip support
-- **Single file** — auditable in one sitting
+## Quick Example
+```python
+from tiny_skill_md import parse, parse_file, validate, score
 
-## Integration pattern
+doc = parse_file("skills/my-skill/SKILL.md")
+problems = validate(doc)
+print(score(doc))
+```
 
-Use as the front-end of any SKILL.md catalog: read → parse → validate → score → surface top N to agent system prompt. Pairs naturally with `tiny-agentskills`.
+## Key Features
+- YAML-ish frontmatter parsing without a YAML dependency
+- Validation producing typed `Issue` objects
+- Round-trip rendering (`render_frontmatter`, `render`)
+- Directory discovery for a skill tree
+- 18 tests passing (verified by run, 2026-10-23)
 
-## Notes
-
-- Created 2026-09-22 as part of the tiny-* ecosystem
-- MIT licensed, zero dependencies
-- Tests in `tests/`
+## Related
+- `tools/tiny-skill-lint-guide.md` — the linter (18-code error catalogue)
+- `tools/tiny-skill-loader-guide.md` — loading skills at runtime
+- `tools/tiny-agentskills-guide.md` — the Agent Skills runtime conventions

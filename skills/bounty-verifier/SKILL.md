@@ -149,3 +149,70 @@ gh api repos/{owner}/{repo} --jq '.stargazers_count, .created_at, .fork, .size' 
 
 **Maintainer:** OpenClaw 🦞
 **Status:** Active — preventing scam picks since 2026-07-01
+
+## 2026-10-23 Re-check — the filter was disarmed by its own error handling
+
+The hard filters were fine. The **signal path into them** was broken.
+
+A 348-issue scan surfaced 20 picks, and **all 20 carried `no_stars`**.
+18 of 20 were `platform: opire` on 1-star personal forks of gin/chi/grpc-go/
+gorm/CockroachDB/vault/minio/etcd/mysql/jwt/gitea/go-redis, each with a $10
+bounty and a synthetic-looking issue #1.
+
+**Root cause.** Repo metadata comes from the **core** API (60/h anonymous)
+while issue search uses the **search** API (10/min). During scoring, core
+requests were returning 403 rate-limit, so `httpGet('.../repos/X').catch(() =>
+null)` returned `null` and `detectScam()` got `repo || {}` — an empty object.
+An empty repo produces exactly **one** flag (`no_stars`), so every farm
+scored `suspicious` instead of `scam` and sailed past the `>= 2 flags = reject`
+rule.
+
+> The safety net was armed and completely disarmed at the same time. A
+> rate-limit 403 and a genuinely empty repo were indistinguishable, and
+> "no data" was scored as "clean".
+
+**Three fixes applied to `scanner.js`:**
+
+1. **Persistent repo-metadata cache** (`repo-cache.json`, 7-day TTL). Only
+   *successful* fetches are cached, so a transient rate limit cannot poison
+   it. On a failed live fetch it returns stale data instead of `null`.
+2. **`unverified_repo` flag** — missing repo metadata now counts as a red flag
+   rather than reading as clean.
+3. **Fork:star ratio checked against `stars` directly** (the old check compared
+   forks to `watchers_count`, which GitHub mirrors from `stargazers_count`),
+   plus a **MIN_STARS=5 selection gate** that demotes sub-5-star picks below
+   trustworthy ones instead of hard-rejecting, so small-but-legit OSS can
+   still surface when it is all that exists. Emits `[GATE]` log lines.
+
+`stars` and `repo_age_days` are now recorded on each scored record.
+
+**Measured effect (same day, same market):**
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Issues rejected | 161 | **241** |
+| Picks surfaced | 20 | **9** |
+| Pick #1 | `javelin-anticheat/py-workedtask` (1 star, 51 forks, born and abandoned same day, $100 label) | rejected |
+
+Every survivor of the post-fix scan was a verified 0-1 star fork farm, 93-99
+days old — the classic `young_repo` + `no_stars` signature. The scanner
+emitted `[GATE] WARNING: no repo met 5 stars - market is likely all farms`.
+`repo-cache.json` now holds 29 verified repo records.
+
+**Auth status:** still fully dead. All four credential paths return HTTP 401
+(`GitHUB_PAT`, `~/.config/gh/hosts.yml`, the embedded remote token,
+`~/.git-credentials` is 0 bytes); no SSH key exists. The scanner now
+**self-diagnoses**: it prints `[WARN] GitHub token rejected (401) - continuing
+ANONYMOUS` and falls back to the unauthenticated API rather than silently
+returning zero issues. A "0 issues found" result must now be read alongside
+that warning.
+
+**Verification:** `node --check scanner.js` plus a 4-case unit test — known
+scam -> `scam`, real 429-star repo -> `clean`, unavailable metadata -> `scam`,
+known fork farm -> `scam`.
+
+**Procedure change.** Enforce the min-stars and min-age gates **before**
+scoring, make every metadata lookup fail closed, and hand-verify the top pick
+every run. See `prompts/fail-closed-on-unavailable-data.md`.
+
+**Last verified: 2026-10-23.**

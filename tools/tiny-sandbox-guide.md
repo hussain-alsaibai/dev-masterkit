@@ -1,47 +1,56 @@
-# tiny-sandbox — Secure Python Code Execution Sandbox
+# tiny-sandbox Guide
 
 ## Repo
 https://github.com/hussain-alsaibai/tiny-sandbox
 
 ## What It Does
 
-Tiny secure Python code execution sandbox using AST transformation. Zero dependencies. Whitelists safe operations, blocks dangerous ones.
+Zero-dependency sandboxed Python execution. AST-level safety checks plus timeout
+and memory guards. One file, no setup.
 
-## When to Use
+## Last Verified
+2026-10-23
 
-- Running untrusted user code in agents/bots
-- Processing Python snippets in a code-execution tool
-- Isolating eval/exec from the host environment
+## API Correction (2026-10-23)
+
+The previous version of this guide documented `from tiny_sandbox import
+run_sandbox`. **There is no `run_sandbox` function.** Verified against upstream
+`tiny_sandbox.py`:
+
+```
+SandboxError, TimeoutException, SandboxStats, SandboxResult,
+SafeASTTransformer, SandboxedImport, Sandbox, execute
+```
+
+The entry points are the **`Sandbox`** class and a module-level **`execute`**
+function.
 
 ## Key Features
 
-- AST-based transformation (no regex blacklists)
-- Blocks: `import`, `open`, `os.`, `sys.`, `subprocess`, file I/O, network
-- Allows: arithmetic, list/dict operations, builtins (`len`, `range`, etc.)
-- Timeout enforcement via signal alarm
-- Memory limit via resource setrlimit
-- Returns: stdout, return value, execution time
+- `SafeASTTransformer` — rejects dangerous imports and calls at the AST level
+- `Sandbox` — the executor, with `SandboxStats` and `SandboxResult`
+- `TimeoutException` / `SandboxError` — typed failures
+- `_TimeoutGuard` / `_MemoryGuard` — resource limits
+- `SandboxedImport` — restricted import machinery
 
 ## Quick Start
 
 ```python
-from tiny_sandbox import run_sandbox
+from tiny_sandbox import Sandbox, execute
 
-result = run_sandbox(
-    code="[x**2 for x in range(10)]",
-    timeout=5,
-    memory_mb=50
-)
-print(result.output)    # "[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]"
-print(result.elapsed_ms) # execution time
-print(result.blocked)    # [] — no blocked operations
+result = execute("print(sum(range(100)))")
+print(result.stdout)      # "4950\n"
+print(result.returncode)  # 0
 ```
 
-## Security Notes
+`Sandbox` is the configurable form when you need to set limits explicitly.
 
-- Always set `timeout` and `memory_mb` limits
-- Not a full security sandbox — use containers (gVisor, firejail) for untrusted production workloads
-- Last verified: 2026-07-23
+## When to Use
 
-## Last Verified
-2026-07-23
+- Running untrusted or generated Python in agent/tool contexts
+- Safer alternative to `eval()` / `exec()` for dynamic code execution
+- Sandboxed execution where you want more than AST transformation alone
+
+## Related
+
+- `tools/tiny-safeexec-guide.md` — subprocess isolation, complementary depth
