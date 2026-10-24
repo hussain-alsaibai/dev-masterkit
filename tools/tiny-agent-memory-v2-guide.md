@@ -1,7 +1,7 @@
 # tiny-agent-memory-v2 — Tiered Agent Memory (v2)
 
 **Source:** [hussain-alsaibai/tiny-agent-memory-v2](https://github.com/hussain-alsaibai/tiny-agent-memory-v2)
-**License:** MIT | **Language:** Python 3.9+ | **Last verified:** 2026-09-05
+**License:** MIT | **Language:** Python 3.9+ | **Last verified:** 2026-10-24 (19/19 by test run)
 
 > Three-tier memory architecture for AI agents. Working (~0ms) → Episodic (~1ms) → Semantic (~5ms). Zero dependencies. ~550 lines.
 
@@ -83,6 +83,33 @@ curl -O https://raw.githubusercontent.com/hussain-alsaibai/tiny-agent-memory-v2/
 | Semantic recall (100 facts) | ~5ms |
 | Full snapshot | ~0.5ms |
 
+## Self-deadlock fix (2026-10-24)
+
+`EpisodicMemory.stats()` acquired `self._lock` and then called `self.count()`,
+which acquired the same `threading.Lock` again. A plain `Lock` is not
+reentrant, so **every `stats()` call hung the calling thread forever** — no
+error, no timeout, no stack trace. The visible symptom was a pytest run that
+printed all its dots and then never exited.
+
+**Third instance of this bug class** after `fast-cache` `Cache.info()` and
+`tiny-mcp-registry` `export()`.
+
+Fix: build the payload under the lock without calling `count()` from inside
+the critical section, and make the episodic lock an `RLock` so a future nesting
+mistake degrades into a redundant acquire instead of a permanent hang.
+
+The regression test uses a `ThreadPoolExecutor` with a timeout, so the hang
+**fails loudly instead of stalling the suite**:
+
+```python
+with ThreadPoolExecutor(max_workers=1) as pool:
+    future = pool.submit(m.episodic.stats)
+    stats = future.result(timeout=10)
+```
+
+Verified the new test hangs on the pre-fix code and passes after.
+
+
 ## Integration
 
 Pairs with `tiny-bounty-workflow` for memory persistence across bounty iterations, and `tiny-workflow-engine` for orchestration pipelines.
@@ -90,4 +117,5 @@ Pairs with `tiny-bounty-workflow` for memory persistence across bounty iteration
 ## See Also
 
 - [tiny-agent-memory Guide](tiny-agent-memory-guide.md) — v1 (BM25/TF-IDF single-store)
+- `prompts/reentrant-lock-discipline.md` — the lock-nesting rule this fix applied
 - [tiny-memo Guide](tiny-memo-guide.md) — pub/sub event bus for agent inter-process communication

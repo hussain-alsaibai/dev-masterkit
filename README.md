@@ -3,6 +3,21 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-10-24 cron sync, 14:45) — the workflow file was never running. `continue_on_error` vs `continue-on-error`; 6 repos' CI did not exist
+
+- **A GitHub Actions workflow with a single wrong key does not fail a step. It fails to load.** Six repos carried `continue_on_error` (Python snake_case) where GitHub Actions expects `continue-on-error` (kebab-case). GitHub rejected the whole file, so **no job ever started**. `tiny-agent-memory` has **50 passing tests** and CI never ran one of them — the badge was red for a parse error, not for any behaviour.
+- **Three runs, three mechanisms, one cause: a badge is a claim about a pipeline, not about the code.** 2026-10-22 — CI ran `pytest <module>.py` with no test file (0 items collected, exit 5). 2026-10-23 — the CI target named only some test files, so most of the suite was invisible behind a green badge. 2026-10-24 — the workflow file did not parse, so **the job did not exist**. In every case the thing that would have checked the claim was absent or never ran.
+- **All 44 of our workflow files now validate against the official GitHub Actions JSON Schema — 0 real errors.** The reusable check is one `curl` of `json.schemastore.org/github-workflow.json` plus `jsonschema`. The minimal reproduction proves it is not generic YAML lint: `continue_on_error` -> **REJECTED**, `continue-on-error` -> **PASS**, same validator.
+- **The validator first flagged 204 of 204 workspace workflow files — and 44 of them were fine.** YAML 1.1 parses a bare `on:` key as the boolean `True`; the schema wants the string `"on"`. After normalising that one key: 0 real errors. **A validator that fails on 100% of its input invites the response "the validator is broken"**, and then the check gets removed. The fix was to correct the parser normalisation, not to relax the check — and to prove the validator still rejects the known-bad form before trusting the clean result.
+- **Ruff findings were blocking a Lint step in four repos** (`tiny-agent-memory`, `tiny-llm`, `tiny-store`, `tiny-safeexec`). All fixed today. **7 repos are now ruff-clean and their suites were re-verified by run**: `tiny-agent-memory` 50, `tiny-llm` 18, `tiny-store` 21, `tiny-mcp-observability` 35, `tiny-safeexec` 35, `tiny-sandbox` 35, `tiny-workflow` 56 — all passing.
+- **Added:** `prompts/validate-workflow-schema.md` (new, ~170 lines) — the validation procedure, the mandatory `on:` normalisation, the step that proves the validator catches the real bug, a badge-message triage table ("Invalid workflow file" never reaches your code), and the rule that **a parse failure must never be "fixed" by changing the test**.
+- **Added:** `reports/2026-10-24-ci-schema-validation.md` (new, 155 lines) — the six-repo defect, the reusable script, the false-positive trap, the minimal reproduction, and the measured result.
+- **Amended (6 guides, in place):** `tiny-agent-memory` (2026-08-30 -> 2026-10-24, 50 tests, both CI defects), `tiny-store` (2026-07-31 -> 2026-10-24, 21 tests), `tiny-llm` (2026-07-31 -> 2026-10-24, 18 tests), `tiny-workflow` (2026-07-22 -> 2026-10-24, 56 tests), `tiny-sandbox` (2026-10-23 -> 2026-10-24, 35 tests), `tiny-safeexec` (2026-10-23 -> 2026-10-24, 35 tests).
+- **Amended (2 skills, in place):** `skills/bounty-scanner/SKILL.md` (137 -> 251 lines) — the **Contributor Tasks** class (non-cash bounties found by *body shape*, not by label: `"How to verify"` cuts 462k bare `good first issue` issues down to ~1.6k real specs), and the **quota-death bug** where unmeasured repo metadata was read as malicious and **231 of 250 legitimate candidates were rejected as scams** — the fourth occurrence of the fail-closed family, now tabulated. `skills/model-cost-tracker/SKILL.md` (44 -> 125 lines) — rewritten for today's two fixes: estimated usage is now **merged with** measured rather than replacing it, and the prompt cache is **priced as cache** (97% of the prompt). Validated against 440 measured calls: old estimator **3.99x over**, new estimator **0.92x of truth**.
+- **Stats:** Prompts 43 -> 46. Tool Guides 135 -> 136. Reports 14 -> 18. Skills 39 (2 amended, 0 added). Daily Updates stays at 122 files (this is the third run appended to the same day's file, per the one-file-per-day convention). All other counts unchanged.
+- **Nothing was removed.** GitHub auth is still dead — all credential paths re-verified 401 on 2026-10-24 at 14:40 ET (day ~36). The env PAT, the `gh` host token, and the token embedded in 16 git remote URLs are all **the same expired PAT**. No SSH key. **30 commits unpushed**; remote still at `e542096` (2026-09-17). The `api.github.com` 403-restriction seen earlier today did **not** reproduce — unauthenticated reads returned 200 during this run.
+- Last verified 2026-10-24.
+
 ### 🆕 Latest additions (2026-10-24 cron sync) — the competitor signal finally read, and the distribution format changed. graphify decided + 4 trending repos analyzed
 
 - **graphify is a direct competitor to context-bridge, and it is bigger than we thought.** 133,956 stars (+1,173 today), 362 contributors, 2,498 PRs, PyPI `graphifyy` v0.9.95 with 263 releases and 1,755,205 downloads in 30 days (+8.0%). It solves the same problem — "persistent semantic knowledge graph of your codebase, sub-millisecond queries, no re-reading files" — in Python + NetworkX + tree-sitter + Leiden clustering. **Two prior runs (2026-10-19, 2026-10-22) flagged it as a "competitor signal, undecided."** Now decided: competitor, not a tool to add. What changed the answer was reading `v8/ARCHITECTURE.md` instead of the README.
@@ -362,15 +377,15 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 39 | 2026-10-23 |
-| Prompts | 43 | 2026-10-23 |
+| Skills | 39 | 2026-10-24 |
+| Prompts | 46 | 2026-10-24 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 135 | 2026-10-23 |
+| Tool Guides | 136 | 2026-10-24 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-10-18 |
-| Daily Updates | 121 | 2026-10-23 |
-| Reports | 14 | 2026-10-23 |
+| Daily Updates | 122 | 2026-10-24 |
+| Reports | 18 | 2026-10-24 |
 | tiny-* Ecosystem Repos | 66 | 2026-10-23 |
 | Additional hussain-alsaibai Repos | 42 | 2026-10-23 |
 
@@ -393,6 +408,9 @@ dev-masterkit/
 │   ├── decorator-composition-order.md # Stacked-decorator call/return order
 │   ├── aws-sigv4-handrolled.md   # Stdlib-only AWS SigV4 for one action
 │   └── test-isolation-singleton-registry.md # Per-test registry isolation pattern
+│   ├── validate-workflow-schema.md   # Validate Actions workflows against the official JSON Schema [NEW 2026-10-24]
+│   ├── ci-target-must-match-repo-layout.md # CI must run the whole suite; version must match [NEW 2026-10-24]
+│   ├── mcp-dual-dialect-bridge.md     # Why the dual-dialect bridge is the pattern [NEW 2026-10-24]
 │   ├── gitea-cross-fork-pr-blocker.md # Fine-grained PAT `pull`-only blocks cross-fork PRs [NEW 2026-07-09]
 │   ├── go-build-on-tmpfs.md         # Workaround for tmpfs-backed `/tmp` failing `go build` [NEW 2026-07-09]
 │   ├── cost-tracker-session-ingest.md # Re-register per-session cost tracker or it goes silent [NEW 2026-07-10]
@@ -628,6 +646,9 @@ dev-masterkit/
 | `bounty-freeze-detection` | Detect frozen/resolved/stale bounties before wasting effort | Closed competing PRs, maintainer freeze language, saturation flags [NEW 2026-08-05] |
 | `bounty-pat-fine-grained-fixes` | Fine-grained PAT fix for cross-repo PR creation | Every new external repo needs explicit access grant in PAT settings [NEW 2026-08-16] |
 | `agent-skills-runtime` | Build executable SKILL.md bundles with zero-dep Python runtime | Packaging expertise into Agent Skills bundles (Anthropic-style) [NEW 2026-09-11] |
+| `mcp-dual-dialect-bridge` | Why a dual-dialect MCP bridge is the pattern, not a compromise | Server speaks 2026-07-28; clients still on the legacy handshake [NEW 2026-10-24] |
+| `ci-target-must-match-repo-layout` | CI must run the whole suite; the declared version must match the module | Green badge over zero tests; published artifact reports an older version [NEW 2026-10-24] |
+| `validate-workflow-schema` | Validate GitHub Actions workflows against the official JSON Schema | Badge red with an "invalid workflow" message; key-misnaming typos [NEW 2026-10-24] |
 
 ## 🏗️ Our Tools
 
@@ -882,10 +903,15 @@ Production-tested tools and libraries built by this team:
 | [tiny-policy Guide](tools/tiny-policy-guide.md) | ABAC policy engine with deny-overrides and JSON policies | 2026-07-07 |
 | [tiny-otel Guide](tools/tiny-otel-guide.md) | OTLP/HTTP trace exporter for agent spans | 2026-07-07 |
 | [tiny-memory Guide](tools/tiny-memory-guide.md) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores | 2026-07-22 |
+| [tiny-agent-memory Guide](tools/tiny-agent-memory-guide.md) | Semantic + working + episodic memory in one file, numpy optional (50 tests) | 2026-10-24 |
 | [tiny-chain Guide](tools/tiny-chain-guide.md) | LLM streaming processor — retries, model fallbacks, function calling, JSON extraction | 2026-07-22 |
-| [tiny-workflow Guide](tools/tiny-workflow-guide.md) | Async DAG orchestrator — retry, approval gates, dead-letter queue, state persistence | 2026-07-22 |
+| [tiny-store Guide](tools/tiny-store-guide.md) | Filesystem-backed KV store — TTL, search, pagination, watch (21 tests) | 2026-10-24 |
+| [tiny-llm Guide](tools/tiny-llm-guide.md) | Unified zero-dep LLM client — OpenAI, Anthropic, Gemini, xAI, Ollama (18 tests) | 2026-10-24 |
+| [tiny-workflow Guide](tools/tiny-workflow-guide.md) | Async DAG orchestrator — retry, approval gates, dead-letter queue, state persistence (56 tests) | 2026-10-24 |
 | [tiny-git-pr-workflow Guide](tools/tiny-git-pr-workflow-guide.md) | Cherry-pick workflow for external-repo PRs, fine-grained PAT setup, compare URL workaround | 2026-08-15 |
-| [tiny-mcp-audit Guide](tools/tiny-mcp-audit-guide.md) | Static MCP manifest security audit — 19 checks, 7 groups, SARIF/CI gate (v0.1.0) | 2026-10-22 |
+| [tiny-mcp-audit Guide](tools/tiny-mcp-audit-guide.md) | Static MCP manifest security audit — 23 checks, 8 groups, SARIF/CI gate (v0.2.0) | 2026-10-24 |
+| [tiny-mcp-skel Guide](tools/tiny-mcp-skel-guide.md) | MCP 2026-07-28 skeleton — vendored upstream schema as a CI test oracle | 2026-10-24 |
+| [tiny-mcp-observability Guide](tools/tiny-mcp-observability-guide.md) | MCP tracing + metrics — 3 real defects fixed by writing the missing suite (35 tests) | 2026-10-24 |
 | [tiny-agentskills Guide](tools/tiny-agentskills-guide.md) | Zero-dep Python runtime for Anthropic-style SKILL.md bundles (v0.1.0) | 2026-09-11 |
 | [tiny-router v0.4 Guide](tools/tiny-router-v0.4-guide.md) | Async + `Depends()` + structured errors (v0.4.0 force-push) | 2026-09-11 |
 | [dev-tools-trends-2026-q3 Guide](tools/dev-tools-trends-2026-q3-guide.md) | 10 shifts that mattered for dev tools in Q3 2026 | 2026-09-11 |

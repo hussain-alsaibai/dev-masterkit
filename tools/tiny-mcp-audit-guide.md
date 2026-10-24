@@ -1,12 +1,13 @@
 # tiny-mcp-audit Guide
 
-**tiny-mcp-audit** — Zero-dependency static security audit for MCP server manifests. 19 checks across 7 groups, 5 severities, a 0-100 posture score with an A-F grade, and a CI-blocking gate. No network I/O, no sandbox, no imports of the audited code.
+**tiny-mcp-audit** — Zero-dependency static security audit for MCP server manifests. 23 checks across 8 groups, 5 severities, a 0-100 posture score with an A-F grade, and a CI-blocking gate. No network I/O, no sandbox, no imports of the audited code.
 
 - **Repo:** hussain-alsaibai/tiny-mcp-audit (local clone: `~/workspace/tiny-mcp-audit`)
 - **Install:** `pip install tiny-mcp-audit`
 - **Size:** ~1 module, 0 runtime dependencies, Python 3.9+
-- **Tests:** 59 passing
-- **Last verified:** 2026-10-22 (59/59 by test run; both example manifests audited by hand)
+- **Version:** 0.2.0 (2026-10-24) — added the `protocol` check group
+- **Tests:** 84 passing
+- **Last verified:** 2026-10-24 (84/84 by test run; `tiny-mcp-skel` and `tiny-mcp-server` audited clean by hand)
 
 ## Why This Exists
 
@@ -51,7 +52,7 @@ mcp-audit *.json --checks transport,secrets # narrow the group set
 | `audit_json(text, checks=None)` | Audit a manifest already in memory |
 | `audit_manifest(manifest, checks=None)` | Audit a parsed dict |
 | `audit_many(paths, ...)` | Batch, one report per file |
-| `CHECK_NAMES` | The 7 check groups |
+| `CHECK_NAMES` | The 8 check groups |
 | `Severity` | `critical / high / medium / low / info` |
 | `Finding` | `.code .severity .message .location .evidence .remediation` |
 
@@ -111,6 +112,51 @@ contract, not added a feature.
 Exit code is 1 at or above `--fail-on`. SARIF 2.1.0 output maps findings onto
 GitHub code scanning without a translation step.
 
+## Protocol conformance (added v0.2.0, 2026-10-24)
+
+The 2026-07-28 MCP revision removed the `initialize` handshake, made MCP
+stateless, and made `server/discover` **MUST**-implement. A live probe of 400
+registry servers found **73 of the 79** reachable servers still answer only
+`initialize` — they are invisible to a current client, which calls
+`server/discover` and gets `-32601`.
+
+The new `protocol` group closes the version-field gap:
+
+| Code | Severity | What it flags |
+|---|---|---|
+| MCP070 | high | protocol version missing, malformed, or older than the current revision |
+| MCP071 | high / info | server exposes a method the current revision removed |
+| MCP072 | medium | server advertises a deprecated capability (roots / sampling / logging) |
+| MCP073 | medium | server advertises a deprecated transport (HTTP+SSE) |
+
+The revision is read from `protocolVersion`, `protocol_version`, `specVersion`,
+`discover.protocolVersions` and `_meta`, so it works against both a raw
+manifest and a captured `server/discover` response.
+
+### MCP071 is demoted to INFO when the server bridges
+
+**Every one of the 6 servers that speak the current dialect also kept its
+legacy `initialize` handler. None removed it.** Keeping the old handler as a
+compatibility shim is the pattern that actually works in the field, so MCP071
+drops from HIGH to **INFO** when the manifest also implements
+`server/discover`:
+
+```
+legacy server (unreachable)      bridge (recommended)
+  [HIGH] MCP070  version '1.0'     [INFO] MCP071 initialize kept as a shim
+  [HIGH] MCP071  initialize        grade A, does not block CI
+  grade F, blocks CI
+```
+
+Without `server/discover` the finding stays HIGH, because such a server is
+unreachable to current clients. Verified by hand: `tiny-mcp-skel` and
+`tiny-mcp-server` now audit clean (grade A, non-blocking); a legacy-only
+server still audits to grade F and blocks CI.
+
+See `prompts/mcp-dual-dialect-bridge.md` and
+`reports/2026-10-24-mcp-dialect-migration.md`.
+
+
 ## When to Use
 
 - Before an agent connects to a third-party MCP server.
@@ -129,11 +175,13 @@ GitHub code scanning without a translation step.
 ## Status
 
 The repo does not exist on GitHub yet — `GET /repos/hussain-alsaibai/tiny-mcp-audit`
-returns **404** as of 2026-10-22. Local clone and passing tests only. Treat the
+returns **404** as of 2026-10-24. Local clone and passing tests only. Treat the
 install line above as the intended distribution, not a live one.
 
 ## See Also
 
+- `tools/tiny-mcp-skel-guide.md` — the stdlib-only skeleton that speaks the current dialect
 - `tools/tiny-mcp-server-guide.md` — building the server this audits
 - `tools/tiny-mcp-client-guide.md` — the consumer side
 - `tools/tiny-secret-mask-guide.md` — runtime redaction, for what leaks after connect
+- `prompts/mcp-dual-dialect-bridge.md` — the migration procedure behind the protocol group

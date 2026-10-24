@@ -8,6 +8,8 @@ Scans GitHub for open **official** bounty issues from verified platforms, scores
 - **Algora** — `label:algora` on GitHub issues
 - **Opire** — `label:opire` on GitHub issues
 - **Verified Repos** — Known bounty-friendly repos with legitimate programs
+- **Contributor Tasks** — non-cash bounties: an issue in an established repo
+  whose body is a spec and whose labels are `good first issue` / `help wanted`
 
 ## Rejected (Auto-filtered)
 - Unknown repos with 💎 Bounty labels (social engineering traps)
@@ -16,6 +18,9 @@ Scans GitHub for open **official** bounty issues from verified platforms, scores
 - Young repos (<90 days) with unrealistic bounties
 - Inorganic forks of well-known projects with zero stars
 - Dollar-marker issues in throwaway forks of major Go projects, even when the issue body names real payouts
+- Repos with <5 stars (fork farms) — demoted below trustworthy picks
+- **Bounties already contested by 3+ open PRs** — a "first merged PR takes the
+  payout" bounty with 10 rival PRs is effectively closed (added 2026-10-24)
 
 ## Scoring (0–100)
 | Factor | Max | Logic |
@@ -45,6 +50,10 @@ node scanner.js top
 - `scanner.js` — core scanner + scorer + official filter
 - `daily-bounty-work.js` — automated daily work starter (uses official scan)
 - `last-scan.json` — cached results from last run (auto-managed)
+- `repo-cache.json` — repo metadata cache, 7-day TTL (scam detection)
+- `competition-cache.json` — open-PR counts, 6-hour TTL
+- `test-competition.js` — regression tests for the fail-closed logic
+- `test-contributor-tasks.js` — regression tests for contributor-task detection
 
 ## Token
 Uses the `hussain-alsaibai` token from `~/.git-credentials` automatically.
@@ -134,4 +143,109 @@ When this pattern appears:
   non-farm candidate, but it is dead: 75 PRs mention Comprehend and at least
   5 target #290 alone on an issue with 95 comments.
 
-## Last Verified: 2026-10-23
+## 2026-10-24 Verification Notes
+
+### The fail-closed family, now four occurrences
+
+| Date | Signal | Read as | Reality |
+|------|--------|---------|---------|
+| 2026-10-23 | repo metadata fetch failed | no stars | 1-star fork farms |
+| 2026-10-23 | model-cost tracker read SQLite | zero usage | 74.2M tokens/day |
+| 2026-10-24 | PR competition search failed | zero competition | 25 open PRs |
+| 2026-10-24 | repo metadata died on the core quota | 0 stars = 1 flag | 231 of 250 rejected as scam |
+
+The general rule, and it has now cost a day twice: **never treat unavailable
+data as a pass.** Any new trust signal must ask "what does this code do when
+the value is missing?" and the answer has to be *reject*, never *accept*.
+See `prompts/fail-closed-on-unavailable-data.md`.
+
+Rules that follow:
+- **Competition is measured in its own phase**, over the top 30 candidates
+  only, so the request count stays bounded.
+- **The HTML path is the source of truth when the API is exhausted.** An
+  issue page embeds its linked PRs; that needs no API quota. Both sources are
+  used and the **higher** count wins.
+- **An unmeasurable count is `COMPETITION_UNKNOWN` (-1)**, never 0. It scores
+  as maximum competition, and `daily-bounty-work.js` refuses to start work
+  on it.
+- **The dead `scoreIssue()` helper was deleted**, not left in place. A
+  landmine containing the exact expression that broke the scanner is how the
+  bug comes back.
+
+Run `node test-competition.js` (12 checks) after touching the scorer.
+
+### Contributor tasks: bounties that pay no cash
+
+The label sweep above only finds **cash** bounties. A large class of real,
+mergeable work uses no cash convention at all: an issue in an established repo
+whose body is a spec ("### Files", "### What to change", "### How to verify",
+"### Out of scope") and whose labels are `good first issue` / `help wanted`.
+
+On 2026-10-24 this blind spot cost a full day. The scanner ranked a 0-star
+fork farm first and rejected every legitimate candidate, while
+`pipeshub-ai/pipeshub-ai#4531` — 3.8k stars, a spec with pinned test
+vectors, zero competing PRs — was invisible to it.
+
+They are found by **body shape, not by label**, because no label marks them:
+
+- `CONTRIBUTOR_TASK_QUERIES` — the search queries. `"How to verify"` is the
+  high-signal marker; it cuts 462k bare `good first issue` issues down to
+  ~1.6k real specs, which is what makes the sweep affordable on an anonymous
+  quota.
+- `looksLikeContributorTask()` — requires a verification step AND a scope
+  section AND a minimum body length, so a vague "please fix this" never
+  qualifies.
+- `contributorTaskPayout()` — returns a **non-cash marker**, not a dollar
+  amount. A task pays no cash, so inventing a dollar value would be a lie.
+- `specQuality()` — stands in for the payout score. A task that names the
+  file, the line, the expected values and the verification command is work
+  that can be done without guessing.
+- `CONTRIBUTOR_TASK_MIN_STARS` (500) — with no cash to anchor the value, the
+  repo's reputation is the only trust signal. Far stricter than the 5-star
+  floor for cash bounties.
+
+**The trap:** the `payout === 0` skip in the scorer. A contributor task prices
+at 0 because it pays no cash, and treating that 0 as "not a bounty" dropped
+every one of them before it could be scored. The rule is now
+`payout === 0 && !task`.
+
+Run `node test-contributor-tasks.js` (43 checks) after touching this logic.
+
+### The quota-death bug: "unmeasured" read as "malicious"
+
+The contributor-task sweep collected **300** issues and the scanner scored
+**zero** of them. The 08:32 scan rejected 231 of its 250 candidates as
+"Scam detected" and every survivor was a 0-star fork farm. Nothing malicious
+was detected. Three defects stacked:
+
+1. **Repo metadata died on the core quota.** The anonymous core API allows
+   60 requests/hour. The sweep spends that on the first 60 candidates; every
+   fetch after returns `null`. `detectScam()` reads a missing repo as 0 stars,
+   and a fork farm and a 3.8k-star repo become indistinguishable.
+   **Fix:** `parseRepoHtml()` reads the star/fork/created fields out of the
+   repo's HTML page, which has no rate limit. `fetchRepo()` falls back to it
+   and records `_source: 'html'` so a report can be honest about which path
+   produced the number.
+2. **Absent metadata counted as two flags, not one.** The `no_stars` check
+   fired on a missing repo *and* the `unverified_repo` check fired, giving
+   two flags = a hard scam reject. Unmeasured is not malicious.
+   **Fix:** the `no_stars` signal is suppressed when the repo object is absent,
+   leaving exactly one flag.
+3. **The shape filter was a heading whitelist.** It required the exact trio
+   "How to verify" + "Files/What to change" + "Steps/Acceptance criteria".
+   Real maintainers write "## Acceptance criteria", "## Done when",
+   "## How to check the change", "## Scoped task", "## Goal", "## Scope".
+   **282 of the 300 collected issues** were legitimate specs thrown away.
+   **Fix:** all of those heading variants are accepted; the vague-issue
+   rejections still hold.
+
+A fourth defect sat behind the third: the contributor-task star floor only
+rejected when the star count was a **number** below 500, so a task in a repo
+whose metadata was unavailable skipped the check entirely and passed. That is
+fail-open, so it is now `unmeasurable_stars_for_contributor_task` — rejected.
+
+The sweep also reads **3 pages** per query, not one. `"How to verify"` matches
+1,581 issues; sorting by `created desc` means page 1 holds only the newest
+100, so 1,481 real specs were invisible.
+
+## Last Verified: 2026-10-24

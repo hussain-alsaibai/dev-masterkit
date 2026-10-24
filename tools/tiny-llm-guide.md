@@ -3,7 +3,7 @@
 > Unified LLM client for Python — zero dependencies, every major provider. OpenAI, Anthropic, Google Gemini, xAI Grok, Ollama.
 
 **Source:** [hussain-alsaibai/tiny-llm](https://github.com/hussain-alsaibai/tiny-llm)
-**License:** MIT | **Language:** Python | **Last verified:** 2026-07-31
+**License:** MIT | **Language:** Python | **Last verified:** 2026-10-24
 
 ## When to use
 
@@ -66,6 +66,18 @@ response = client.chat(
 - **Cost tracking** — per-call + session aggregate
 - **Fallback chains** — try next model if primary unavailable
 - **System templates** — parameterized system prompts
+
+## Verification (2026-10-24)
+
+**18 tests passing** (verified by run). Version `0.1.0` in both
+`pyproject.toml` and `__version__` - they match. `ruff check` is clean after
+removing unused imports and one unused local in `call_tool()`.
+
+The repo's CI workflow was unparseable until 2026-10-24 (`continue_on_error`
+is not a GitHub Actions key - it is `continue-on-error`). Note that this repo's
+CI still runs an inline smoke script rather than the pytest suite - see
+`prompts/ci-target-must-match-repo-layout.md` for why a CI target that does
+not name the real test files is a coverage fiction.
 
 ## Zero Dependency
 

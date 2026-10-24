@@ -1,7 +1,7 @@
 # tiny-safeexec — Safe Python Code Execution
 
 **Source:** [hussain-alsaibai/tiny-safeexec](https://github.com/hussain-alsaibai/tiny-safeexec)
-**License:** MIT | **Language:** Python 3.8+ | **Last verified:** 2026-10-23
+**License:** MIT | **Language:** Python 3.8+ | **Last verified:** 2026-10-24
 
 ## Status
 **The upstream repository is named `tiny-safeexec` but its contents are
@@ -52,6 +52,17 @@ print(result.returncode)   # 0
 - Captures stdout, stderr, return value
 - Blocks network, filesystem, and dangerous imports
 - Zero dependencies beyond stdlib
+
+## Verification (2026-10-24)
+
+**35 tests passing** (verified by run). Version `1.0.0` in both
+`pyproject.toml` and `__version__` - they match. `ruff check` is clean.
+
+The repo's CI lint step was failing on ruff findings; fixed 2026-10-24.
+
+Note the naming trap from the API Correction above: this repo ships
+`tiny_sandbox.py`, so `import tiny_safeexec` will fail. The module is
+`tiny_sandbox`.
 
 ## Security model
 

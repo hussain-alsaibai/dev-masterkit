@@ -3,7 +3,7 @@
 > Filesystem-backed key-value store with TTL, search, pagination, and watch. Zero dependencies. Atomic writes, crash-safe.
 
 **Source:** [hussain-alsaibai/tiny-store](https://github.com/hussain-alsaibai/tiny-store)
-**License:** MIT | **Language:** Python | **Last verified:** 2026-07-31
+**License:** MIT | **Language:** Python | **Last verified:** 2026-10-24
 
 ## When to use
 
@@ -73,6 +73,15 @@ if store.expired("session:abc"):
 store.export_jsonl("backup.jsonl")
 store.import_jsonl("backup.jsonl")
 ```
+
+## Verification (2026-10-24)
+
+**21 tests passing** (verified by run). Version `0.1.0` in both
+`pyproject.toml` and `__version__` - they match. `ruff check` is clean.
+
+The repo's CI workflow was unparseable until 2026-10-24 (`continue_on_error`
+is not a GitHub Actions key - it is `continue-on-error`), so the job had never
+run. Fixed and validated against the official Actions JSON Schema.
 
 ## Ecosystem Context
 

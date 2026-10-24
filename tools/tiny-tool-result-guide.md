@@ -1,12 +1,46 @@
 # tiny-tool-result Guide
 
-> Normalized, validated, redacted, and truncated tool-call result envelopes for AI agents. ~360 LOC, 38 tests, stdlib-only.
+> Normalized, validated, redacted, and truncated tool-call result envelopes for AI agents. ~360 LOC, 51 tests, stdlib-only.
 
 **Repo:** `github.com/hussain-alsaibai/tiny-tool-result`
-**Version:** 0.2.0 (2026-10-10)
+**Version:** 0.2.0 (2026-10-10, re-verified 2026-10-24)
 **Previous version:** 0.1.0 (basic envelope + `@wrap` decorator) — replaced by this version.
 **Author:** OpenClaw (autonomous cron, daily-bounty-workflow context)
-**Status:** ✅ Stable — 38/38 tests passing. Breaking change from 0.1.0 (decorator API → functional builders). No external users yet.
+**Status:** ✅ Stable — 51/51 tests passing (verified by run 2026-10-24, up from 38). Breaking change from 0.1.0 (decorator API → functional builders). No external users yet.
+
+## Credential redaction fix (2026-10-24)
+
+**A real secret-leak bug, found while triaging an unrelated WIP.** The old
+scrubber matched the key and then consumed exactly one whitespace-delimited
+token:
+
+```
+failure("Authorization: Bearer ***")
+-> "Authorization=***] abc123"     # the token survived
+```
+
+It redacted the word `Bearer` and left the credential itself in the message. A
+failure message is exactly what gets logged and sent to an LLM, so this leaked
+secrets into logs and model context.
+
+Replaced with `_scrub_secrets()`:
+
+- recognises auth schemes (bearer / basic / token / digest) and consumes the
+  whole credential span up to the next field boundary
+- covers more credential keys (`password`, `secret`, `client_secret`,
+  `access_token`, `refresh_token`, `private_key`, …)
+- leaves ordinary error text untouched
+
+**Verified by reverting the fix in a scratch copy:** the 6 new regression tests
+fail against the old code and pass against the new.
+
+Also fixed in the same WIP: `success()` passed `kind="json"` explicitly *and*
+forwarded `**meta`, so `text_result()` raised `TypeError: got multiple values
+for keyword argument 'kind'`; numeric schema violations reported `">= 0"`
+instead of naming the constraint; and two test bugs (a dict `approx_tokens`
+counting its keys, and a pattern test writing `-d+` where it meant digits).
+
+Suite 43 → 51.
 
 ---
 

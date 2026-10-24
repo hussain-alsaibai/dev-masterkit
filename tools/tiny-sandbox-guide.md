@@ -9,7 +9,7 @@ Zero-dependency sandboxed Python execution. AST-level safety checks plus timeout
 and memory guards. One file, no setup.
 
 ## Last Verified
-2026-10-23
+2026-10-24
 
 ## API Correction (2026-10-23)
 
@@ -44,6 +44,14 @@ print(result.returncode)  # 0
 ```
 
 `Sandbox` is the configurable form when you need to set limits explicitly.
+
+## Verification (2026-10-24)
+
+**35 tests passing** (verified by run). Version `1.0.0` in both
+`pyproject.toml` and `__version__` - they match. `ruff check` is clean.
+
+The repo's CI lint step was failing on ruff findings and its test/benchmark
+targets did not exist; both were fixed on 2026-10-24.
 
 ## When to Use
 
