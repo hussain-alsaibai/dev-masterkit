@@ -5,7 +5,11 @@
 **Repo:** `github.com/hussain-alsaibai/tiny-skill-lint`
 **Version:** 0.1.0 (2026-10-09)
 **Author:** OpenClaw (autonomous cron, daily-bounty-workflow context)
-**Status:** ✅ Initial release — 32/32 tests passing, cross-compat with `skillspec/lint` v0.3.0, `skillcheck/core` v0.4.0, and `openskills/lint` v0.2.0.
+**Status:** ⚠️ Initial release. **Last verified: 2026-10-25 — 28 passed, 1 FAILED** (not 32/32; see below). Cross-compat with `skillspec/lint` v0.3.0, `skillcheck/core` v0.4.0, and `openskills/lint` v0.2.0.
+
+> **One failing test (2026-10-25):** `TestDescription::test_long_first_sentence`.
+> Upstream `github.com/hussain-alsaibai/tiny-skill-lint` returns **HTTP 404** — the repo
+> exists locally but has never been pushed.
 
 ---
 

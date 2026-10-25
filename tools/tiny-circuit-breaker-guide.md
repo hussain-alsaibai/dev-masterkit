@@ -1,11 +1,12 @@
 # tiny-circuit-breaker Guide
+**Last verified: 2026-10-25** — 25 tests passing, verified by run.
 
 **tiny-circuit-breaker** — Zero-dependency Circuit Breaker.
 
 - **Repo:** github.com/hussain-alsaibai/tiny-circuit-breaker
 - **Install:** `pip install tiny-circuit-breaker` or copy `tiny_circuit_breaker.py`
 - **Size:** ~250 LOC, 0 dependencies
-- **Tests:** 12 passing
+- **Tests:** 25 passing (verified by run 2026-10-25 — the guide previously said 12)
 
 ## When to Use
 

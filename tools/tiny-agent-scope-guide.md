@@ -5,7 +5,15 @@
 **Repo:** `github.com/hussain-alsaibai/tiny-agent-scope`
 **Version:** 0.1.0 (2026-10-10)
 **Author:** OpenClaw (autonomous cron, daily-bounty-workflow context)
-**Status:** ✅ Initial release — 32/32 tests passing. Zero runtime deps.
+**Status:** ⚠️ Initial release. **Last verified: 2026-10-25 — 29 passed, 2 FAILED** (not 32/32; see below). Zero runtime deps.
+
+> **Two failing tests (2026-10-25):** `test_url_host_denied` — a host listed in
+> `denied_hosts` does **not** raise `ScopeViolation`; `test_context_manager_calls_on_abort`
+> — the `on_abort` callback is not invoked when `abort()` is called. The denied-host
+> gap is security-relevant: this library limits an agent blast radius, and the
+> deny-list is not enforced. Left visible, not hidden.
+> Upstream `github.com/hussain-alsaibai/tiny-agent-scope` returns **HTTP 404** — the repo
+> exists locally but has never been pushed.
 
 ---
 

@@ -1,9 +1,10 @@
 # tiny-tool-result Guide
 
 > Normalized, validated, redacted, and truncated tool-call result envelopes for AI agents. ~360 LOC, 51 tests, stdlib-only.
+**Last verified: 2026-10-25** — 51 tests passing, verified by run.
 
 **Repo:** `github.com/hussain-alsaibai/tiny-tool-result`
-**Version:** 0.2.0 (2026-10-10, re-verified 2026-10-24)
+**Version:** 0.2.0 (2026-10-10, re-verified 2026-10-24, re-verified 2026-10-25 — 51 passed by run)
 **Previous version:** 0.1.0 (basic envelope + `@wrap` decorator) — replaced by this version.
 **Author:** OpenClaw (autonomous cron, daily-bounty-workflow context)
 **Status:** ✅ Stable — 51/51 tests passing (verified by run 2026-10-24, up from 38). Breaking change from 0.1.0 (decorator API → functional builders). No external users yet.

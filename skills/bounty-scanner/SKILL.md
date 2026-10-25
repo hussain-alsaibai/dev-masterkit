@@ -21,6 +21,7 @@ Scans GitHub for open **official** bounty issues from verified platforms, scores
 - Repos with <5 stars (fork farms) — demoted below trustworthy picks
 - **Bounties already contested by 3+ open PRs** — a "first merged PR takes the
   payout" bounty with 10 rival PRs is effectively closed (added 2026-10-24)
+- **Issues that already have an assignee** — added 2026-10-25. See below.
 
 ## Scoring (0–100)
 | Factor | Max | Logic |
@@ -248,4 +249,35 @@ The sweep also reads **3 pages** per query, not one. `"How to verify"` matches
 1,581 issues; sorting by `created desc` means page 1 holds only the newest
 100, so 1,481 real specs were invisible.
 
-## Last Verified: 2026-10-24
+## An assigned issue is a taken issue (2026-10-25)
+
+The 07:03 scan that day selected `pipeshub-ai#4063`. A maintainer had already
+assigned it to `louisss1016`, with an open PR behind it. The issue said
+"Comment here to claim it. One assignee." Nothing in the scanner or in
+`daily-bounty-work.js` looked at the assignee, so a task somebody else was
+already doing scored as available and the work would have started on it.
+
+Closed, awarded, PR-contested, star-count and scam were all checked. The one
+signal that actually decides whether a task is still open was not. **This is
+the same bug class as the four failures below — a signal that was never read,
+not a signal that was read and misjudged.**
+
+The fix is cheap because the search API returns `assignees` on every issue
+object, so the check costs no extra request:
+
+- `scanner.js` rejects any issue with an assignee, flagged `already_assigned`.
+  The singular `assignee` field is honoured too.
+- `daily-bounty-work.js` re-checks, because it is the component that decides
+  what work actually starts.
+
+Regression test:
+
+```bash
+node test-assigned-issues.js   # 11 checks, all must pass
+```
+
+**Generalisation:** when picking work in a repo that hands tasks out one at a
+time, the assignee is the claim. Check it before the PR count — one open PR
+on an assigned issue is somebody's finished work, not a contest.
+
+## Last Verified: 2026-10-25

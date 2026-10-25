@@ -64,6 +64,6 @@ https://github.com/hussain-alsaibai/tiny-router
 
 ## See Also
 
-- `tools/tiny-router-v0.4-guide.md` — v0.4.0 (JWT middleware + request-id + OpenAPI export)
+- v0.4.0 (JWT middleware + request-id + OpenAPI export) — superseded; its guide was removed 2026-10-25, API notes folded into `tools/tiny-router-guide.md` (v0.7.4)
 - `tools/tiny-router-guide.md` — base router guide
 - `tools/tiny-secret-mask-guide.md` — pair with `mask_response()` for safe error returns

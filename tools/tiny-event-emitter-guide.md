@@ -1,11 +1,12 @@
 # tiny-event-emitter Guide
+**Last verified: 2026-10-25** — 12 tests passing, verified by run.
 
 **tiny-event-emitter** — Zero-dependency Node.js-style EventEmitter.
 
 - **Repo:** github.com/hussain-alsaibai/tiny-event-emitter
 - **Install:** `pip install tiny-event-emitter` or copy `tiny_event_emitter.py`
 - **Size:** ~400 LOC, 0 dependencies
-- **Tests:** 16 passing
+- **Tests:** 12 passing (verified by run 2026-10-25 — the guide previously said 16)
 
 ## When to Use
 

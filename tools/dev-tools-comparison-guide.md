@@ -5,6 +5,8 @@ description: "Head-to-head benchmarks: tiny-* ecosystem vs industry alternatives
 
 # dev-tools-comparison Guide
 
+**Last verified: 2026-10-25** — content checked against the current tiny-* guides in this repo; benchmark numbers are the repo’s own and were not re-measured today.
+
 > Head-to-head benchmarks and feature comparisons: tiny-* vs the alternatives.
 > GitHub: https://github.com/hussain-alsaibai/dev-tools-comparison
 > Part of: [dev-tooling-trends-2026](https://github.com/hussain-alsaibai/dev-tooling-trends-2026)
