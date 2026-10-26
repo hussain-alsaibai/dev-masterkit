@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Validates that every skill declares valid AgentSkills frontmatter,
+      # that no build artefact is tracked, and reports how many skills are
+      # still pending conversion (skills/AGENTSKILLS_PENDING.md).
+      - name: Check repository structure
+        run: python3 scripts/check_structure.py
