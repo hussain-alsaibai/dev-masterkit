@@ -1,3 +1,8 @@
+---
+name: security-audit
+description: Audit a repository for hardcoded secrets, insecure code patterns, and risky file permissions using stdlib regex and AST checks, then report findings by severity with concrete remediation steps. Use when asked to audit a repo for security issues, find hardcoded credentials, or run a pre-commit security check.
+---
+
 # security-audit — Skill for Scanning Repos for Secrets/Vulns
 
 ## Trigger

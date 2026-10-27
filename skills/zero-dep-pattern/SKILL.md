@@ -1,3 +1,8 @@
+---
+name: zero-dep-pattern
+description: Author a single-file, stdlib-only Python utility in the tiny-family style — one purpose, full type hints, __all__ and __version__, inline unittest self-tests, under 300 lines — and optionally package it for PyPI. Use when asked for a tiny zero-dependency module or a single-file Python utility.
+---
+
 # zero-dep-pattern — Skill for Creating Single-File Python Utilities
 
 ## Trigger

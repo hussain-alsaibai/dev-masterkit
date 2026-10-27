@@ -74,14 +74,37 @@ store.export_jsonl("backup.jsonl")
 store.import_jsonl("backup.jsonl")
 ```
 
-## Verification (2026-10-24)
+## Verification (2026-10-26)
 
-**21 tests passing** (verified by run). Version `0.1.0` in both
+**24 tests passing** (verified by run 2026-10-26). Version `0.1.0` in both
 `pyproject.toml` and `__version__` - they match. `ruff check` is clean.
 
 The repo's CI workflow was unparseable until 2026-10-24 (`continue_on_error`
 is not a GitHub Actions key - it is `continue-on-error`), so the job had never
 run. Fixed and validated against the official Actions JSON Schema.
+
+### The `TieredStore` falsy-dict bug (fixed 2026-10-26)
+
+**A real library bug, found while fixing CI — not a CI defect.**
+
+```python
+# BROKEN - an empty dict is falsy, so the caller's dict was DISCARDED
+self.hot = hot or {}
+
+# CORRECT
+self.hot = hot if hot is not None else {}
+```
+
+`TieredStore.__init__` replaced the caller's `hot` dict with a fresh one
+whenever that dict was empty. Promoted keys were written into a dict nobody
+could read. **The 21-test suite had zero `TieredStore` coverage**, which is
+why it shipped.
+
+Fixed, with 3 regression tests added (21 → 24).
+
+> **A suite that does not cover the class you just changed cannot catch the
+> bug you just changed.** Coverage is not a metric here; it is the answer to
+> "would this test have failed before the fix?"
 
 ## Ecosystem Context
 

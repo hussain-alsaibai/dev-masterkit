@@ -1,3 +1,8 @@
+---
+name: api-validation
+description: Validate API keys and endpoint health with safe, non-destructive test requests (GET or harmless POST), then record status codes, error meanings, and fix steps in a validation report. Use when asked to test an API key, check whether an API or service is up, verify credentials, or debug why an integration is failing.
+---
+
 # api-validation — Skill for Testing API Keys and Endpoints
 
 ## Trigger

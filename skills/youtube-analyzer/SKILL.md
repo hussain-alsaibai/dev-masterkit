@@ -1,3 +1,8 @@
+---
+name: youtube-analyzer
+description: Analyze a YouTube channel against 2026 best practices — content mix, thumbnails, engagement, SEO, posting consistency — and render an HTML dashboard with prioritized recommendations. Use when asked to review or improve a YouTube channel's content, thumbnails, or SEO.
+---
+
 # YouTube Channel Analyzer
 
 Analyzes YouTube channels against 2026 best practices and generates actionable recommendations.

@@ -1,3 +1,8 @@
+---
+name: api-dev
+description: Build, test, document, and debug HTTP APIs using only curl and the Python standard library — scaffolding endpoints, generating OpenAPI specs, mocking services, and tracing failures. Use when asked to create an API or REST endpoints, test or debug API calls, produce an OpenAPI spec, mock an external API, or load test endpoints.
+---
+
 # api-dev — Skill for API Development
 
 ## Trigger

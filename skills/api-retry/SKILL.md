@@ -1,3 +1,8 @@
+---
+name: api-retry
+description: Wrap HTTP calls in a reusable JavaScript apiCall() helper with exponential backoff, configurable max retries, 429 rate-limit handling, and a circuit breaker. Use when adding retry logic to API calls, when an endpoint is flaky and needs backoff, or when building a resilient API client.
+---
+
 # API Retry Utility
 
 A reusable module for making API calls with exponential backoff retry logic.

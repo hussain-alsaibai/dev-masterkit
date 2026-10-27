@@ -1,3 +1,8 @@
+---
+name: pr-monitor
+description: Track open GitHub pull requests and detect new maintainer comments, reviews, CI check results, merges, and closures, emitting Telegram alerts on change. Use when waiting on your own PRs and you need to be notified when a reviewer or CI responds.
+---
+
 # PR Monitor Skill
 
 Watches open GitHub PRs for status changes and alerts via Telegram.

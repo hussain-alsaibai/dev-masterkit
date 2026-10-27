@@ -1,3 +1,8 @@
+---
+name: health-monitor
+description: Run periodic host health checks for disk, memory, webhook server, and gateway, alert via FalconEye above configurable thresholds, and auto-restart the webhook server when it dies. Use when setting up system monitoring or when diagnosing why a service stopped responding.
+---
+
 # Health Monitor Skill
 
 Automated system health monitoring with FalconEye integration.

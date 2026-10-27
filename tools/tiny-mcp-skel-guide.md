@@ -4,9 +4,21 @@
 
 - **Repo:** hussain-alsaibai/tiny-mcp-skel (local clone: `~/workspace/tiny-mcp-skel`)
 - **Install:** `pip install tiny-mcp-skel` (pulls `tiny-router>=0.7.0`, `tiny-validator>=0.5.0`)
+  - **The PyPI install line cannot work — checked 2026-10-26.** `tiny-validator` has
+    **no PyPI project at all** (the JSON endpoint 404s), and `tiny-router`'s
+    newest release on PyPI is **0.0.8**, while this package pins `>=0.7.0`.
+    CI therefore installs its siblings **straight from GitHub**:
+
+    ```yaml
+    pip install "tiny-router @ git+https://github.com/hussain-alsaibai/tiny-router.git"
+    pip install "tiny-validator @ git+https://github.com/hussain-alsaibai/tiny-validator.git"
+    ```
+
+    A hardcoded `/home/node` path in the test bootstrap was removed in the same
+    commit — it made the suite pass on exactly one machine.
 - **Size:** 605 lines total, ~150 executable; 0 external runtime deps beyond the two tiny-* siblings
 - **Tests:** 43 passing (verified by run, 2026-10-24)
-- **Last verified:** 2026-10-24 (43/43 by test run; `server/discover` handler confirmed against the vendored 2026-07-28 JSON Schema)
+- **Last verified:** 2026-10-26 (43/43 by test run; `server/discover` handler confirmed against the vendored 2026-07-28 JSON Schema)
 
 ## Why This Exists
 

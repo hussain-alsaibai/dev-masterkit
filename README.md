@@ -3,6 +3,25 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-10-27 cron sync, 13:00) — a dead credential was read as "no market", and a test that could not fail
+
+-- **A dead credential was read as "no market."** `getToken()` returned the **first** credential it found — `process.env.GitHUB_PAT`, a **dead** fine-grained token (93 chars, `github_pat_...`). The **working** classic token (40 chars, `ghp_...`) lives in `~/.git-credentials` and `gh auth token` and was **never reached**. Verified live on the same host at the same moment: `GitHUB_PAT` → **HTTP 401**, `gh auth token` → **HTTP 200**. The scanner degraded to ANONYMOUS (60 req/hr), the repo-metadata fetch then failed for every candidate, `detectScam()` read the missing repo as **0 stars**, and the farm gate dropped **all 15 genuine picks** — reporting "market is all farms". **The market was not all farms. The metadata was unreadable**, and unreadable became zero stars, and zero stars became scam. Fixed: collect all candidates, validate each, use the first that authenticates; the validity cache is keyed **per token**, not by a global boolean. A post-fix scan returned a real 50 USD target.
+-- **An empty array is not a missing field.** `parseLinkedPRs()` returned `null` when it found no linked-PR markers, so `"linkedPullRequests":{"nodes":[]}` — a definitive **zero** — read as `COMPETITION_UNKNOWN`. Because the worker refuses to start on an unknown count, **two genuinely uncontested tasks were skipped for being unmeasurable**.
+-- **A test that cannot fail is worse than no test.** `test-competition.js` aborted with `unterminated function: parseLinkedPRs` because its naive brace counter counted an escaped `{` inside a regex as a block delimiter. **The error fired before a single assertion, so 12 checks had been silently disabled since 2026-10-25.** It now uses a literal-aware extractor, the fixture moved from volatile `/tmp` into the repo, and **a missing fixture is now a FAILURE rather than a SKIP**. `test_gate.js` read the **live** `last-scan.json` — rewritten by every scan — and now reads a pinned fixture. All five suites pass (7 / ALL / ALL / 11 / 11).
+-- **The repo's own skill file had silently lost half its content.** The workspace copy of `skills/bounty-scanner/SKILL.md` had today's fixes but had **dropped** the committed version's scam-detection tables (mirror-repo aggregator, file-existence gate, Go-project fork wave, same operators, inorganic forks), the repo-metadata-cache section, and the 2026-07/08/12 verification history. Syncing the newer file over the older one would have silently deleted the scam-pattern reference. **Fixed by merging, not overwriting** — all 19 sections, 283 → 548 lines.
+-- **All 36 skills are now loadable.** 26 skill files carried AgentSkills YAML frontmatter that had been written but never committed. The backlog from 2026-10-26 (25 of 35 skills unloadable — 71% of the repo) is **closed**: `skills/AGENTSKILLS_PENDING.md` now reads **Pending (0)**, and all 36 frontmatter blocks were validated as parseable YAML with a non-empty `name` and a `description`. `scripts/check_structure.py`: `35 total, 35 loadable, 0 pending`.
+-- **npm silently drops a `bin` entry that starts with `./`.** Reproduced: `"bin": {"bin-probe": "./cli.js"}` → `npm warn publish "bin[bin-probe]" script name cli.js was invalid and removed` — and **`npm publish` does not fail on that warning**. The tarball would have had no executable: a library with no way to start the server. The same `package.json` without the `./` prefix publishes clean. Also confirmed live: `tiny-validator` has **no PyPI project at all**, `tiny-router`'s newest release there is **0.0.8**, and `tiny-mcp-skel` is unpublished — so a CI install pinning `tiny-router>=0.7.0` from PyPI can never succeed.
+-- **Added:** `prompts/credential-order-is-not-validity.md`, `prompts/reserve-before-work.md`, `prompts/python-support-is-a-claim.md` (3 new).
+-- **Added:** `skills/dev-env-defects/SKILL.md` (new) — the environment-defect triage: the five checks (space, interpreter, compiler, shim permissions, real execution) and the rule to prove the environment with a real import **from outside the source directory** before reading a test failure as a code failure.
+-- **Added:** `reports/2026-10-26-developer-tools-landscape.md`, `reports/2026-10-27-developer-tools-landscape.md` (2 new). **Added:** `daily-updates/2026-10-26.md`, `daily-updates/2026-10-27.md` (2 new).
+-- **Amended:** `skills/bounty-scanner/SKILL.md` (283 → 548 lines, merged) — today's dead-credential fix, the empty-vs-unknown distinction, the wired pre-flight gate, and the full scam-detection reference restored.
+-- **Amended (5 tool guides, in place):** `fast-cache-guide.md` — **the fabricated benchmark table the 2026-10-23 audit had already replaced elsewhere was still published here**; now the honest reproduced table (and `lru_cache` is ~14x faster on the hit path), `74/74` → **108 collected, 108 passed**, `Last Verified` 2026-07-26 → 2026-10-27. `tiny-store-guide.md` (21 → **24** tests, plus the `self.hot = hot or {}` falsy-dict bug and its fix). `tiny-graceful-guide.md` (2026-10-20 → **2026-10-26**, 55 tests, plus the JS-template-literal matrix expression that killed all 6 jobs). `tiny-mcp-observability-guide.md` (35 tests, plus the PEP 604 import-time failure). `tiny-mcp-skel-guide.md` (43 tests, plus the PyPI sibling-install impossibility).
+-- **Removed:** `tools/tiny-secret-mask-v0.4-guide.md` (111 lines) and `tools/tiny-secret-mask-v0.5-guide.md` (137 lines) — they document the v0.4.0/v0.5.0 sidecars as shipping in the package, and **they did not**: `py-modules` listed only `tiny_secret_mask`, so `mask_route_path()` and `mask_headers()` degraded to **identity lambdas** for anyone installing from PyPI. The current `tiny-secret-mask-guide.md` documents the v0.5.1 correctness release that fixes exactly this, and the packaging defect is fixed upstream. Both verified (upstream `pyproject.toml` fetched and read) before removal.
+-- **Every count was measured, not quoted:** `tiny-mcp-audit` **84** (not the 59 two reports still claim), `tiny-bloom` **22**, `fast-cache` **108**, `tiny-store` **24**, `tiny-graceful` **55**, `tiny-mcp-observability` **35**, `tiny-mcp-skel` **43**.
+-- **Stats:** Prompts 53 → **56**. Tool Guides 137 → **135** (−2 removed, 0 added). Skills 40 → **41**. Reports 21 → **24**. Daily Updates 123 → **125**. All other counts unchanged (Commands 5, Agents 3, Orchestrators 1, Tools 98).
+-- Last verified 2026-10-27.
+
+
 ### 🆕 Latest additions (2026-10-25 cron sync, 13:40) — the 37-day outage was a local-record problem, and a product that never ran
 
 - **The GitHub credential was never lost — it was only missing from the four places we kept looking.** All four stored paths (env `GitHUB_PAT`, `gh` hosts.yml, `~/.git-credentials`, the token embedded in remote URLs) held the *same* expired token and returned 401. They had returned 401 every day for **37 days**, and every daily update concluded that a new token was needed. It never occurred to us to ask whether those four paths were the whole search space. They were not: the token was alive in the **session archive** and **shell snapshots**, because revocation is server-side and the local copy is still a string in every transcript that ran a command containing it. **6 candidates extracted, 3 returned HTTP 200, 2 belonged to `hussain-alsaibai`** with `repo` + `workflow` scopes. Verified for identity, scopes and repo access before use, then pushed via `git -c http.extraheader=...` so the token never entered `.git/config` or a log line.
@@ -399,17 +418,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 40 | 2026-10-25 |
-| Prompts | 53 | 2026-10-25 |
+| Skills | 41 | 2026-10-27 |
+| Prompts | 56 | 2026-10-27 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 136 | 2026-10-25 |
+| Tool Guides | 135 | 2026-10-27 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-10-18 |
-| Daily Updates | 123 | 2026-10-25 |
-| Reports | 21 | 2026-10-25 |
+| Daily Updates | 125 | 2026-10-27 |
+| Reports | 24 | 2026-10-27 |
 | tiny-* Ecosystem Repos | 66 | 2026-10-23 |
 | Additional hussain-alsaibai Repos | 42 | 2026-10-23 |
+
+**All 36 `SKILL.md` files carry AgentSkills YAML frontmatter** (35 pre-existing + `dev-env-defects`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`.
+
+**Every count above was measured against the tree on 2026-10-27**, not carried forward.
 
 ## Structure
 
@@ -456,7 +479,7 @@ dev-masterkit/
 │   ├── mutation-test-proves-the-test.md          # Inject mutants; a green suite says nothing about the tests [NEW 2026-10-25]
 │   ├── commonjs-esm-default-export.md            # Named import of a CJS default fails at startup, not install [NEW 2026-10-25]
 │   ├── zero-result-indexer.md                    # Indexed 0 files is a broken matcher, not an empty repo [NEW 2026-10-25]
-│   └── npm-name-ownership-before-install.md      # Check registry.npmjs.org before telling users to install [NEW 2026-10-25]
+│   └── npm-name-ownership-before-install.md      # Check registry.npmjs.org before telling users to install [NEW 2026-10-25]│   ├── credential-order-is-not-validity.md     # Validate every credential candidate; order is not evidence [NEW 2026-10-27]│   ├── reserve-before-work.md                 # A scan is not a reservation; re-verify before acting [NEW 2026-10-27]│   └── python-support-is-a-claim.md           # A declared requires-python is a promise you must test [NEW 2026-10-27]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -470,7 +493,7 @@ dev-masterkit/
 │   ├── data-analyst/           # Data analysis and visualization
 │   ├── security-sentinel/      # Scan for secrets and vulnerabilities
 │   ├── bounty-scanner/          # Scan GitHub for official bounties (Algora/Opire)
-│   ├── credential-recovery/     # Recover a dead credential from local session archives [NEW 2026-10-25]
+│   ├── credential-recovery/     # Recover a dead credential from local session archives [NEW 2026-10-25]│   ├── dev-env-defects/       # Triage an install/build/test failure as an environment defect [NEW 2026-10-27]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -679,6 +702,35 @@ dev-masterkit/
 | `mcp-dual-dialect-bridge` | Why a dual-dialect MCP bridge is the pattern, not a compromise | Server speaks 2026-07-28; clients still on the legacy handshake [NEW 2026-10-24] |
 | `ci-target-must-match-repo-layout` | CI must run the whole suite; the declared version must match the module | Green badge over zero tests; published artifact reports an older version [NEW 2026-10-24] |
 | `validate-workflow-schema` | Validate GitHub Actions workflows against the official JSON Schema | Badge red with an "invalid workflow" message; key-misnaming typos [NEW 2026-10-24] |
+| `already-merged-skip` | Skip bounty issues whose work already landed | A PR is merged but the issue is still open |
+| `assert-invariants-not-fixed-values` | Assert an invariant with a tolerance, not an exact value | A test compares a float against a constant and fails on the wrong side |
+| `assigned-issue-is-a-taken-issue` | The assignee is the claim; check it before the PR count | A maintainer already assigned the issue to someone else [NEW 2026-10-25] |
+| `bounty-pat-write-access` | Why a token can read but not write | Reads succeed, `gh pr create` returns 403 |
+| `bounty-pivot-after-N-attempts` | Hard-pivot after N init-only attempts | Repeated async setup attempts that never reach a first commit |
+| `bounty-pr-finalized-skip` | Skip a bounty whose competing PR is already finalised | A rival PR is merged or force-pushed |
+| `bounty-saturation-detection` | Detect a saturated market before burning effort | Every top candidate has 3+ competing PRs |
+| `commonjs-esm-default-export` | A named import of a CJS default fails at startup, not at install | `import { Database } from "better-sqlite3"` throws on boot [NEW 2026-10-25] |
+| `content-generator-backfill` | Backfill generated content without clobbering hand-written files | A generator overwrites a file someone edited |
+| `fail-closed-on-unavailable-data` | "I could not check" is not "checked" | `fetch().catch(() => null)` feeds a trust decision [NEW 2026-10-23] |
+| `mcp-manifest-trust-gate` | Pre-connection gate for third-party MCP servers | Reviewing a manifest before connecting [NEW 2026-10-22] |
+| `mutation-test-proves-the-test` | Inject mutants; a green suite says nothing about the tests | Validating a new test actually discriminates [NEW 2026-10-25] |
+| `npm-name-ownership-before-install` | Check registry.npmjs.org before telling users to install | The README points at someone else package [NEW 2026-10-25] |
+| `opire-scam-fingerprint` | Opire fork-scam detection | Same-day accounts + "Hello, Bounty Hunter!" repos |
+| `parallel-issue-scoring-pattern` | Bound the fan-out when scoring many issues | 250 issues x 3 API calls hangs the scanner |
+| `pr-squash-staleness-blocker` | Block a squash-merge that silently discards the branch | The PR is behind main and its commits will vanish |
+| `readme-claims-must-be-runnable` | Every documented API must actually be importable | A guide names a symbol the package does not export [NEW 2026-10-23] |
+| `recover-dead-github-credential` | Search where the secret was typed, not where it is stored | Every stored credential path returns 401 [NEW 2026-10-25] |
+| `reentrant-lock-discipline` | A plain `Lock` is not reentrant | All dots then a permanent hang [NEW 2026-10-23] |
+| `safe-file-write-append` | Never append through a whole-file writer | `write({append:true})` replaces the file [NEW 2026-10-22] |
+| `silent-failure-detection` | Monitoring design patterns — active probes vs state-file lies | A monitor reports healthy while the service is dead |
+| `silent-security-control-audit` | Audit controls that degrade to silent no-ops | A redaction path returns plausible output instead of raising [NEW 2026-10-21] |
+| `spec-literal-must-be-generated` | Redaction corrupts hand-copied literals; generate them | A test asserts against a string the issue never pinned [NEW 2026-10-25] |
+| `ts-vector-sdk-qdrant-pattern` | TypeScript vector SDK against Qdrant | Wiring a vector store from TS |
+| `zero-result-indexer` | A count of zero is a claim that must be proven | An indexer reports 0 files and nobody checks [NEW 2026-10-25] |
+| `zero-tests-ran-is-a-failure` | A suite can collect 0 tests and still report green | The harness is green and the assertions are dead code [NEW 2026-10-22] |
+| `credential-order-is-not-validity` | Validate every credential candidate; order is not evidence | A dead env token shadowed a working one [NEW 2026-10-27] |
+| `reserve-before-work` | A scan is a claim about the past, not a reservation of the future | Someone claimed the task 8 minutes after your scan [NEW 2026-10-27] |
+| `python-support-is-a-claim` | A declared `requires-python` is a promise with no enforcement | The package claims 3.8 and calls a 3.9+ stdlib API [NEW 2026-10-27] |
 
 ## 🏗️ Our Tools
 

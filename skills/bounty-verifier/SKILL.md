@@ -1,6 +1,6 @@
 ---
 name: bounty-verifier
-description: Two-stage bounty issue verification — hard filters + behavioral signals — to refuse scam/fork issues before picking them. Last verified: 2026-10-22.
+description: "Two-stage bounty issue verification — hard filters + behavioral signals — to refuse scam/fork issues before picking them. Last verified: 2026-10-22."
 ---
 
 # Bounty Verifier

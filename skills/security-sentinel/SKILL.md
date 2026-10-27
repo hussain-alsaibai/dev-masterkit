@@ -1,3 +1,8 @@
+---
+name: security-sentinel
+description: Scan a workspace, repository, or codebase for exposed secrets, world-writable or mis-set file permissions, unsafe Python constructs, and vulnerable pinned dependencies, returning a severity summary with pass or fail status. Use when asked to scan for vulnerabilities, find API keys, audit file permissions, or check for exposed credentials.
+---
+
 # security-sentinel — Skill for Security Scanning
 
 ## Trigger

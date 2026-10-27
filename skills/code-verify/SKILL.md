@@ -1,3 +1,8 @@
+---
+name: code-verify
+description: Verify code before sending it by running the right syntax check per language (bash -n, node --check, py_compile, go vet, JSON and YAML parsers) and screening destructive commands for required safeguards. Use before handing over any code block longer than a few lines, a state-changing command, or a config file that must parse.
+---
+
 # Code Verify
 
 Verify code before sending it. Catch syntax errors, missing deps, and logic flaws *before* they reach the user.

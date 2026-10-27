@@ -1,3 +1,8 @@
+---
+name: doc-generator
+description: Generate accurate project documentation — README.md, API reference, usage guides, examples, and an optional CONTRIBUTING guide — from the actual code structure, public API surface, and entry points. Use when asked to write a README, document a repo or API, or make a project look professional.
+---
+
 # doc-generator — Skill for Generating README + Docs
 
 ## Trigger

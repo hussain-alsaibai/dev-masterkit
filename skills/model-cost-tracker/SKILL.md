@@ -1,3 +1,8 @@
+---
+name: model-cost-tracker
+description: Measure and report AI provider spend from the OpenClaw SQLite transcript store and the legacy usage log, merging measured token usage with estimates and pricing prompt-cache reads at their own rate. Use when asked what AI calls cost, for a daily, weekly, or monthly cost report, or to audit token usage per model.
+---
+
 # model-cost-tracker
 
 Tracks every AI API call across all providers and generates cost reports.

@@ -1,3 +1,8 @@
+---
+name: human-actor
+description: Write GitHub comments, PR descriptions, and maintainer replies that read like a real developer — specific technical context, varied and imperfect phrasing, matched tone, and no bot-like politeness or emoji patterns. Use before sending any GitHub comment, PR body, or review response.
+---
+
 # Human Actor Skill
 
 How to interact like a human in open source communities to avoid detection as a bot.

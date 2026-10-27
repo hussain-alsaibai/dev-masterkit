@@ -1,3 +1,8 @@
+---
+name: data-analyst
+description: Turn raw CSV, JSON, and SQLite data into insights using only Python's standard library — loading and cleaning, SQL queries, SVG charts, statistics, and JSON or Markdown reports. Use when asked to analyze data, generate insights or charts, query a database, process or clean a CSV or spreadsheet, or produce a data report.
+---
+
 # data-analyst — Skill for Data Analysis
 
 ## Trigger

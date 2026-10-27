@@ -1,3 +1,8 @@
+---
+name: benchmark-runner
+description: Measure and compare code performance with Python's standard library only (time.perf_counter, tracemalloc, statistics), producing a reproducible report with mean, median, and standard deviation. Use when asked to benchmark code, find a bottleneck, profile performance, or compare two implementations.
+---
+
 # benchmark-runner — Skill for Performance Benchmarking
 
 ## Trigger

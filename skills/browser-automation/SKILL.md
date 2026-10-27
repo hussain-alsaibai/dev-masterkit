@@ -1,3 +1,8 @@
+---
+name: browser-automation
+description: Drive web pages through the OpenClaw browser tool or the Stagehand CLI to navigate, click, fill forms, extract data, and take screenshots, using snapshot-based element refs and local versus Browserbase environment selection. Use when asked to browse a website, navigate to a URL, fill out a form, click a button, scrape page content, or screenshot a web app.
+---
+
 # Browser Automation
 
 Automate web browser interactions using natural language via CLI commands or the OpenClaw `browser` tool.

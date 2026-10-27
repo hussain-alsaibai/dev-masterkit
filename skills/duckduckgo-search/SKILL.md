@@ -1,3 +1,8 @@
+---
+name: duckduckgo-search
+description: Run anonymous DuckDuckGo web, news, and image searches plus instant-answer lookups with no API key, using safe-search and region settings. Use when a task needs general web search, latest news, image sourcing, or fact verification and no paid search API is available.
+---
+
 # DuckDuckGo Search Skill
 
 Advanced web search capability using DuckDuckGo's search engine via Python.

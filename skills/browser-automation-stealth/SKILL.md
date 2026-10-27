@@ -1,3 +1,8 @@
+---
+name: browser-automation-stealth
+description: Wrap Playwright in a stealth browser with fingerprint randomization, rotating user-agent headers, proxy support, cookie-jar management, captcha handling, and screenshot or PDF output. Use when scraping or testing sites that block ordinary automation, or when a normal browser session is getting detected as a bot.
+---
+
 # Browser Automation Stealth
 
 **Version:** 1.0.0  

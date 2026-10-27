@@ -1,3 +1,8 @@
+---
+name: working-memory
+description: Maintain a session-scoped volatile state file (current task, loaded context, active files, next steps, metrics) with checkpoint and restore across restarts, kept separate from persistent long-term memory. Use when tracking in-progress task state or recovering context after a session restart.
+---
+
 # Working Memory Skill
 
 **Purpose:** Session-scoped volatile memory for tracking current task state, loaded context, and next steps.

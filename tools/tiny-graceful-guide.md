@@ -5,8 +5,8 @@
 - **Repo:** github.com/hussain-alsaibai/tiny-graceful
 - **Install:** `pip install tiny-graceful` or copy `tiny_graceful.py`
 - **Size:** ~280 LOC, 0 dependencies
-- **Tests:** 55 passing
-- **Last verified:** 2026-10-20
+- **Tests:** 55 passing (verified by run 2026-10-26)
+- **Last verified:** 2026-10-26
 
 ## Why This Exists
 
@@ -107,4 +107,30 @@ $ timeout -s TERM python3 example.py
 - Pure CLI scripts — use `signal.signal()` directly
 - Long-running batch jobs with structured checkpoints — pair with `tiny-checkpoint` instead
 - Service meshes where the platform owns shutdown (k8s with `terminationGracePeriodSeconds` and a real preStop hook)
+
+## Two CI defects fixed 2026-10-26
+
+**1. The matrix expression was a JavaScript template literal, not a GitHub
+expression.** Every one of the six matrix jobs died on the same malformed
+version string:
+
+```yaml
+# BROKEN - setup-python receives the literal string, not the expression
+python-version: ${ matrix.python-version }
+
+# CORRECT
+python-version: ${{ matrix.python-version }}
+```
+
+This was the only repo in the estate with that typo. **A badge that is red
+for a parse error tells you nothing about the code** — read the log before
+you change the implementation.
+
+**2. A test used `sys.stdlib_module_names`, which is 3.10+, while the
+package declares `requires-python = ">=3.8"`.** The test now uses a
+version-gated fallback list.
+
+> **A declared support floor is a contract. Check every stdlib call against
+> the OLDEST version in the matrix, not the newest.** See
+> `prompts/python-support-is-a-claim.md`.
 

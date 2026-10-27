@@ -5,7 +5,9 @@ https://github.com/hussain-alsaibai/fast-cache
 
 ## One-liner
 LRU + TTL + stale-while-revalidate, sync + async decorators.
-Thread-safe, 2.2M ops/sec, zero dependencies.
+Thread-safe, zero dependencies. Measured: 1,445,388 ops/sec on the hit path
+(CPython 3.11.2, 50,000 iterations, best of 3) — and `functools.lru_cache`
+is ~14x faster there, because it does no clock read. See Benchmarks below.
 
 ## Install
 ```bash
@@ -122,16 +124,41 @@ async def fetch_weather(city: str) -> dict:
         return await client.get(f"https://api.weather/{city}")
 ```
 
-## Benchmarks
-- 2.2M ops/sec on a single thread (cache hit)
-- 1.4M ops/sec with 50% miss rate
-- ~1.8M ops/sec concurrent (4 threads)
+## Benchmarks (corrected 2026-10-27)
+
+> **The previous table in this file was fabricated.** It cited `2.2M ops/sec`
+> on a path that does not reach it, and numbers for `cachetools` and
+> `functools.lru_cache` on "Apple M3, Python 3.12" that were never measured.
+> The 2026-10-23 audit replaced that table in
+> `tools/fast-cache-v0.8.0-guide.md`; **this file kept the old one for a
+> month**, and it is the file a reader opens first. The honest, reproduced
+> table is below and in the v0.8.0 guide.
+
+Measured on CPython 3.11.2, AMD EPYC 9354P, single process, 50,000
+iterations, best of 3 (reproduce with `benchmark_swr.py`):
+
+| Operation | fast-cache | functools.lru_cache |
+|---|---|---|
+| Hit (with TTL check) | 1,445,388 ops/sec | **20,442,365 ops/sec** |
+| Set | 57,398 ops/sec | **~90,000 ops/sec** |
+| Set (evicting under maxsize) | 171,553 ops/sec | N/A |
+| SWR stale serve | 666,290 ops/sec | N/A |
+| Namespaced set + get | 92,464 ops/sec | N/A |
+
+**`lru_cache` wins on the hit path, roughly 14x.** That is the honest result
+and the table does not pretend otherwise: `functools.lru_cache` does no clock
+read, so a TTL check costs it nothing. `fast-cache` is faster where the
+extra features are the point — eviction under `maxsize`, SWR, namespacing.
+
 - Memory: ~250 bytes per entry + value
 
 ## Tests
-74/74 (was 26/26 before v0.7.x series). Covers LRU eviction, TTL expiry,
-stale-while-revalidate, concurrent access, async wrapping, atomic add, TTL keepalive
-refresh, CRDT merge(), and SingleFlightCache stampede protection.
+**108 collected, 108 passed** (verified by run 2026-10-27). Covers LRU
+eviction, TTL expiry, stale-while-revalidate, concurrent access, async
+wrapping, atomic add, TTL keepalive refresh, CRDT merge(),
+SingleFlightCache stampede protection, and the `@staticmethod` /
+`@classmethod` descriptor handling that a `requires-python = ">=3.8"` claim
+requires (see `prompts/python-support-is-a-claim.md`).
 
 ## v0.7.2 — SingleFlightCache (added 2026-10-18)
 
@@ -186,8 +213,17 @@ fix — Go's `singleflight` package (since 2014) and Java's
 - Persistence required (fast-cache is in-memory only)
 - Per-process caches that need to be invalidated externally (no pub/sub)
 
-## Last Verified: 2026-07-26
+## Last Verified: 2026-10-27
 
+- **108 tests collected, 108 passed** — verified by run.
+- The benchmark table above was **corrected**: the previous one in this file
+  was the fabricated table the 2026-10-23 audit had already replaced
+  elsewhere. A guide that keeps the wrong numbers is worse than no guide,
+  because it is the one that gets cited.
+- **Version note:** this tree is `version = "0.7.3"`; `repos/fast-cache` is
+  `0.8.0` and carries the SWR / namespacing sidecars. Upstream `main` is
+  still `0.7.3`. The SWR numbers above were measured against the 0.8.0
+  build.
 - Commit: `2820fef` (operator lease field note; cache ROI remains at
   `8389359`; cache primitives remain at `29ee08b`)
 - Verification: the operator lease guidance was recorded after reviewing the

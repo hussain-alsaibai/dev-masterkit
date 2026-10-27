@@ -72,6 +72,22 @@ print(store.metrics)
 - Measuring latency and error rate per tool without an OpenTelemetry dependency
 - Pairing with `tiny-mcp-audit` for the static half of MCP assurance
 
+## CI defect fixed 2026-10-26
+
+**PEP 604 annotations (`str | None`) are 3.10+, while the package metadata
+claimed `>=3.9`.** On 3.9 that raises `TypeError: unsupported operand
+type(s) for |` **at import time** — so the whole package was unusable, not
+merely degraded.
+
+Fixed with `from __future__ import annotations` at the top of the module,
+which defers annotation evaluation.
+
+**35 tests passing** (verified by run 2026-10-26).
+
+> **A version-specific syntax is a runtime failure, not a typing detail.**
+> `from __future__ import annotations` is a one-line fix for an entire class
+> of it — see `prompts/python-support-is-a-claim.md`.
+
 ## Related
 
 - `tools/tiny-mcp-audit-guide.md` — static manifest auditing (the other half)

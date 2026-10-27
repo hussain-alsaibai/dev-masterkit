@@ -1,3 +1,8 @@
+---
+name: prompt-engineering
+description: Design system prompts and instruction templates with a role, task, constraints, output format, examples, and rules structure, explicit boundaries, and format control so LLM output stays consistent. Use when asked to write a system prompt, improve a prompt template, or make an assistant return a fixed structure such as JSON.
+---
+
 # prompt-engineering — Skill for Writing Effective System Prompts
 
 ## Trigger

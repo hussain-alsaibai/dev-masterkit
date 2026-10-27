@@ -1,3 +1,8 @@
+---
+name: fallback-notify
+description: Deliver critical alerts through a fallback chain — FalconEye webhook, then Telegram direct message, then a local alert file — with auto-restart, escalation, and per-attempt logging. Use when a primary webhook may be down and an alert must still reach a human.
+---
+
 # Fallback Notification System
 
 Multi-channel notification system for when primary FalconEye webhook fails.

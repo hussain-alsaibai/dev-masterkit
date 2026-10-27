@@ -1,3 +1,8 @@
+---
+name: test-automation
+description: Generate deterministic unittest test suites (stdlib only) covering happy path, edge cases, error conditions, and side effects, with tempfile and unittest.mock for I/O, network, and environment variables. Use when asked to write tests for a module or function, add unit tests, or improve test coverage.
+---
+
 # test-automation — Skill for Auto-Generating Test Suites
 
 ## Trigger

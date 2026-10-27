@@ -1,3 +1,8 @@
+---
+name: repo-creator
+description: Scaffold a production-ready zero-dependency Python repository — src layout, pyproject.toml, unittest suite, GitHub Actions CI, gitignore, README, and LICENSE — then validate it locally. Use when asked to create a new repo, set up a Python project, or start a stdlib-only package.
+---
+
 # repo-creator — Skill for Creating Zero-Dependency Python Repos
 
 ## Trigger

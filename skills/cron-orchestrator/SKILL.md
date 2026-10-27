@@ -1,3 +1,8 @@
+---
+name: cron-orchestrator
+description: Create and manage OpenClaw cron jobs for scheduled monitoring, reporting, and maintenance — schedule kinds (at, every, cron), timezone, delivery target, failure alerts, staggerMs to avoid RPM bursts, and force-run verification. Use when asked to automate a task daily or weekly, set up a recurring check or scheduled report, or monitor a service on a schedule.
+---
+
 # cron-orchestrator — Skill for Setting Up Automated Monitoring Jobs
 
 ## Trigger
