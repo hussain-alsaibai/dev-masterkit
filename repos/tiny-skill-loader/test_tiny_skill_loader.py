@@ -278,8 +278,7 @@ def test_skill_to_dict():
 
 def test_syntax_error_in_skill(tmp_path):
     f = tmp_path / "bad.py"
-    f.write_text("def register(reg, manifest
-")
+    f.write_text("def register(reg, manifest\n")
     with pytest.raises(SkillLoadError):
         load_skill_from_file(str(f))
 

@@ -98,6 +98,23 @@ def _import_module_from_path(path, module_name):
     return mod
 
 
+def _accepts_manifest_only(sig) -> bool:
+    """Does this signature accept manifest_only=True?
+
+    True when the parameter exists at all, or when it exists via **kwargs
+    (a wrapper function that forwards arguments cannot be introspected any
+    further, and guessing wrong here means a skill never gets asked for its
+    manifest).
+    """
+    try:
+        params = sig.parameters
+    except (TypeError, ValueError):
+        return False
+    if "manifest_only" in params:
+        return True
+    return any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params.values())
+
+
 def _extract_manifest(mod, path):
     if hasattr(mod, "MANIFEST"):
         manifest = mod.MANIFEST
@@ -111,11 +128,29 @@ def _extract_manifest(mod, path):
     if hasattr(mod, "register"):
         fn = mod.register
         sig = inspect.signature(fn)
-        if "manifest" in sig.parameters:
-            try:
-                result = fn(manifest_only=True)
-            except TypeError:
-                result = fn()
+        # A register() that accepts manifest_only is declaring: "call me with
+        # manifest_only=True and I will hand back the manifest dict". That
+        # signal stands on its own. The old code only called it when the
+        # signature ALSO declared a "manifest" parameter, so a skill written
+        # as register(reg, manifest_only=True) was never asked and the loader
+        # fell back to a synthetic name derived from the module hash.
+        if _accepts_manifest_only(sig):
+            # The documented manifest-only form is register(reg, manifest_only=True):
+            # the registry is still passed positionally, the flag just tells the
+            # skill not to register tools and to hand the manifest back instead.
+            # So the call needs a registry argument. A throwaway one is fine
+            # here - the real registry is used later, in _call_register.
+            probe = SkillRegistry()
+            result = None
+            for call in (
+                lambda: fn(probe, manifest_only=True),
+                lambda: fn(manifest_only=True),
+            ):
+                try:
+                    result = call()
+                    break
+                except TypeError:
+                    continue
             if isinstance(result, dict):
                 return result
         return {
@@ -131,7 +166,7 @@ def _call_register(mod, registry, manifest):
         return
     fn = mod.register
     sig = inspect.signature(fn)
-    if "manifest_only" in sig.parameters:
+    if _accepts_manifest_only(sig):
         try:
             fn(registry, manifest_only=True)
             return
@@ -270,7 +305,14 @@ class SkillRegistry:
         return [s.to_dict() for s in self._loaded.values()]
 
     def list_tools(self):
+        """Namespaced tool names, sorted.
+
+        Sorted, not insertion-ordered: the caller is an agent that is handed
+        this list to choose from, and a stable order means the same tool
+        surface always reads the same way regardless of the order skills
+        happened to be registered in.
+        """
         out = []
         for s in self._loaded.values():
             out.extend(f"{s.name}.{t}" for t in s.tools)
-        return out
+        return sorted(out)

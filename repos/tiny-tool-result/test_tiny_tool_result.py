@@ -35,7 +35,9 @@ def test_approx_tokens_long_string():
     assert approx_tokens("a" * 400) == 100
 
 def test_approx_tokens_dict():
-    assert approx_tokens({"a": "b" * 80, "c": "d" * 80}) == 40
+    # Each 80-char value is 80//4 = 20 tokens, and each 1-char key
+    # contributes 1 token, so 20 + 20 + 1 + 1 = 42.
+    assert approx_tokens({"a": "b" * 80, "c": "d" * 80}) == 42
 
 def test_approx_tokens_list():
     assert approx_tokens(["ab", "cd", "ef"]) == 3
@@ -144,8 +146,11 @@ def test_schema_enum():
     assert errs
 
 def test_schema_string_pattern():
-    errs = validate_schema("abc-123", {"type": "string", "pattern": r"^[a-z]+-d+$"})
+    errs = validate_schema("abc-123", {"type": "string", "pattern": r"^[a-z]+-\d+$"})
     assert errs == []
+    # A value that does not match the pattern is reported.
+    bad = validate_schema("ABC-123", {"type": "string", "pattern": r"^[a-z]+-\d+$"})
+    assert bad
     errs = validate_schema("ABC", {"type": "string", "pattern": r"^[a-z]+$"})
     assert errs
 
@@ -196,6 +201,43 @@ def test_failure_redacts_secrets():
     assert "abc123" not in r.error
     assert "xyz789" not in r.error
     assert "[REDACTED]" in r.error
+
+
+# Secret scrubbing regression tests
+#
+# A naive "key then one word" scrubber leaks the credential itself when
+# the value carries an auth scheme: "Authorization: Bearer abc123" would
+# redact the word "Bearer" and leave "abc123" in the message. These tests
+# pin the behaviour so the leak cannot come back.
+
+@pytest.mark.parametrize(
+    "text,secret",
+    [
+        ("Authorization: Bearer abc123", "abc123"),
+        ("Authorization: Bearer sk-abc123def456ghi789jkl", "sk-abc123def456ghi789jkl"),
+        ("token=xyz789", "xyz789"),
+        ("api_key: AKIAIOSFODNN7EXAMPLE", "AKIAIOSFODNN7EXAMPLE"),
+        ("password: hunter2", "hunter2"),
+        ("client_secret: s3cr3t-value", "s3cr3t-value"),
+    ],
+)
+def test_failure_does_not_leak_secret_values(text, secret):
+    r = failure(text)
+    assert secret not in r.error
+    assert "[REDACTED]" in r.error
+
+
+def test_failure_redacts_multiple_secrets():
+    r = failure("Authorization: Bearer abc123 token=xyz789 failed")
+    assert "abc123" not in r.error
+    assert "xyz789" not in r.error
+    assert "[REDACTED]" in r.error
+
+
+def test_failure_keeps_non_secret_text():
+    r = failure("connection refused after 3 retries")
+    assert "connection refused" in r.error
+    assert "[REDACTED]" not in r.error
 
 
 # Helpers

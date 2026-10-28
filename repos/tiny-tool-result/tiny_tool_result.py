@@ -188,9 +188,13 @@ def validate_schema(value: Any, schema: Dict[str, Any], path: str = "$") -> List
             errors.append(ValidationError(path, f"pattern {schema['pattern']!r}", value[:40]))
     if isinstance(value, (int, float)) and not isinstance(value, bool):
         if "minimum" in schema and value < schema["minimum"]:
-            errors.append(ValidationError(path, f">= {schema['minimum']}", value))
+            errors.append(
+                ValidationError(path, f"minimum {schema['minimum']}", value)
+            )
         if "maximum" in schema and value > schema["maximum"]:
-            errors.append(ValidationError(path, f"<= {schema['maximum']}", value))
+            errors.append(
+                ValidationError(path, f"maximum {schema['maximum']}", value)
+            )
     if isinstance(value, dict):
         for req in schema.get("required", []):
             if req not in value:
@@ -320,9 +324,58 @@ def success(
         original_bytes=original,
         redacted=redacted,
         validation_errors=errors,
-        kind="json",
+        # kind comes from meta when the caller sets it (e.g. text_result),
+        # and defaults to "json" otherwise.
+        kind=meta.pop("kind", "json"),
         **meta,
     )
+
+
+# Keys whose value is a credential and must never be echoed.
+_SECRET_KEY_RE = re.compile(
+    r"(?i)\b(authorization|api[_-]?key|apikey|secret|password|passwd|passphrase|"
+    r"token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key)\b"
+    r"\s*[:=]\s*"
+)
+
+# The next "key=value" pair marks the end of the current secret span.
+_NEXT_FIELD_RE = re.compile(r"\b[\w.-]+\s*[:=]")
+
+# An authentication scheme introduces a multi-token credential.
+_AUTH_SCHEME_RE = re.compile(r"(?i)\s*(bearer|basic|token|digest)\b")
+
+
+def _scrub_secrets(text: str) -> str:
+    """Replace credential values with [REDACTED].
+
+    A naive "key then one word" rule leaks the secret itself when the
+    value carries an auth scheme: "Authorization: Bearer abc123" would
+    redact the word "Bearer" and leave "abc123" in the message. When a
+    scheme is present the whole credential span is consumed instead, up to
+    the next field boundary.
+    """
+    out = text
+    # Process matches right-to-left so earlier offsets stay valid.
+    matches = list(_SECRET_KEY_RE.finditer(out))
+    for m in reversed(matches):
+        rest = out[m.end():]
+        scheme = _AUTH_SCHEME_RE.match(rest)
+        if scheme:
+            # Scheme present: consume everything up to the next
+            # "key=value" boundary (or end of string).
+            boundary = _NEXT_FIELD_RE.search(rest)
+            span_end = len(out) if boundary is None else m.end() + boundary.start()
+        else:
+            # Plain value: consume exactly one whitespace-delimited token.
+            stripped = rest.lstrip()
+            lead = len(rest) - len(stripped)
+            parts = stripped.split(None, 1)
+            token_end = len(parts[0]) if parts else 0
+            span_end = m.end() + lead + token_end
+        secret = out[m.end():span_end]
+        if secret.strip():
+            out = out[:m.start()] + m.group(1) + "=[REDACTED]" + out[span_end:]
+    return out
 
 
 def failure(
@@ -336,7 +389,7 @@ def failure(
     **meta: Any,
 ) -> ToolResult:
     """Wrap a failed tool result. `error` is scrubbed of common secret patterns."""
-    safe = re.sub(r"(?i)(authorization|api[_-]?key|token)\s*[:=]\s*\S+", r"\1=[REDACTED]", error)
+    safe = _scrub_secrets(error)
     return ToolResult(
         ok=False,
         error=safe,

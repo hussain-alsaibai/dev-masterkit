@@ -95,6 +95,7 @@ class AgentScope:
         self._state.setdefault("cost_usd", 0.0)
         self._state.setdefault("started_at", time.monotonic())
         self._state.setdefault("aborted", False)
+        self._state.setdefault("abort_fired", False)
         self._state.setdefault("violations", [])
 
     # --- State helpers ----------------------------------------------------- #
@@ -124,7 +125,24 @@ class AgentScope:
         return bool(self._state.get("aborted"))
 
     def abort(self) -> None:
+        """Mark the scope aborted and fire on_abort exactly once.
+
+        Abort is a terminal state. Calling abort() twice, or aborting and then
+        letting the context manager finish, must not notify the caller twice:
+        a double on_abort can tear down resources that were already released
+        and make an ordinary abort look like a failure.
+        """
+        already = self._state.get("aborted", False)
         self._state["aborted"] = True
+        if already:
+            return
+        self._fire_abort()
+
+    def _fire_abort(self) -> None:
+        """Invoke the on_abort callback at most once per scope."""
+        if self._state.get("abort_fired"):
+            return
+        self._state["abort_fired"] = True
         if self.on_abort:
             try:
                 self.on_abort(self)
@@ -197,13 +215,42 @@ class AgentScope:
     def check_url(self, url: str) -> None:
         host = (urllib.parse.urlparse(url).hostname or "").lower()
         for pat in self.denied_hosts:
-            if fnmatch.fnmatch(host, pat.lower()):
+            if self._host_denied(host, pat.lower()):
                 self._record_violation("host_denied", host)
                 raise ScopeViolation("host", host)
         if self.allowed_hosts is not None:
             if not any(fnmatch.fnmatch(host, p.lower()) for p in self.allowed_hosts):
                 self._record_violation("host_not_allowed", host)
                 raise ScopeViolation("host", host)
+
+    @staticmethod
+    def _host_denied(host: str, pattern: str) -> bool:
+        """Does host match a deny-list pattern?
+
+        A deny-list entry is a statement about a DOMAIN, not about one exact
+        hostname. Denying "evil.com" but allowing "api.evil.com" is not a
+        deny-list - it is a deny-list with a hole shaped exactly like the
+        attack. So a pattern that names a domain also covers its subdomains.
+
+        The domain form is recognised by the absence of any glob metacharacter
+        (star, question mark, bracket). Those keep plain fnmatch semantics:
+
+            "evil.com"      -> denies evil.com, api.evil.com, a.b.evil.com
+            "*.example.org" -> denies example.org and its subdomains
+        """
+        if not host:
+            return False
+        if fnmatch.fnmatch(host, pattern):
+            return True
+        # Plain domain (no glob metacharacters): also deny subdomains.
+        if not any(ch in pattern for ch in "*?["):
+            return host == pattern or host.endswith("." + pattern)
+        # Glob pattern with a literal base: a leading "*." covers the bare
+        # domain as well.
+        if pattern.startswith("*.") and not any(ch in pattern[2:] for ch in "*?["):
+            base = pattern[2:]
+            return host == base or host.endswith("." + base)
+        return False
 
     def _record_violation(self, kind: str, target: str) -> None:
         self._state["violations"].append({"kind": kind, "target": target, "t": time.time()})
@@ -239,8 +286,8 @@ def agent_scope(name: str = "default", **kwargs: Any):
     try:
         yield sc
     finally:
-        if sc.on_abort and sc.aborted():
-            try:
-                sc.on_abort(sc)
-            except Exception:
-                pass
+        # abort() already fired the callback; _fire_abort() is a no-op when it
+        # has, and fires it when the scope was aborted by other means. Exactly
+        # one notification either way.
+        if sc.aborted():
+            sc._fire_abort()

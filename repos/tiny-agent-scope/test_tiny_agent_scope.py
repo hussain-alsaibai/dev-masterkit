@@ -268,6 +268,93 @@ def test_combined_workflow():
         s.record_tool_call("search", tokens=10, cost_usd=0.05)
 
 
+# --------------------------------------------------------------------------- #
+# Regression tests (2026-10-28)
+#
+# Two bugs shipped in 0.1.0 and are fixed in the library:
+#
+#   1. denied_hosts did not match subdomains. fnmatch compares the full host
+#      against the pattern, so denied_hosts=["evil.com"] let api.evil.com
+#      through. A deny-list with a hole shaped like the attack is not a
+#      deny-list, and this library exists to bound an agent blast radius.
+#   2. on_abort fired twice when abort() was called inside agent_scope(...):
+#      abort() invoked the callback directly and the context manager's finally
+#      invoked it again.
+#
+# These tests pin both behaviours, including the cases a naive fix would break.
+# --------------------------------------------------------------------------- #
+
+
+def test_denied_host_matches_subdomain():
+    s = scope_for("t", denied_hosts=["evil.com"])
+    with pytest.raises(ScopeViolation) as e:
+        s.check_url("https://api.evil.com/x")
+    assert e.value.kind == "host"
+    assert e.value.target == "api.evil.com"
+
+
+def test_denied_host_matches_deep_subdomain():
+    s = scope_for("t", denied_hosts=["evil.com"])
+    with pytest.raises(ScopeViolation):
+        s.check_url("https://a.b.evil.com/x")
+
+
+def test_denied_host_glob_matches_bare_domain():
+    s = scope_for("t", denied_hosts=["*.evil.com"])
+    with pytest.raises(ScopeViolation):
+        s.check_url("https://evil.com/x")
+
+
+def test_denied_host_does_not_overblock_suffix():
+    # "myevil.com" ends with "evil.com" but is a different domain. A fix that
+    # used a bare endswith() would wrongly block it.
+    s = scope_for("t", denied_hosts=["evil.com"])
+    s.check_url("https://myevil.com/x")  # no raise
+
+
+def test_denied_host_does_not_overblock_prefix():
+    s = scope_for("t", denied_hosts=["evil.com"])
+    s.check_url("https://notevil.com/x")  # no raise
+
+
+def test_denied_host_is_case_insensitive():
+    s = scope_for("t", denied_hosts=["Evil.COM"])
+    with pytest.raises(ScopeViolation):
+        s.check_url("https://API.evil.com/x")
+
+
+def test_abort_fires_callback_once():
+    seen = []
+    s = scope_for("t", on_abort=lambda s: seen.append(s.name))
+    s.abort()
+    s.abort()
+    s.abort()
+    assert seen == ["t"]
+
+
+def test_abort_in_context_fires_callback_once():
+    seen = []
+    with agent_scope("t", on_abort=lambda s: seen.append("aborted")) as s:
+        s.abort()
+        s.abort()
+    assert seen == ["aborted"]
+
+
+def test_context_without_abort_does_not_fire_callback():
+    seen = []
+    with agent_scope("t", on_abort=lambda s: seen.append("aborted")) as s:
+        s.step()
+    assert seen == []
+
+
+def test_abort_still_blocks_further_steps():
+    s = scope_for("t", max_steps=10)
+    s.abort()
+    assert s.aborted()
+    with pytest.raises(BudgetExceeded):
+        s.step()
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-v"]))
