@@ -10,6 +10,26 @@ Zero-dependency diff, patch, and merge for text. One file, no setup. Semantic
 conflict detection.
 
 ## Last Verified
+2026-10-28 - **20 tests passing** (measured by run against the upstream clone).
+The package had **no CI** until 2026-10-28.
+
+## The Duplicate-Test-File Defect (fixed 2026-10-28)
+
+The repository shipped **two** files named `test_tiny_diff.py` - one in the repo
+root and one under `tests/`. pytest refuses to collect the second because of
+the duplicate basename, and the `tests/` copy was **stale**: it imported APIs
+that no longer exist. The stale copy is removed.
+
+Same defect, same day, in `tiny-eval`.
+
+**Note on the PyPI name:** `tiny-diff` on PyPI is owned by someone else - a
+package described as "Hackable implementation of diffusion models" (v0.1.0,
+verified 2026-10-28). `pip install tiny-diff` installs **that**, not this
+project. Install from the repository URL instead.
+
+## Previous verification
+2026-10-23
+## Last Verified
 2026-10-23
 
 ## API Correction (2026-10-23)

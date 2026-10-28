@@ -36,14 +36,20 @@ for key, value in store.iterate(cursor=None, limit=50):
     print(key, value)
 
 # Tiered L1 + L2
-from tiny_store import TieredStore
-from fast_cache import LRUCache
+from tiny_store import TieredStore, Store
 
 tiered = TieredStore(
-    l1=LRUCache(capacity=1000),
+    l1=Store("./l1"),
     l2=Store("./data")
 )
 ```
+
+> **Correction (2026-10-28):** this snippet previously imported `LRUCache`
+> from `fast_cache`. **There is no `LRUCache` in `fast_cache`** - verified by
+> import: it is absent from `dir(fast_cache)`. `fast_cache` exports `Cache`,
+> `CacheAsync`, `CacheStats`, `DiskSpillover`, `CacheMetricsListener` and
+> `cache_method`. `TieredStore` accepts any mapping-like object for `l1`,
+> so a `fast_cache.Cache` works too - but the import in the snippet was wrong.
 
 ## Key Features
 

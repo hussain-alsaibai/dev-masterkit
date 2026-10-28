@@ -2,6 +2,21 @@
 
 **Repository:** https://github.com/hussain-alsaibai/tiny-event-bus
 **License:** MIT
+**Last verified:** 2026-10-28 - **44 tests passing** (measured by run against
+the upstream clone). The package had **no CI** until 2026-10-28.
+
+## The Wheel Shipped Nothing (fixed 2026-10-28)
+
+The wheel contained **no importable module**, because
+`[tool.setuptools.packages.find]` with `include = ["tiny_event_bus*"]` finds
+nothing - a single top-level module is not a package. Fixed with
+`[tool.setuptools] py-modules = ["tiny_event_bus"]`.
+
+This is the same defect class as `tiny-semantic-cache`, `tiny-ai-workflow`
+and `tiny-task`: four packages installed cleanly and imported nothing.
+
+The PyPI name `tiny-event-bus` is **free** (verified 2026-10-28); the package
+is not published there yet.
 **Last verified:** 2026-08-25
 
 ## What It Is

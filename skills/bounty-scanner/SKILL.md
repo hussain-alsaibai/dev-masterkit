@@ -464,6 +464,47 @@ The sweep also reads **3 pages** per query, not one. `"How to verify"` matches
 1,581 issues; sorting by `created desc` means page 1 holds only the newest
 100, so 1,481 real specs were invisible.
 
+## The slot budget is not a slice budget (fixed 2026-10-28)
+
+The scanner collects contributor tasks and cash bounties, then picks a fixed
+number of candidates to **score**. The pick was a **positional slice** - the
+first N of the collected list.
+
+On the live sweep the first 100 collected tasks came from only **39 repos**:
+`k08200/klorn` alone held **14**, `tonianev/eonmark` **13**,
+`exceev-consulting/server-prep` **11**. And `pipeshub-ai/pipeshub-ai` - the
+3.8k-star repo the contributor-task path exists for - sat at positions **200
+and 238** and was cut before it was ever scored.
+
+**Why the slice was wrong.** Scoring is **per-repo work**: 250 candidates from
+39 repos is 39 repos' worth of metadata fetches and scam detection. Spending
+that budget on 14 issues from one 8-star repo buys nothing. Diversity by repo
+is the cheaper way to spend the same budget.
+
+**The fix** is `spreadAcrossRepos()` - a round-robin across repos, so every
+repo's FIRST task is taken before any repo's second task:
+
+```javascript
+return cash.slice(0, cashSlots).concat(spreadAcrossRepos(tasks, taskSlots));
+```
+
+Four properties that matter: the count is **exact** (`out.length === slots`),
+it is **deterministic** (no randomness, no seed), every repo's first item is
+**reachable**, and the flood is still **visible** - a repo with more tasks
+than any other still has its first task scored, it simply cannot take the
+whole window.
+
+The regression test asserts the property that was broken - *a task past the
+positional window is still scored* - plus two more that can fail independently:
+one repo cannot take every task slot, a quiet repo is still represented, and
+the slot count stays exact.
+
+**A slice of a list is chosen by whoever built the list.** If the slice decides
+the outcome, list order decides the outcome - and list order is an artefact of
+the collection order, not a signal about issue quality.
+
+See `prompts/a-slot-budget-is-not-a-slice-budget.md`.
+
 ## Files
 - `scanner.js` — core scanner + scorer + official filter
 - `daily-bounty-work.js` — automated daily work starter (uses official scan)
@@ -512,7 +553,7 @@ Credentials are resolved by **validating candidates, not by order**:
 that authenticates is used. Do not reintroduce a first-match-wins lookup —
 see the dead-credential section above.
 
-## Last Verified: 2026-10-27
+## Last Verified: 2026-10-28
 
 All five regression suites pass on the current tree:
 

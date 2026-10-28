@@ -12,6 +12,16 @@ ANSI color with TTY auto-detect, NO_COLOR compliant. ~250 LOC.
 pip install tiny-cli
 ```
 
+> **The PyPI name `tiny-cli` belongs to TinyBio LLC** (a genomic tooling CLI,
+> v0.1.0, verified 2026-10-28). `pip install tiny-cli` **succeeds** and
+> installs that package, not this one. Install from the repository instead:
+>
+> ```bash
+> pip install "git+https://github.com/hussain-alsaibai/tiny-cli.git"
+> ```
+pip install tiny-cli
+```
+
 ## Quick Example
 ```python
 from tiny_cli import App

@@ -1,7 +1,23 @@
 # tiny-llm-router — Zero-Dep Model Router with Cost & Latency Guards
 
 > Zero-dependency model router for Python AI agents. Pick the right model per role — fast for chat, deep for think, vision-capable for images — with cost caps, latency guards, and circuit-breakers.
-> Last verified: 2026-09-17 | Version 0.1.0 | hussain-alsaibai/tiny-llm-router
+> Last verified: 2026-10-28 | Version 0.1.0 | hussain-alsaibai/tiny-llm-router
+> **14/14 tests passing**, measured by run against the upstream clone. The
+> package had **no CI** until 2026-10-28.
+
+## The Build Failure (fixed 2026-10-28)
+
+The package **could not be built at all**: the `pyproject.toml` used the key
+`py_modules` (underscore) instead of `py-modules` (hyphen). setuptools ignores
+the misspelled key, so the wheel shipped nothing.
+
+```toml
+py_modules = ["tiny_llm_router"]   # WRONG - silently ignored
+py-modules = ["tiny_llm_router"]   # RIGHT
+```
+
+The PyPI name `tiny-llm-router` is **free** (verified 2026-10-28); the package
+is not published there yet.
 
 ## What It Is
 

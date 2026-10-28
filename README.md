@@ -3,6 +3,29 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-10-28 cron sync, 13:00) — a repo with tests and no CI is not tested; a PyPI name that is not yours installs silently
+
+-- **Twenty-five repositories had a test suite and no CI workflow. Adding one to each found 8 real defects**, including two libraries whose central function could never run: `tiny-semantic-cache`'s `cosine_similarity()` raised **`NameError` on every call** (`sum(x * y for y in b)` — `x` is not in that generator), and `tiny-ai-workflow` could not construct a single `WorkflowStep` because `field(default_factory=None, init=False)` makes dataclasses **call** `None()`. **Every one of the eight had shown a green local test run at some point.** The reason is one hole: `pip install -e .` puts the **source tree** on `sys.path`, so the suite imports the loose `.py` file next to the test and never proves the **wheel** ships the module. Five packages passed the editable install and still published a wheel with **zero importable modules**.
+-- **The check that matters:** fresh venv → `pip install -e .` → `import <module>` **from a different cwd**. From inside the repo the loose source file shadows the installed package and the defect is invisible.
+-- **The other six defects, all real:** `tiny-file-watcher` reported renames as `DELETED + CREATED` (a rename is **not atomic** — the detector compared inodes between *consecutive* snapshots; fixed with an `inode → last-seen-path` map, **400-trial harness: 0 misses** where the old code missed 2–4 per 60; it failed 3 of 6 CI jobs), `tiny-scheduler`'s `stop()` raised `TypeError` on 3.8 (`cancel_futures=` is **3.9+** while the package claims `>=3.8`), `tiny-bucket-quota` shipped `py-modules = ["tiny_rate_window"]` — **the wrong module**, copied from a sibling, `tiny-llm-router` used `py_modules` instead of `py-modules` (build failed outright), `tiny-jsonpath` used an empty-string `package-data` key (build failed outright), and `tiny-diff`/`tiny-eval` shipped two test files with the **same basename** so pytest refused to collect the second.
+-- **A collection error is not a test failure.** `snapdb`'s PEP 669 profiler bug produced **11 collection errors** — not 11 failures. Nothing ran at all; the suite was unrunnable on two of the five Python versions in CI, and the badge said nothing about the code.
+-- **A flaky test can hide a real race.** `tiny-file-watcher`'s rename test failed 3 of 6 CI jobs. The first instinct is a longer sleep; that is not the bug. The *test* fix was separate and also needed — a fixed `sleep(0.3)` against a background polling thread became a **condition wait**, halving the suite time (4.1s → 2.1s). **Reproduce the race before you fix the test.**
+-- **Five PyPI names in our own stack belong to other people.** A sweep of all 62 names found: `tiny-router` is nekonoshiri's HTTP router, `tiny-cli` is TinyBio LLC's genomic CLI, `tiny-eval` is a different TinyEval, `tiny-memo` is a note-taking app, `tiny-diff` is a diffusion-models package. **Two of the seven in-scope READMEs said `pip install tiny-router` / `pip install tiny-cli` — and both commands SUCCEED, installing another developer's code with no error at all.** That is the worst failure shape: silent, and it looks like success. Three more carried PyPI badges rendering the foreign package's version. Fixed in 15 repos: install lines use the GitHub URL, badges point at the GitHub install, and the two collision cases say **plainly why** so a future reader does not "fix" it back. Still blocked: no PyPI token exists on this host — the 5 collision names need a **rename decision**, not a token. `pysnapdb` is already ours at v0.14.0 vs a v0.18.0 repo.
+-- **Never compare partial calendar months.** The first Q4 report compared calendar-month totals; the data ended on the 25th, so the final month had 25 of 31 days and every package looked like it was collapsing. `fastapi` **−29.9% → +28.4%**, `langchain` **−45.8% → −4.4%** under the corrected trailing-30d-vs-30d comparison. The corrected method has now shipped twice; the 2026-10-28 report covers **160 packages** (was 100) with every figure script-verified against a raw table that ships alongside it. The corrected comparison also **flipped the conclusion**: agent frameworks **fractured** — `marvin` +80.1%, `agno` +29.8%, `letta` +29.6%, `langchain-anthropic` +29.3%, while `langchain` is **−3.4%** and `llama-index` **−14.9%**.
+-- **A slot budget is not a slice budget.** The bounty scanner picked candidates to score with a **positional slice**, so the repos that opened the most issues decided the outcome: the first 100 collected tasks came from only **39 repos** (`k08200/klorn` alone held 14), and `pipeshub-ai/pipeshub-ai` — the 3.8k-star repo the contributor-task path exists for — sat at positions 200 and 238, **cut before it was ever scored**. Scoring is per-repo work, so spending the budget on 14 issues from one 8-star repo buys nothing. Fixed with a round-robin across repos (`spreadAcrossRepos()`): every repo's **first** task is taken before any repo's second, the count stays exact, and the flood stays visible.
+-- **Four guides were documenting APIs that do not exist, and the same sweep found them.** `tiny-eval-guide.md` documented `eval_expr`, `Sandbox` and `interpolate` — **none of the three exists** (the package is an agent-evaluation framework); the guide is rewritten and its snippet **executed before publication**. `fast-cache-guide.md` said `from fast_cache import cache` and `from fast_cache import SingleFlightCache` — **neither import works** (`__all__` is `Cache`, `CacheAsync`, `CacheStats`, `DiskSpillover`, `CacheMetricsListener`, `cache_method`; `SingleFlightCache` lives in the `fast_cache_v072` sidecar); it also claimed `Cache(default_ttl=...)` and `get_or_call` — the real ones are `Cache(maxsize, ttl, ...)` and `get_or_set`. `tiny-store-guide.md` imported `LRUCache` from `fast_cache`, where it does not exist. `tiny-hll-guide.md` and `tiny-cli-progress-guide.md` said "repo does not exist upstream yet" — both returned 404 on 2026-10-23 and return **200** now.
+-- **Added:** `prompts/ci-census-reveals-what-was-never-checked.md`, `prompts/never-compare-partial-calendar-months.md`, `prompts/pypi-name-collision-is-a-silent-success.md, `prompts/a-slot-budget-is-not-a-slice-budget.md` (4 new).
+-- **Added:** `skills/ci-census/SKILL.md` (new) — the runnable census procedure: build the backlog, derive the matrix from `requires-python`, name the test files that exist, simulate CI exactly, and read collection errors as *nothing ran*.
+-- **Added:** `tools/fresh-install-verification-guide.md`, `tools/ci-matrix-generator-guide.md`, `tools/tiny-file-watcher-guide.md` (3 new).
+-- **Added:** `reports/2026-10-28-ci-census.md`, `reports/2026-10-28-developer-tools-landscape.md`, `reports/2026-10-28-pyPI-numbers.md` (3 new). **Added:** `daily-updates/2026-10-28.md` (1 new).
+-- **Amended (14 tool guides, in place):** `tiny-semantic-cache` (2026-08-31 → **2026-10-28**, 20 tests, the `NameError` defect), `tiny-ai-workflow` (**12** tests, the `default_factory` defect), `tiny-diff` (**20** tests, the duplicate-basename defect), `tiny-event-bus` (**44** tests, the wheel shipped nothing), `tiny-task` (**11** tests, the wheel shipped nothing), `tiny-eval` (rewritten against the real API), `tiny-scheduler` (2026-09-03 → **2026-10-28**, 57 → **60** tests, the 3.8 defect), `tiny-llm-router` (2026-09-17 → **2026-10-28**, the build failure), `tiny-bucket-quota` (2026-10-16 → **2026-10-28**, the wrong module), `tiny-jsonpath` (2026-10-18 → **2026-10-28**, the build failure), `fast-cache` (the `cache` / `SingleFlightCache` / `default_ttl` / `get_or_call` corrections), `tiny-store` (the `LRUCache` correction), `tiny-cli` (the PyPI collision), `tiny-hll` + `tiny-cli-progress` (stale 404 notes corrected).
+-- **Amended:** `skills/bounty-scanner/SKILL.md` (548 → **589** lines) — today's slot-budget fix, merged in rather than overwriting.
+-- **Removed:** `repos/tiny-tool-result/_smoke.txt` and `repos/tiny-skill-loader/_fix.txt` — two scratch files whose entire content was `File is empty (0 bytes).` and a single constant line. They were tracked, and nothing referenced them.
+-- **Every count was measured, not quoted:** `tiny-scheduler` 60, `tiny-eval` 63, `tiny-jsonpath` 49, `tiny-file-watcher` 46, `tiny-event-bus` 44, `tiny-bucket-quota` 23, `tiny-semantic-cache` 20, `tiny-diff` 20, `tiny-llm-router` 14, `tiny-ai-workflow` 12, `tiny-task` 11, `fast-cache` 108, `snapdb` 223 passed / 5 skipped, `tiny-router` 176 passed / 1 skipped — all measured by run against the upstream clones on 2026-10-28. The bounty scanner's five suites all pass (7 / ALL / ALL / 11 / 11).
+-- **Stats:** Prompts 56 → **60**. Tool Guides 135 → **138** (+3). Skills 41 → **42**. Reports 24 → **27**. Daily Updates 125 → **126**. All other counts unchanged (Commands 5, Agents 3, Orchestrators 1, Tools 98).
+- Last verified 2026-10-28.
+
+
 ### 🆕 Latest additions (2026-10-27 cron sync, 13:00) — a dead credential was read as "no market", and a test that could not fail
 
 -- **A dead credential was read as "no market."** `getToken()` returned the **first** credential it found — `process.env.GitHUB_PAT`, a **dead** fine-grained token (93 chars, `github_pat_...`). The **working** classic token (40 chars, `ghp_...`) lives in `~/.git-credentials` and `gh auth token` and was **never reached**. Verified live on the same host at the same moment: `GitHUB_PAT` → **HTTP 401**, `gh auth token` → **HTTP 200**. The scanner degraded to ANONYMOUS (60 req/hr), the repo-metadata fetch then failed for every candidate, `detectScam()` read the missing repo as **0 stars**, and the farm gate dropped **all 15 genuine picks** — reporting "market is all farms". **The market was not all farms. The metadata was unreadable**, and unreadable became zero stars, and zero stars became scam. Fixed: collect all candidates, validate each, use the first that authenticates; the validity cache is keyed **per token**, not by a global boolean. A post-fix scan returned a real 50 USD target.
@@ -418,21 +441,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 41 | 2026-10-27 |
-| Prompts | 56 | 2026-10-27 |
+| Skills | 42 | 2026-10-28 |
+| Prompts | 60 | 2026-10-28 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 135 | 2026-10-27 |
+| Tool Guides | 138 | 2026-10-28 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Tools | 98 | 2026-10-18 |
-| Daily Updates | 125 | 2026-10-27 |
-| Reports | 24 | 2026-10-27 |
+| Daily Updates | 126 | 2026-10-28 |
+| Reports | 27 | 2026-10-28 |
 | tiny-* Ecosystem Repos | 66 | 2026-10-23 |
 | Additional hussain-alsaibai Repos | 42 | 2026-10-23 |
 
-**All 36 `SKILL.md` files carry AgentSkills YAML frontmatter** (35 pre-existing + `dev-env-defects`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`.
+**All 37 `SKILL.md` files carry AgentSkills YAML frontmatter** (36 pre-existing + `ci-census`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `37 total, 37 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-10-27**, not carried forward.
+**Every count above was measured against the tree on 2026-10-28**, not carried forward.
 
 ## Structure
 
@@ -494,6 +517,7 @@ dev-masterkit/
 │   ├── security-sentinel/      # Scan for secrets and vulnerabilities
 │   ├── bounty-scanner/          # Scan GitHub for official bounties (Algora/Opire)
 │   ├── credential-recovery/     # Recover a dead credential from local session archives [NEW 2026-10-25]│   ├── dev-env-defects/       # Triage an install/build/test failure as an environment defect [NEW 2026-10-27]
+│   ├── ci-census/             # Find the repos whose tests nothing executes [NEW 2026-10-28]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -553,7 +577,10 @@ dev-masterkit/
 │   ├── tiny-rate-limiter-guide.md # 4 algorithms, 5M ops/s, sync + async               [NEW 2026-07-30]
 │   ├── tiny-sandbox-guide.md      # Secure Python code execution via AST sandbox    [NEW 2026-07-23]
 │   ├── tiny-worker-guide.md       # Zero-dep background worker / job queue           [NEW 2026-07-23]
-│   └── tiny-events-guide.md       # Zero-dep event emitter — pub/sub pattern         [NEW 2026-07-23]
+│   ├── tiny-events-guide.md       # Zero-dep event emitter — pub/sub pattern         [NEW 2026-07-23]
+│   ├── fresh-install-verification-guide.md # Fresh venv → install → import from outside [NEW 2026-10-28]
+│   ├── ci-matrix-generator-guide.md # Generate the matrix from the package's own metadata [NEW 2026-10-28]
+│   └── tiny-file-watcher-guide.md  # Polling watcher; a rename is not atomic            [NEW 2026-10-28]
 ├── daily-updates/                # Daily changelog
 │   ├── 2026-06-25.md             # June 25 update
 │   ├── 2026-06-26.md             # June 26 update
@@ -614,6 +641,7 @@ dev-masterkit/
 | `bounty-scanner` | Scan GitHub for official bounties (Algora/Opire) | "Find bounties" / "Scan for bounties" |
 | `browser-automation` | Web browser automation and data extraction | "Browse this" / "Fill this form" |
 | `bounty-verifier` | Two-stage verification gate (hard filters + behavioral) | "Verify this bounty" / "Is this legit?" |
+| `ci-census` | Find the repos whose tests nothing executes | "Add CI to these" / "Which repos are untested?" |
 
 ### 🧩 tiny-* Ecosystem Skills (built using these patterns)
 
@@ -731,6 +759,10 @@ dev-masterkit/
 | `credential-order-is-not-validity` | Validate every credential candidate; order is not evidence | A dead env token shadowed a working one [NEW 2026-10-27] |
 | `reserve-before-work` | A scan is a claim about the past, not a reservation of the future | Someone claimed the task 8 minutes after your scan [NEW 2026-10-27] |
 | `python-support-is-a-claim` | A declared `requires-python` is a promise with no enforcement | The package claims 3.8 and calls a 3.9+ stdlib API [NEW 2026-10-27] |
+| `ci-census-reveals-what-was-never-checked` | A repo with tests and no CI is untested | 25 repos had suites and no workflow; 8 could not work at all [NEW 2026-10-28] |
+| `never-compare-partial-calendar-months` | Compare trailing 30d vs the previous 30d | A report written on the 25th compares a partial month [NEW 2026-10-28] |
+| `pypi-name-collision-is-a-silent-success` | `pip install` succeeding is not the check | The name on PyPI belongs to someone else [NEW 2026-10-28] |
+| `a-slot-budget-is-not-a-slice-budget` | A positional slice lets list order decide the outcome | 100 tasks came from 39 repos; one repo held 14 [NEW 2026-10-28] |
 
 ## 🏗️ Our Tools
 

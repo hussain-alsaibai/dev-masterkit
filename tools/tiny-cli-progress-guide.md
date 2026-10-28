@@ -8,8 +8,12 @@ Zero-dependency terminal progress bar for Python. Pure stdlib, TTY-aware,
 no-op when not attached to a terminal.
 
 ## Status
-**Repo does not exist upstream yet** (`https://github.com/hussain-alsaibai/tiny-cli-progress`
--> HTTP 404, checked 2026-10-23). Local clone only.
+**The repo now exists upstream.** `https://github.com/hussain-alsaibai/tiny-cli-progress`
+returned HTTP 404 on 2026-10-23 and returns **200** now (last push 2026-10-26,
+re-checked 2026-10-28). The earlier "local clone only" note is stale.
+
+**The PyPI name `tiny-cli-progress` is free** (verified 2026-10-28), but the
+package is not published there yet. Install from the repository URL.
 
 ## Last Verified
 2026-10-23

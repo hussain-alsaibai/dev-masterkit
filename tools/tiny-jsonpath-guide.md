@@ -1,5 +1,21 @@
 # tiny-jsonpath v0.1.0 — RFC 9535 (JSONPath 1.0) Parser & Evaluator
 
+**Last verified:** 2026-10-28 - **49/49 tests passing** (measured by run
+against the upstream clone). The package had **no CI** until 2026-10-28.
+
+## The Build Failure (fixed 2026-10-28)
+
+The package **could not be built at all**: `pyproject.toml` used the
+empty-string key in `package-data`, which modern setuptools rejects.
+
+```toml
+[tool.setuptools.package-data]
+"" = ["llms.txt", "README.md", "LICENSE"]   # WRONG - rejected
+"*" = ["llms.txt", "README.md", "LICENSE"]   # RIGHT
+```
+
+The PyPI name `tiny-jsonpath` is **free** (verified 2026-10-28); the package
+is not published there yet.
 **Last verified:** 2026-10-18
 **Repo:** https://github.com/hussain-alsaibai/tiny-jsonpath
 **License:** MIT • **Deps:** zero (stdlib only) • **LOC:** ~830 (lib) + ~600 (tests) • **Tests:** 49/49

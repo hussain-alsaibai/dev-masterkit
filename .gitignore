@@ -36,3 +36,8 @@ npm-debug.log*
 # memory/skillspector-baseline-dev-masterkit-2026-10-27.yaml in the workspace
 # repo so the review decisions are not lost.
 .skillspector-baseline.yaml
+
+# Local operational logs written by the accountability cron. They contain
+# absolute host paths and per-run state; they are not part of the published
+# toolkit.
+memory/

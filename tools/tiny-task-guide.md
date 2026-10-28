@@ -9,6 +9,25 @@ Zero-dependency durable task queue for Python. One file, no setup. JSONL-backed,
 with priority, TTL, retries, and multiple workers.
 
 ## Last Verified
+2026-10-28 - **11 tests passing** (measured by run against the canonical
+published clone at `/home/node/repos/tiny-task`). The package had **no CI**
+until 2026-10-28.
+
+## The Wheel Shipped Nothing (fixed 2026-10-28)
+
+The wheel contained **no importable module**, because
+`[tool.setuptools.packages.find]` with `include = ["tiny_task*"]` finds
+nothing - a single top-level module is not a package. Fixed with
+`[tool.setuptools] py-modules = ["tiny_task"]`.
+
+**Two implementations of `tiny-task` exist** and this guide documents the
+canonical one: the published v1.0.0 at `/home/node/repos/tiny-task` (11 tests)
+and an unrelated v0.1.0 in the workspace. The canonical clone is the published
+one and is what the CI fix was applied to.
+
+## Previous verification
+2026-10-23
+## Last Verified
 2026-10-23
 
 ## API Correction (2026-10-23)

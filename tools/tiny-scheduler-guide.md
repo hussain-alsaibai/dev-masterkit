@@ -105,4 +105,30 @@ from datetime import timezone, datetime
 sched.add_cron(fn, "0 9 * * *", start_at=datetime(2026, 1, 1, tzinfo=timezone.utc))
 ```
 
-Last verified: 2026-09-03
+## The Python 3.8 Defect (fixed 2026-10-28)
+
+`Scheduler.stop()` raised **`TypeError` on Python 3.8**:
+
+```python
+# BROKEN - `cancel_futures` was only added in Python 3.9
+self._executor.shutdown(wait=True, cancel_futures=False)
+
+# CORRECT
+if sys.version_info >= (3, 9):
+    self._executor.shutdown(wait=True, cancel_futures=False)
+else:
+    self._executor.shutdown(wait=True)
+```
+
+The package declares `requires-python = ">=3.8"`, and `stop()` is also what the
+context manager and the `running` property rely on - so **every** call to stop
+the scheduler failed on 3.8. 4 of the 57 tests failed there for this reason.
+
+It shipped because the package had a test suite and **no CI workflow**. A CI
+matrix across 3.8-3.13 now exists and a `TestPython38Compatibility` pins the
+shutdown path on every supported version.
+
+**Now 60/60 tests passing** (was 57), verified by run on 3.8, 3.9, 3.10, 3.11,
+3.12 and 3.13.
+
+Last verified: 2026-10-28

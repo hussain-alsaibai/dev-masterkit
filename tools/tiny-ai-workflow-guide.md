@@ -9,6 +9,42 @@ Step-function style AI pipeline for Python. One file, no setup. Sequence,
 parallel, conditional, and loop steps with per-step error handling.
 
 ## Last Verified
+2026-10-28 - **12 tests passing** (measured by run against the upstream clone;
+was 3 passed / 9 failed). The package had **no CI** until 2026-10-28, and
+adding it found a defect that made the library unusable.
+
+## The `WorkflowStep` Defect (fixed 2026-10-28)
+
+`@wf.step()` could **never** work:
+
+```python
+# BROKEN - `default_factory` is a CALLABLE that dataclasses invokes
+result: Any = field(default_factory=None, init=False)
+
+# CORRECT
+result: Any = field(default=None, init=False)
+```
+
+Passing `None` as the factory means dataclasses calls `None()`, which raises
+`TypeError: 'NoneType' object is not callable` on **every single step
+registration**. 9 of the 12 tests failed for this reason.
+
+One test was also asserting the opposite of the documented behaviour: it
+checked that a step which *succeeded* appears in `failed_steps()`. The library
+is right - `failed_steps()` returns only steps whose state is `failed` - so the
+test was inverted.
+
+Packaging was fixed in the same pass: the wheel shipped no importable module,
+because `[tool.setuptools.packages.find]` with `include = ["tiny_ai_workflow*"]`
+finds nothing (a single module is not a package). It now uses
+`[tool.setuptools] py-modules = ["tiny_ai_workflow"]`.
+
+The PyPI name `tiny-ai-workflow` is **free** (verified 2026-10-28); the
+package is not published there yet.
+
+## Previous verification
+2026-10-23
+## Last Verified
 2026-10-23
 
 ## API Correction (2026-10-23)

@@ -1,5 +1,30 @@
 # tiny-bucket-quota v0.1.0 — Hierarchical Token-Bucket Quota Allocator
 
+**Last verified:** 2026-10-28 - **23/23 tests passing** (measured by run
+against the upstream clone). The package had **no CI** until 2026-10-28.
+
+## The Wrong Module Was Shipped (fixed 2026-10-28)
+
+The `pyproject.toml` declared:
+
+```toml
+py-modules = ["tiny_rate_window"]   # WRONG - copied from a sibling repo
+```
+
+The installed finder mapped `tiny_rate_window` to a path that **does not
+exist** in this repo. The package built and installed cleanly and shipped
+nothing importable.
+
+```toml
+py-modules = ["tiny_bucket_quota"]   # CORRECT
+```
+
+Same defect family as `tiny-llm-router` (`py_modules` instead of
+`py-modules`) and `tiny-jsonpath` (an invalid `package-data` key) - three
+packaging failures found on the same day, all in repos that had **no CI**.
+
+The PyPI name `tiny-bucket-quota` is **free** (verified 2026-10-28); the
+package is not published there yet.
 **Last verified:** 2026-10-16
 **Repo:** https://github.com/hussain-alsaibai/tiny-bucket-quota
 **License:** MIT • **Deps:** zero (stdlib only) • **LOC:** 623 (lib) + 250 (tests) • **Tests:** 23/23

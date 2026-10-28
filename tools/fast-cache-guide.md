@@ -16,12 +16,25 @@ pip install fast-cache
 
 ## Quick Example
 ```python
-from fast_cache import cache
+from fast_cache import Cache
 
-@cache(ttl=60, maxsize=1024)
+cache = Cache(maxsize=1024, ttl=60)
+
 def expensive_query(user_id: int) -> dict:
     return db.fetch(user_id)
+
+result = cache.get_or_set("user:42", lambda: expensive_query(42))
 ```
+
+The constructor is `Cache(maxsize=None, ttl=None, maxmemory=None,
+evict_callback=None, thread_safe=True)` - there is **no** `default_ttl`
+keyword. `get_or_call` does not exist either; the method is **`get_or_set`**.
+Both verified by running the snippet above on 2026-10-28.
+
+> **There is no module-level `cache` object.** `fast_cache.__all__` is
+> `["Cache", "CacheAsync", "CacheStats", "DiskSpillover", "CacheMetricsListener",
+> "cache_method"]` - verified by import on 2026-10-28. `from fast_cache import
+> cache` raises `ImportError`.
 
 ## Features
 - **LRU eviction** — bounded memory under sustained load
@@ -168,7 +181,7 @@ a per-key `threading.Event` until the factory completes, then share the result.
 Different keys continue to run in parallel.
 
 ```python
-from fast_cache import SingleFlightCache
+from fast_cache_v072 import SingleFlightCache
 
 cache = SingleFlightCache(default_ttl=300)
 
@@ -195,7 +208,14 @@ protection is actually firing.
 ### Sidecar module
 
 SingleFlightCache ships in `fast_cache_v072.py` (sidecar pattern, same as v0.7.1's
-CRDT module). Existing `from fast_cache import cache` users see no behavior change.
+CRDT module) and is **not** re-exported from `fast_cache` - import it from the
+sidecar: `from fast_cache_v072 import SingleFlightCache`.
+
+> **Correction (2026-10-28):** this guide previously said
+> `from fast_cache import SingleFlightCache` and
+> `from fast_cache import cache`. **Neither import works** - verified by
+> importing the module: `cache` and `SingleFlightCache` are both absent from
+> `dir(fast_cache)`. `SingleFlightCache` lives in the `fast_cache_v072` sidecar.
 15 new tests in `tests/test_v072_additions.py`.
 
 ### Why this matters

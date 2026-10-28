@@ -1,6 +1,6 @@
 # Skills pending AgentSkills frontmatter
 
-Generated from the repository state on 2026-10-27.
+Generated from the repository state on 2026-10-28.
 
 A `SKILL.md` file is only loadable as an AgentSkill when it begins
 with a YAML frontmatter block that declares at least `name` and
@@ -13,7 +13,7 @@ description: What this skill does and when to use it.
 ---
 ```
 
-All 35 skills in this directory now carry that block, so every one of
+All 36 skills in this directory now carry that block, so every one of
 them is loadable by an agent runtime. The backlog below is empty; it
 is kept in the file so a future skill that arrives as a legacy markdown
 document has an obvious place to be tracked.
@@ -27,7 +27,7 @@ from this list and the warning goes away.
 
 _None. Every skill in `skills/` has valid frontmatter._
 
-## Already loadable (35)
+## Already loadable (36)
 
 - api-dev
 - api-retry
@@ -36,6 +36,7 @@ _None. Every skill in `skills/` has valid frontmatter._
 - bounty-scanner
 - bounty-verifier
 - browser-automation
+- ci-census
 - browser-automation-stealth
 - code-verify
 - codebuddy-code

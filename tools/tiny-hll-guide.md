@@ -11,9 +11,13 @@
 **Tests:** 25 passing (verified by run, 2026-10-23)
 **Last verified:** 2026-10-23
 
-> **Repo does not exist upstream yet** (`GET /repos/hussain-alsaibai/tiny-hll`
-> -> 404; `https://github.com/hussain-alsaibai/tiny-hll` -> HTTP 404, both checked
-> 2026-10-23). Local clone only.
+> **The repo now exists upstream.** `GET /repos/hussain-alsaibai/tiny-hll`
+> returned 404 on 2026-10-23 and returns **200** now (last push 2026-10-26,
+> re-checked 2026-10-28). The earlier "local clone only" note is stale.
+>
+> **The PyPI name `tiny-hll` is free** (verified 2026-10-28), but the package is
+> not published there yet, so `pip install tiny-hll` will not work. Install
+> from the repository URL.
 
 ## Quick Start
 
