@@ -30,14 +30,17 @@ npm-debug.log*
 # Runtime output
 *.log
 
-# Local scanner suppression baseline (SkillSpector). Records which findings a
-# human reviewed and accepted. It is local state: no CI in this repo consumes
-# it, and no sibling repository tracks one. Kept under
-# memory/skillspector-baseline-dev-masterkit-2026-10-27.yaml in the workspace
-# repo so the review decisions are not lost.
-.skillspector-baseline.yaml
+# The SkillSpector suppression baseline is NOT ignored. It is a record of
+# human review decisions, and the CI job (scripts/scan_skills.py) compares it
+# against the pinned scanner version, so it has to be versioned alongside the
+# skills it describes. It was ignored until 2026-10-29, which is how a stale
+# baseline survived a scanner upgrade unnoticed: the fingerprints stopped
+# matching, every reviewed finding looked new, and nothing consumed the file.
 
 # Local operational logs written by the accountability cron. They contain
 # absolute host paths and per-run state; they are not part of the published
 # toolkit.
 memory/
+
+# SkillSpector JSON report produced by scripts/scan_skills.py (removed by the script).
+.skillspector-report.json

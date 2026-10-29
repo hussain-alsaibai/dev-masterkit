@@ -21,3 +21,23 @@ jobs:
       # still pending conversion (skills/AGENTSKILLS_PENDING.md).
       - name: Check repository structure
         run: python3 scripts/check_structure.py
+
+  skill-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Scans the skills with NVIDIA SkillSpector against the committed
+      # suppression baseline. Fails if the scanner version drifts from the
+      # baseline (a stale baseline suppresses nothing, so every reviewed
+      # finding looks new) or if any finding is not covered by a reviewed
+      # baseline entry.
+      - name: Install SkillSpector
+        run: pip install 'git+https://github.com/NVIDIA/SkillSpector@v2.13.2'
+
+      - name: Scan skills
+        run: python3 scripts/scan_skills.py
