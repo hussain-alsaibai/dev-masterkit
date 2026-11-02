@@ -51,6 +51,6 @@ python tiny_bounty.py remove <id>
 - Agent-friendly (no external deps)
 
 ## Related
-- `tools/tiny-bounty-queue-guide.md` — `tiny-bounty-queue` (scoring + dispatch, local only)
+- `tools/tiny-bounty-queue-guide.md` — `tiny-bounty-queue` (scoring + dispatch, upstream verified 2026-11-02)
 - `tools/tiny-bounty-workflow-guide.md` — `tiny-bounty-workflow` (anti-scam + scoring)
 - `skills/bounty-scanner/SKILL.md` — the upstream scanner this ecosystem feeds

@@ -57,6 +57,6 @@ limiter = TokenBucket(rate=2.0, capacity=10)   # 2 tokens/sec, burst 10
 
 - `tools/tiny-rate-limiter-guide.md` — `tiny-rate-limiter`, a separate repo
   with a different API (`rate_limit`, `TokenBucket`, `RateLimiter`)
-- `tools/tiny-rate-window-guide.md` — `tiny-rate-window` (local only, not upstream)
-- `tools/tiny-bucket-quota-guide.md` — `tiny-bucket-quota` (local only, not upstream)
+- `tools/tiny-rate-window-guide.md` — `tiny-rate-window` (upstream, verified 2026-11-02)
+- `tools/tiny-bucket-quota-guide.md` — `tiny-bucket-quota` (upstream, verified 2026-11-02)
 - `tools/tiny-sliding-window-guide.md` — `tiny-sliding-window`

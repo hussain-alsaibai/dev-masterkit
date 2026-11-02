@@ -8,11 +8,19 @@ Zero-dependency bounty issue queue with pluggable scoring and dispatch.
 Pure Python stdlib. MIT.
 
 ## Status
-**Repo does not exist upstream yet** (`https://github.com/hussain-alsaibai/tiny-bounty-queue`
--> HTTP 404, checked 2026-10-23). Local clone only.
+**Live upstream as of 2026-11-02.** The repo was created on GitHub at
+17:10 UTC on 2026-11-02, *after* this guide's earlier same-day 404 re-check.
+
+`GET /repos/hussain-alsaibai/tiny-bounty-queue` -> **HTTP 200**, MIT, default
+branch `main`, `tiny_bounty_queue.py` + `tests/` + `examples/`.
+
+```bash
+pip install git+https://github.com/hussain-alsaibai/tiny-bounty-queue.git
+```
 
 ## Last Verified
-2026-11-02 - the upstream repo **still returns HTTP 404** (re-checked 2026-11-02). Local clone only.
+2026-11-02 - cloned from upstream and ran the suite: **18 passed** (matches
+the count this guide already claimed).
 
 ## API Correction (2026-10-23)
 
@@ -30,17 +38,44 @@ decomposition is **`ScoreBreakdown`**. `BountyIssue` is the raw issue,
 rules, and `Dispatch` the action layer.
 
 ## Quick Example
+Executed against upstream on 2026-11-02 (output pasted from the run).
+
 ```python
-from tiny_bounty_queue import Queue, Scorer, parse_github_issue
+from tiny_bounty_queue import BountyIssue, Scorer, Filter, Queue, Dispatch
 
-issue = parse_github_issue(raw_issue_json)
-scorer = Scorer()
-scored = scorer.score(issue)
+agent_profile = {"python": 0.9, "go": 0.5, "qdrant": 0.4,
+                 "webhooks": 0.7, "docs": 0.95}
+scorer = Scorer(capability=agent_profile)
+flt = Filter(blocked_phrases=("seed phrase", "send me your"),
+             max_age_hours=24 * 60, forbid_repos=frozenset({"scam/repo"}))
+queue = Queue(scorer=scorer, flt=flt, max_concurrent=1, budget_usd=300.0)
 
-q = Queue()
-q.add(scored)
-print(q.next())
+issues = [
+    BountyIssue(id="arakoodev/EdgeChains#273", repo="arakoodev/EdgeChains",
+                number=273, title="feat: Qdrant adapter", reward_usd=50.0,
+                required_skills=frozenset({"python", "qdrant"}), age_hours=6.0),
+]
+plan = Dispatch(queue).plan(issues, agent_profile)
+print(Dispatch(queue).explain(plan))
 ```
+
+```
+Dispatch plan: 1 items, $5.00 est.
+  [00] arakoodev/EdgeChains#273  $50 score=0.779 cap=0.65 fresh=0.94 lock=1.00
+```
+
+**Three API corrections found by running it on 2026-11-02** (the previous
+snippet in this guide used all three wrong):
+
+1. `Scorer()` needs **`capability=`**; `Queue()` needs **`scorer=`** - the
+   zero-argument forms in the old snippet raise at construction.
+2. **`Queue` has no `add()` and no `next()`.** Its surface is `admit(issues)`
+   (an *iterable*, returning `(kept, dropped_with_reason)`) plus the
+   constructor fields `budget_usd`, `max_concurrent`, `estimated_cost_per_issue_usd`.
+3. **`parse_github_issue(repo, number, title, body, ...)` takes positional
+   arguments, not a raw issue dict.** And dispatch is
+   **`Dispatch(queue).plan(issues, agent_profile)`** - `plan()` requires the
+   issue iterable, it does not read a pre-filled queue.
 
 ## Key Features
 - Per-issue scoring with a transparent breakdown

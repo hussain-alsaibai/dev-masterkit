@@ -43,5 +43,5 @@ print(tracker.total_usd)
 
 ## Related
 
-- `tools/tiny-budget-ledger-guide.md` — `tiny-cost-ledger`, a different repo (local only)
+- `tools/tiny-budget-ledger-guide.md` — `tiny-cost-ledger`, a different repo (upstream verified 2026-11-02)
 - `tools/tiny-llm-budget-guide.md` — runtime token/USD budget enforcement

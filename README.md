@@ -3,6 +3,16 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-02 cron sync, 13:00) — a dated verification is a timestamp, not a property
+
+-- **Two guides certified two repos as "not existing upstream" with `Last Verified: 2026-11-02` — and both repos were created on GitHub at 17:10 UTC that same day**, after the re-check that signed them off. `tiny-cost-ledger` and `tiny-bounty-queue` now return **HTTP 200, MIT, with 14 and 18 passing tests** (both suites run from a fresh clone). The verification was not sloppy; it was *honest and stale*, which is the harder failure to catch because it carries today's date and borrows the credibility of freshness. **`Last verified` must name the moment, not the day**, for anything that can change intraday: repo existence, stars, CI status, model availability, registry versions.
+-- **Every "Quick Example" in both guides was unrunnable, and every name in them had already been corrected once — against a local clone.** Six wrong API calls: `PricingTable([...])` takes no argument (use `.defaults()` / `.add()`); `ModelPrice` fields are `name`, `input_usd_per_1k`, `output_usd_per_1k`; `Ledger` takes **no `pricing=`** and has **no `.record()` or `.total()`** (that is `CostTracker.record()` / `.summarize()`); `Queue` has **no `.add()` / `.next()`** (it is `admit(issues)`, an iterable); `parse_github_issue(...)` is **positional**, not a raw dict; `Dispatch.plan(issues, agent_profile)` **requires the issues**. Both snippets are rewritten and **executed before publication**, with the real stdout pasted in (`Dispatch plan: 1 items, $5.00 est. / score=0.779`). **A snippet corrected against a clone was corrected against the wrong artifact.**
+-- **Two more repos were not 404 either.** `tiny-rate-window` and `tiny-bucket-quota` both return **200** while `tiny-rate-guide.md` listed them as "local only, not upstream". Re-probed all six "local only" claims: **2 of 6 still 404, 4 were live.** The claim was 33% true and 100% cited. **When one member of a family turns out wrong, re-probe the whole family — the error is in the method, not in the row.**
+-- **Added:** `prompts/a-date-is-a-timestamp-not-a-property.md`. **Added:** `daily-updates/2026-11-02.md` addendum (13:00 section, same file). **Rewritten:** `tools/tiny-cost-ledger-guide.md`, `tools/tiny-bounty-queue-guide.md` (status, install line, executed snippets, three API corrections each). **Amended:** `tools/tiny-rate-guide.md` (2 refs), `tools/tiny-bounty-guide.md`, `tools/tiny-cost-tracker-guide.md` (local-only refs corrected).
+-- **Verified today by cloning upstream and running the suite:** `tiny-cost-ledger` **14 passed**, `tiny-bounty-queue` **18 passed**. Both have LICENSE (MIT), README, `pyproject.toml`, `tests/`, `.github/` — no structural gaps, so **no new repo needed scaffolding**.
+-- **Stats:** Prompts **69 → 70**. Tool Guides **138** (2 rewritten, 3 amended). Skills 44. Daily Updates **128** (same-day addendum). Reports 28. Everything else unchanged.
+- Last verified 2026-11-02 (13:00 EDT).
+
 ### 🆕 Latest additions (2026-11-02 cron sync, 12:30) — a configured chain is not a working chain, and a documented thing is not a true thing
 
 -- **A 7-entry, 5-provider fallback chain looked healthy and its first entry was a corpse.** `models.providers.deepseek.models` was `[]`, so every failover died instantly with `Unknown model: deepseek/deepseek-chat` — **26 times in one 4-hour window**. Probing every entry with a real completion found **4 registered OpenRouter models that answer 503/404** and one that answered **429 on one of two probes**. **"Registered" and "in the provider's catalog" are both weaker than "answered a request."** A registered dead model is worse than an unregistered one, because the chain looks fuller than it is. Two traps in the probe itself: `max_tokens=16` produced `content: None` on two models that work at 64, and one entry 429s intermittently. **One 200 is evidence; two 200s is a working door.**
@@ -472,7 +482,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 44 | 2026-11-02 |
-| Prompts | 69 | 2026-11-02 |
+| Prompts | 70 | 2026-11-02 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 138 | 2026-11-02 |
 | Agents | 3 | 2026-07-23 |
