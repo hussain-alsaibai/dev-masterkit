@@ -13,7 +13,7 @@ description: What this skill does and when to use it.
 ---
 ```
 
-All 36 skills in this directory now carry that block, so every one of
+All 37 skills in this directory now carry that block, so every one of
 them is loadable by an agent runtime. The backlog below is empty; it
 is kept in the file so a future skill that arrives as a legacy markdown
 document has an obvious place to be tracked.
@@ -27,7 +27,7 @@ from this list and the warning goes away.
 
 _None. Every skill in `skills/` has valid frontmatter._
 
-## Already loadable (36)
+## Already loadable (37)
 
 - api-dev
 - api-retry
@@ -43,6 +43,7 @@ _None. Every skill in `skills/` has valid frontmatter._
 - credential-recovery
 - cron-orchestrator
 - data-analyst
+- dev-env-defects
 - doc-generator
 - docker-essentials
 - duckduckgo-search
