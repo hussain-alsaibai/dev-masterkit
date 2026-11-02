@@ -24,9 +24,11 @@ The baseline is committed on purpose. It is a record of human review
 decisions, and it only works if it is versioned alongside the skills.
 """
 
+import glob
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -44,23 +46,71 @@ def fail(msg):
     sys.exit(1)
 
 
-def scanner_version():
+def resolve_scanner():
+    """Return the path to a runnable scanner binary.
+
+    Do NOT trust PATH alone. More than one skillspector install can exist on a
+    host, and they can be built against different Pythons. A stale install
+    linked to Python 3.11 fails to start at all, and the message it prints is
+    'requires a different Python' - which reads like a missing interpreter
+    problem rather than the wrong-binary problem it actually is.
+
+    Preference order:
+      1. $SKILLSPECTOR_BIN, if set (CI and anyone with an unusual layout)
+      2. a venv alongside this repository (.ssvenv / .venv), then one inside it
+      3. whatever PATH resolves to
+    """
+    override = os.environ.get("SKILLSPECTOR_BIN")
+    if override:
+        if not (os.path.isfile(override) and os.access(override, os.X_OK)):
+            fail("SKILLSPECTOR_BIN=%s is not an executable file" % override)
+        return override
+
+    # A local venv may sit beside the repo rather than inside it: the workspace
+    # owns .ssvenv, and dev-masterkit is a sibling of it.
+    roots = [ROOT, os.path.dirname(ROOT)]
+    for base in roots:
+        for venv in (".ssvenv", ".venv", "venv"):
+            for rel in ("bin/skillspector", "Scripts/skillspector.exe"):
+                cand = os.path.join(base, venv, rel)
+                if os.path.isfile(cand) and os.access(cand, os.X_OK):
+                    return cand
+
+    found = shutil.which("skillspector")
+    if found:
+        return found
+
+    fail(
+        "skillspector is not installed. Install it with:\n"
+        "  pip install 'git+https://github.com/NVIDIA/SkillSpector@"
+        + PINNED_SCANNER
+        + "'"
+    )
+
+
+def scanner_version(scanner):
     try:
-        out = subprocess.run(
-            ["skillspector", "--version"],
+        proc = subprocess.run(
+            [scanner, "--version"],
             capture_output=True,
             text=True,
-            check=True,
-        ).stdout.strip()
-    except FileNotFoundError:
-        fail(
-            "skillspector is not installed. Install it with:\n"
-            "  pip install 'git+https://github.com/NVIDIA/SkillSpector@"
-            + PINNED_SCANNER
-            + "'"
         )
-    except subprocess.CalledProcessError as exc:
-        fail("could not run 'skillspector --version': %s" % exc.stderr.strip())
+    except FileNotFoundError:
+        fail("%s disappeared between resolution and execution" % scanner)
+    except OSError as exc:
+        fail("could not execute %s: %s" % (scanner, exc))
+
+    out = (proc.stdout + "" + proc.stderr).strip()
+    if proc.returncode != 0:
+        # The interpreter-version error arrives here, not as a crash. Say what
+        # it means instead of passing through a message that blames Python.
+        fail(
+            "%s could not run (exit %d): %s\n"
+            "  This usually means the install is bound to a Python the package "
+            "does not support (SkillSpector needs >=3.12).\n"
+            "  Point at a working install with SKILLSPECTOR_BIN=/path/to/skillspector"
+            % (scanner, proc.returncode, out[:600])
+        )
     m = re.search(r"(\d+\.\d+\.\d+)", out)
     if not m:
         fail("could not parse a version out of %r" % out)
@@ -83,9 +133,11 @@ def baseline_version():
 
 
 def main():
-    installed = scanner_version()
+    scanner = resolve_scanner()
+    installed = scanner_version(scanner)
     pinned = baseline_version()
 
+    print("scanner: %s" % scanner)
     print("scanner installed: %s" % installed)
     print("baseline written for: %s" % pinned)
 
@@ -95,13 +147,13 @@ def main():
             "baseline suppresses nothing, so every reviewed finding looks "
             "new. Regenerate the baseline with the pinned version and "
             "review the diff:\n"
-            "  skillspector baseline ./skills -o .skillspector-baseline.yaml --no-llm"
-            % (installed, pinned)
+            "  %s baseline ./skills -o .skillspector-baseline.yaml --no-llm"
+            % (installed, pinned, scanner)
         )
 
     result = subprocess.run(
         [
-            "skillspector",
+            scanner,
             "scan",
             "./skills",
             "--no-llm",
