@@ -1,7 +1,11 @@
 # tiny-agentskills — Zero-Dep Runtime for Anthropic-Style SKILL.md Bundles
 
 > Zero-dependency Python runtime for loading, parsing, and dispatching Agent Skills (Anthropic-style SKILL.md bundles).
-> Last verified: 2026-09-11 | Version 0.1.0 | hussain-alsaibai/tiny-agentskills
+> Last verified: 2026-11-02 | Version 0.1.0 | hussain-alsaibai/tiny-agentskills
+>
+> The upstream repo exists and was last pushed 2026-10-26 (verified
+> 2026-11-02). The API surface below was last **executed** on 2026-09-11;
+> upstream has moved since. Treat the method list as a 2026-09-11 snapshot.
 
 ## What It Is
 

@@ -1,129 +1,130 @@
 # tiny-skill-lint Guide
 
-> Zero-dependency SKILL.md frontmatter linter. ~210 LOC, 32 tests, stdlib-only.
+> Zero-dependency SKILL.md frontmatter linter. 310 LOC, 35 tests, stdlib-only.
 
 **Repo:** `github.com/hussain-alsaibai/tiny-skill-lint`
-**Version:** 0.1.0 (2026-10-09)
-**Author:** OpenClaw (autonomous cron, daily-bounty-workflow context)
-**Status:** ⚠️ Initial release. **Last verified: 2026-10-25 — 28 passed, 1 FAILED** (not 32/32; see below). Cross-compat with `skillspec/lint` v0.3.0, `skillcheck/core` v0.4.0, and `openskills/lint` v0.2.0.
+**Version:** 0.2.0
+**Last verified:** 2026-11-02 - **35 tests passing** (measured by run), CI
+green. The repo **now exists upstream** (it returned HTTP 404 until
+2026-11-02) and has a CI workflow.
 
-> **One failing test (2026-10-25):** `TestDescription::test_long_first_sentence`.
-> Upstream `github.com/hussain-alsaibai/tiny-skill-lint` returns **HTTP 404** — the repo
-> exists locally but has never been pushed.
+## Install
 
----
+```bash
+# From GitHub (not on PyPI)
+pip install git+https://github.com/hussain-alsaibai/tiny-skill-lint.git
+```
 
-## What is it?
-
-`tiny-skill-lint` is a single-file Python tool (~210 LOC) that validates the frontmatter of `SKILL.md` files. It checks for the 18 most common quality issues in skill manifests: missing required fields, name format, description budget, semver validation, unknown keys, and more.
-
-It is the reference implementation of the SKILL.md linter family that converges around an 18-code error catalogue (E001–E018). See the [Developer Tools Landscape 2026-10-09](../../dev-reports/2026-10-09-developer-tools-landscape.md) report (Trend 3) for the cross-ecosystem context.
-
-## Why does it exist?
-
-In 2026, the SKILL.md convention is adopted by OpenClaw, Cursor, Goose, CodeBuddy, and most internal agent frameworks. Until `tiny-skill-lint`, there was no schema enforcement, no quality score, and no CI gate:
-
-- A missing `description` field would silently ship
-- A 2,000-character description would silently consume 512 system prompt tokens
-- An invalid `version` semver would silently break plugin discovery
-- A 2-character `name` would silently produce an unusable skill key
-
-`tiny-skill-lint` solves this in a single file with no dependencies.
+Or copy `tiny_skill_lint.py` into your repo and run it directly.
 
 ## Usage
 
 ```bash
-# Lint a single file
-python -m tiny_skill_lint path/to/SKILL.md
+python -m tiny_skill_lint path/to/SKILL.md     # one file
+python -m tiny_skill_lint skills/              # directory, recursive
+python -m tiny_skill_lint skills/ --format=json   # CI-friendly
+python -m tiny_skill_lint skills/ --strict        # warnings become errors
+python -m tiny_skill_lint skills/ --config lint.config.json
+```
 
-# Lint a directory recursively
-python -m tiny_skill_lint skills/
+**Exit code is 1 when any record has level `error`, 0 otherwise.** That is
+what makes it usable as a CI gate as-is:
 
-# CI-friendly JSON output
-python -m tiny_skill_lint skills/ --format=json
-
-# Strict mode (warnings become errors)
-python -m tiny_skill_lint skills/ --strict
-
-# Custom config
-python -m tiny_skill_lint skills/ --config=lint.config.json
+```yaml
+- name: Lint skills
+  run: python -m tiny_skill_lint skills/ --format=json
 ```
 
 ## The 18-Code Catalogue
 
+Verified by importing `ERROR_CODES` on 2026-11-02:
+
 | Code | Level | Description |
-|------|-------|-------------|
+|---|---|---|
 | E001 | error | Missing required field `name` |
 | E002 | error | Missing required field `description` |
-| E003 | warn  | Description exceeds 800 characters |
+| E003 | warn | Description exceeds 800 characters |
 | E004 | error | Invalid `name` format (must be kebab-case) |
-| E005 | warn  | Name is too short (< 3 chars) |
+| E005 | warn | Name is too short (< 3 chars) |
 | E006 | error | Invalid `version` (must be semver) |
-| E007 | warn  | Version is 0.0.0 |
+| E007 | warn | Version is `0.0.0` |
 | E008 | error | Unknown required field (frontmatter not a flat-key subset) |
-| E009 | warn  | Empty `description` |
-| E010 | warn  | Description contains TODO / FIXME / XXX |
-| E011 | warn  | Missing `when_to_use` (recommended) |
+| E009 | warn | Empty `description` |
+| E010 | warn | Description contains TODO / FIXME / XXX |
+| E011 | warn | Missing `when_to_use` (recommended) |
 | E012 | error | YAML parse error |
-| E013 | warn  | Trailing whitespace in `description` |
-| E014 | warn  | Name contains uppercase letters |
-| E015 | warn  | Missing trailing newline |
-| E016 | warn  | Version is pre-1.0.0 (warn only for libraries in use) |
-| E017 | warn  | Description first sentence is > 100 chars |
-| E018 | error | Invalid `version` semver (E006 supersedes; E018 retained for compat) |
+| E013 | warn | Trailing whitespace in `description` |
+| E014 | warn | Name contains uppercase letters |
+| E015 | warn | Missing trailing newline |
+| E016 | warn | Version is pre-1.0.0 (warn only for libraries in use) |
+| E017 | warn | Description first sentence is > 100 chars |
+| E018 | error | Invalid `version` semver (E006 supersedes; retained for compat) |
 
-The codes are stable and shared across:
-- `skillspec/lint` v0.3.0
-- `skillcheck/core` v0.4.0
-- `openskills/lint` v0.2.0
+## E017 Was Unreachable Until 2026-11-02
 
-## Configuration
+**The rule could never fire.** `_first_sentence()` capped its own return value
+at 100 characters, so the check `len(_first_sentence(desc)) > 100` was
+never true. The catalogue listed the code, the docstring described the
+behaviour, and the rule had never fired once.
 
-`lint.config.json`:
+The fix removed the cap, and the reason is now in the docstring so it is not
+optimised back in:
 
-```json
-{
-  "description_budget": 800,
-  "strict": false,
-  "codes": {
-    "E003": {"level": "warn"},
-    "E011": {"level": "off"}
-  },
-  "ignore": ["**/test*/SKILL.md"]
-}
+```python
+def _first_sentence(description):
+    """There is deliberately no length cap here. E017 fires when the first
+    sentence exceeds the limit, so capping the measurement would make the
+    rule unreachable."""
 ```
 
-## Cross-Repo Interop
+**4 regression tests were added; 3 of them fail on the old code.**
 
-`tiny-skill-lint` is part of the **OpenClaw developer tools ecosystem**:
+See `prompts/a-rule-that-cannot-fire-is-not-a-rule.md` and
+`skills/rule-reachability/SKILL.md`.
 
-- **tiny-validator** — JSON Schema validation, `PluginManifest` schema
-- **tiny-config** — config loader, `to_json_schema` round-trip
-- **tiny-log** — structured logging, redact=True filter
-- **tiny-router** — HTTP router, `Route.to_openapi_schema`
-- **dev-masterkit** — the curated collection; this guide lives there
+## The Cross-Compat Claim Was Wrong And Is Gone
 
-The linter is designed to slot into a CI pipeline as a pre-merge gate. The
-recommended GitHub Actions workflow ships in `.github/workflows/ci.yml`.
+Earlier versions of this guide said the linter was *"Cross-compat with
+`skillspec/lint` v0.3.0, `skillcheck/core` v0.4.0, and `openskills/lint`
+v0.2.0"*. **None of those three names exists on PyPI.** Checked 2026-11-02:
 
-## Adoption Path
+| name | PyPI |
+|---|---|
+| `skillspec` | **404** |
+| `openskills` | **404** |
+| `skillcheck` | **200 - but it is a different project** |
 
-If you maintain a skill catalog and want to adopt `tiny-skill-lint`:
+`skillcheck` on PyPI is at **v1.5.0**, described as *"Cross-agent skill
+quality gate for SKILL.md files conforming to the agentskills.io
+specification"*. It is a real package with real usage - a **competitor**, not
+a compatibility target. Two of the three names are now taken by unrelated
+third-party projects.
 
-1. `pip install tiny-skill-lint`
-2. Add the workflow from `.github/workflows/ci.yml` to your `.github/workflows/`
-3. Run `python -m tiny_skill_lint skills/` locally to see the gap
-4. Set `--strict` for new contributions, leave it off for legacy skills
-5. Use the `--format=json` output to feed a quality dashboard
+**The differentiator is zero dependencies and a CI-gate exit code**, not
+catalogue breadth.
 
-## Roadmap (next 7 days)
+## API Surface
 
-- `tiny-skill-lint` v0.2.0 — adds `--fix` mode that auto-fixes E001–E004
-- `tiny-skill-lint` v0.3.0 — adds `tiny_skill_lint_async.py` sidecar
-- `dev-masterkit` — adopts `tiny-skill-lint` as a CI gate for all skill edits
+```python
+from tiny_skill_lint import lint_file, lint_paths, LintRecord, ERROR_CODES
+```
 
-## See also
+`lint_file(path)` and `lint_paths(paths)` return `LintRecord` objects with
+`path`, `code`, `level`, and `message` fields.
 
-- [dev-reports/2026-10-09-developer-tools-landscape.md](../../dev-reports/2026-10-09-developer-tools-landscape.md) — Trend 3: SKILL.md linters converge
-- [dev-reports/2026-10-08-developer-tools-landscape.md](../../dev-reports/2026-10-08-developer-tools-landscape.md) — Bridge report covering 10-08 cycle
-- [MEMORY.md](../../MEMORY.md) — Tiny-* stack overview (25+ repos)
+## Packaging
+
+```toml
+requires-python = ">=3.8"
+py-modules = ["tiny_skill_lint"]
+```
+
+Both verified by reading the upstream `pyproject.toml` on 2026-11-02. The
+`py-modules` key is correct here - several sibling packages shipped
+`py_modules` instead, which is not a valid key and fails the build.
+
+## Related
+
+- `tools/tiny-skill-md-guide.md` - the parser, validator, renderer, scorer
+- `tools/tiny-skill-loader-guide.md` - loading skills at runtime
+- `tools/tiny-agentskills-guide.md` - the Agent Skills runtime conventions

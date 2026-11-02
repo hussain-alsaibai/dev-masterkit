@@ -4,7 +4,7 @@
 > agent and cron workloads, plus the operator-lease pattern.
 
 **Repo:** https://github.com/hussain-alsaibai/fast-cache
-**Last verified:** 2026-10-23 (v0.8.0 API re-verified by run)
+**Last verified:** 2026-11-02 (v0.8.0 API re-verified by run; snippets executed)
 **See also:** `tools/fast-cache-v0.8.0-guide.md` for the release details.
 
 ## API Correction (2026-10-23)
@@ -18,11 +18,15 @@ from fast_cache import Cache
 cache = Cache(maxsize=1024, ttl=300)
 ```
 
-`add()` and `update()` are **not** on the v0.8.0 `Cache` class
-(`dir(Cache)` verified 2026-10-23). The atomic-claim pattern below uses
+`add()`, `touch()` and `update()` are **not** on the v0.8.0 `Cache` class
+(`dir(Cache)` verified 2026-11-02). The atomic-claim pattern below uses
 `get_or_set()` plus an explicit lock if a strict first-writer-wins claim is
 required, or the `SingleFlightCache` in `_v072.py` when the goal is to share
 one factory call across concurrent misses.
+
+**For a first-writer-wins lease, `set()` returns whether it won:**
+`set(key, value, ttl=None) -> bool`, `True` when the key was absent. That is
+the signal `add()` was assumed to provide.
 
 ## Cache ROI Checklist
 
@@ -74,16 +78,25 @@ serialises the factory call per key and shares the result with waiters.
 ## Stampede Protection (`SingleFlightCache`, v0.7.2)
 
 ```python
-from fast_cache._v072 import SingleFlightCache
+from fast_cache import Cache
+from _v072 import SingleFlightCache
 
-cache = SingleFlightCache(default_ttl=300)
+# SingleFlightCache wraps a Cache. It does not take a default_ttl.
+cache = SingleFlightCache(Cache(maxsize=1024, ttl=300))
 
 # 100 concurrent calls for user_id=42 -> factory runs once, 99 share the result
-results = [cache.get_or_set(("user", 42), lambda: load_user(42)) for _ in range(100)]
+results = [cache.get_or_set("user:42", lambda: load_user(42)) for _ in range(100)]
 
-print(cache.stats.as_dict())
-# {"loads": 1, "shared": 99, "waiters": 99, "peak_waiters": 99}
+print(cache.stats.loads, cache.stats.shared, cache.stats.waiters)
+# 1 99 99
 ```
+
+> **Corrected 2026-11-02.** The previous snippet used
+> `SingleFlightCache(default_ttl=300)` (the constructor is
+> `SingleFlightCache(cache: 'Cache')`), a **tuple** key (the cache is typed for
+> `str`), and `cache.stats.as_dict()` (`SingleFlightStats` has no `as_dict()`
+> method - its fields are `loads`, `shared`, `waiters`, `peak_waiters`,
+> `serialized`). Verified by import.
 
 ### The threading.Event invariant that's easy to get wrong
 
@@ -109,7 +122,10 @@ held a plain `threading.Lock` and then called `self.hit_rate`, which re-acquired
 the same lock. Any thread calling `info()` hung forever with no error.
 
 v0.8.0 fixes it (`RLock` + inline `hit_rate`). If you are pinned to an older
-version, the workaround is to read `cache.stats().hits` and
-`cache.stats().misses` directly instead of calling `info()`.
+version, the workaround is to read `cache.stats.hits` and `cache.stats.misses`
+directly instead of calling `info()`.
 
-**Last verified:** 2026-10-23
+Note the shape: `cache.stats` is a **property**, not a method. `cache.stats()`
+raises `TypeError` on v0.8.0.
+
+**Last verified:** 2026-11-02

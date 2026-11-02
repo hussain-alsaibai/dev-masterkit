@@ -121,10 +121,26 @@ one refactor away from being invented for a field that never had it.
 
 114 passing as of v0.6.0 (95 before this cycle, plus 19 new).
 
-## Last verified: 2026-10-22
+## Last verified: 2026-11-02
 
 - Repo: `hussain-alsaibai/tiny-validator`
 - Version: v0.6.0, commit `f0b4bb2`
+- **114 tests passing** (measured by run, 2026-11-02)
+- The repo now has a **CI workflow** and a version badge, and the README has
+  an install section.
+- API surface verified by import on 2026-11-02:
+
+  ```
+  __all__ = ['Schema', 'PartialSchema', 'Field', 'ValidationError', 'fields',
+             'validate', 'json_schema', 'from_json_schema', 'to_json_schema',
+             'to_openapi_schema', 'http_error_response', 'AsyncField',
+             'AsyncValidator', 'Any', 'String', 'Integer', 'Float', 'Boolean',
+             'List', 'Dict', 'Dict_', 'Email', 'Url', 'Uuid', 'Date', 'DateTime',
+             'Decimal', 'Decimal_', '__version__']
+  ```
+
+  Note the **schema-export trio**: `to_json_schema`, `to_openapi_schema`,
+  and `from_json_schema` (round-trip).
 - Verification: 114/114 by test run on 2026-10-22, plus a hand audit of the
   exporter confirming constraints are read from `Field` records rather than
   from validator error strings.

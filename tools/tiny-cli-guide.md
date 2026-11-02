@@ -82,6 +82,19 @@ if app.confirm("Continue?", default=True):
 - Argument parse: ~80 µs for a 5-option command
 
 ## Tests
-13/13 passing.
+**59 passing** (measured by run, 2026-11-02). The figure on this page was
+13/13 as of 2026-06-30.
 
-## Last Verified: 2026-06-30
+## Last Verified: 2026-11-02
+
+- **Version 1.2.0**, 59 tests passing (measured by run).
+- The repo now has a **CI workflow** and a version badge.
+- The PyPI name `tiny-cli` belongs to **another project** (TinyBio LLC's
+  genomic CLI). `pip install tiny-cli` succeeds and installs someone else's
+  code. Install from the GitHub URL:
+
+  ```bash
+  pip install git+https://github.com/hussain-alsaibai/tiny-cli.git
+  ```
+
+  See `prompts/pypi-n…cess.md` and `prompts/npm-name-ownership-before-install.md`.

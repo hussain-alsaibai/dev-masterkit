@@ -10,7 +10,24 @@ JSON, YAML, INI, `.env`, and env-var sources with dotted-key access, merging,
 and profile support.
 
 ## Last Verified
-2026-10-23
+2026-11-02 - **54 tests passing** (measured by run). Version 0.4.0. The repo
+now has a CI workflow and a version badge.
+
+## API Surface (verified by import, 2026-11-02)
+
+```
+__all__ = ['load', 'load_file', 'get', 'set', 'merge', 'from_env', 'validate',
+           'get_secret', 'load_profile', 'ConfigError', 'get_int', 'get_str',
+           'get_bool', 'get_float', 'get_list', 'snapshot', 'ConfigWatcher',
+           'to_dict', 'to_json', 'to_json_schema', 'mask_secrets',
+           'FrozenConfig']
+```
+
+**There is no `load_config`** (the earlier correction on this page still
+stands). The surface has grown since 2026-10-23: typed getters
+(`get_int`, `get_str`, `get_bool`, `get_float`, `get_list`), a `snapshot`
+helper, a `ConfigWatcher`, `to_json_schema`, `mask_secrets`, and an immutable
+`FrozenConfig`.
 
 ## API Correction (2026-10-23)
 

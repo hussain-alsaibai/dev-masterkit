@@ -500,3 +500,28 @@ fingerprints:
   rule_id: TM1
   file: youtube-api-skill/SKILL.md
   reason: pending
+
+# --- Added 2026-11-02 (skills/runtime-reliability) -------------------------------
+# Reviewed by hand on 2026-11-02 against live SkillSpector v2.13.2 output.
+# Four findings on one new skill: three documentation cross-references and one
+# documented probe command. None of them is code that executes on install.
+#
+# Hashes regenerated 2026-11-02 after the hand-written entries turned out to be
+# computed against a pre-copy-edit revision and matched nothing. The findings are
+# the same four that were reviewed; only the content hashes were stale.
+- hash: sha256:2c2ecbe2cab44b697e5c5f09f898200163259c757993cda790f76724260e3851
+  rule_id: AS3
+  file: runtime-reliability/SKILL.md
+  reason: Cross-reference to skills/dev-env-defects/SKILL.md in a Related list. A markdown link inside this same repository, not a read of another installed skill at runtime. Reviewed 2026-11-02.
+- hash: sha256:dba063410c98ff331fcd2dcf094f7fdf29a0c8b1666e3891e251976ba56267aa
+  rule_id: AS3
+  file: runtime-reliability/SKILL.md
+  reason: Cross-reference to skills/cron-orchestrator/SKILL.md in a Related list. A markdown link inside this same repository, not a runtime read of another skill's instructions. Reviewed 2026-11-02.
+- hash: sha256:ce3ac5735e0719c0eb1a507c23ec1866a3459a609c28cbcbd5bf6bacb7245f52
+  rule_id: AS3
+  file: runtime-reliability/SKILL.md
+  reason: Cross-reference to skills/dev-env-defects/SKILL.md in the closing Related list. Same repository markdown link as the first entry, matched separately by the scanner because it appears on a different line. Reviewed 2026-11-02.
+- hash: sha256:db355e8730f8c6fc652973e07d268948473cc1cab6f4cab65463afc51a7f35cb
+  rule_id: E1
+  file: runtime-reliability/SKILL.md
+  reason: The documented curl command is the live-probe recipe for verifying a model fallback entry. It sends a model id and a fixed reply string to the provider endpoint the operator already configured, using that provider's own credential from its env. No skill data, credential, or file content is transmitted. Reviewed 2026-11-02.

@@ -9,8 +9,8 @@
 **Version:** 0.8.0 (2026-10-23)
 **Install:** `pip install fast-cache` or copy `fast_cache.py`
 **Size:** ~530 LOC core + `_v072.py` + `_v080.py` sidecars, 0 dependencies
-**Tests:** 54 passing (verified by run, 2026-10-23)
-**Last verified:** 2026-10-23
+**Tests:** 138 passing (verified by run, 2026-11-02)
+**Last verified:** 2026-11-02 (snippets re-executed; sidecar import paths corrected)
 
 > **Upstream is behind.** `https://raw.githubusercontent.com/hussain-alsaibai/fast-cache/main/pyproject.toml`
 > reports `version = "0.3.0"` (checked 2026-10-23), and upstream
@@ -73,7 +73,7 @@ values`
 
 ```python
 from fast_cache import Cache
-from fast_cache._v080 import SwrCache
+from _v080 import SwrCache
 
 inner = Cache(maxsize=100)
 swr = SwrCache(inner, swr_window=300, fresh_ttl=60)
@@ -108,7 +108,7 @@ A failed background refresh keeps the previous value and calls
 
 ```python
 from fast_cache import Cache
-from fast_cache._v080 import namespaced
+from _v080 import namespaced
 
 cache = Cache(maxsize=100)
 cache.set("a", 1)
@@ -175,21 +175,21 @@ records the defect it fixes:
 - `SwrCache` (stale-while-revalidate, per-key coalescing)
 - `namespaced()` + `NamespaceView`
 - scalar fast path for `_estimate_size`
-- 54 tests total (28 legacy + 26 new)
+- 54 tests total at v0.8.0 release (28 legacy + 26 new); **138 today** (2026-11-02)
 
 `SingleFlightCache` from v0.7.2 remains available in `_v072.py` for
 cold-start stampede protection:
 
 ```python
-from fast_cache._v072 import SingleFlightCache
+from _v072 import SingleFlightCache
 ```
 
 ## API Surface (verified)
 
 ```python
 from fast_cache import Cache, CacheStats
-from fast_cache._v072 import SingleFlightCache, SingleFlightStats
-from fast_cache._v080 import SwrCache, SwrStats, namespaced, NamespaceView
+from _v072 import SingleFlightCache, SingleFlightStats
+from _v080 import SwrCache, SwrStats, namespaced, NamespaceView
 ```
 
 ## When NOT to Use

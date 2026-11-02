@@ -1,9 +1,9 @@
 # tiny-router — Stdlib WSGI Routing
 
 > Zero-dependency WSGI router for small Python services, agent callbacks, and stdlib-only HTTP examples.
-> Last verified: 2026-10-23 | Version 0.7.4 | hussain-alsaibai/tiny-router
+> Last verified: 2026-11-02 | Version 0.7.5 | hussain-alsaibai/tiny-router
 
-## Current API Surface (verified 2026-10-23, v0.7.4, 177 tests passing)
+## Current API Surface (verified 2026-11-02, v0.7.5, 176 passed / 1 skipped)
 
 ```python
 __all__ = ['Router', 'Request', 'Response', 'StreamingResponse', 'AsyncResponse',
@@ -19,10 +19,10 @@ Router methods: `add, delete, get, head, post, put, patch, options, route,
 mount, static, use, ws, wsgi, from_blueprint, from_json, from_yaml,
 get_routes, not_found, on_error, on_status`.
 
-**Upstream is behind.** `https://raw.githubusercontent.com/hussain-alsaibai/tiny-router/main/pyproject.toml`
-reports `version = "0.1.0"` (checked 2026-10-23). The v0.7.x surface
-described here is the local build. Feature-specific sidecars are documented in
-their own guides:
+**Upstream is now at `version = "0.7.5"`** (fetched 2026-11-02), so the
+v0.7.x surface described here is the published surface, not a local-only
+build. The note on 2026-10-23 that upstream was still at 0.1.0 no longer
+applies. Feature-specific sidecars are documented in their own guides:
 - `tools/tiny-router-v0.7.3-guide.md` — path-redaction middleware
 - `tools/tiny-router-v0.7.4-guide.md` — header-redaction middleware
 - `tools/tiny-router-v0.5-guide.md` — OpenAPI endpoint + JWT refresh pair
@@ -165,3 +165,24 @@ Part of the `tiny-*` zero-dependency ecosystem. See also:
 - [tiny-context](tiny-context-guide.md) — LLM context window manager (v0.1.0, new)
 - [tiny-log](tiny-log-guide.md) — Structured logging
 - [tiny-chain](tiny-chain-guide.md) — Streaming LLM processor
+
+## Last Verified: 2026-11-02
+
+- **176 passed, 1 skipped** (measured by run, 2026-11-02). The figure on this
+  page was 177 tests as of 2026-10-23.
+- **Version 0.7.5** locally and upstream (fetched 2026-11-02).
+- The `__all__` list and the JWT / OpenAPI exports were re-verified **by
+  importing the module**, not by reading the source:
+  `openapi_endpoint`, `openapi_spec`, `jwt_encode`, `jwt_decode`,
+  `jwt_refresh_pair`, `jwt_refresh_exchange`, `jwt_auth`, `request_id`,
+  `WebSocket`, `Path` are all present in v0.7.5.
+- The repo now has a **CI workflow** and a version badge.
+- The PyPI name `tiny-router` belongs to **another project** (nekonoshiri's
+  HTTP router). `pip install tiny-router` succeeds and installs someone
+  else's code. Install from the GitHub URL:
+
+  ```bash
+  pip install git+https://github.com/hussain-alsaibai/tiny-router.git
+  ```
+
+  See `prompts/pypi-n…cess.md`.

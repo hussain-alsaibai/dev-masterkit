@@ -3,6 +3,25 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-02 cron sync, 12:30) — a configured chain is not a working chain, and a documented thing is not a true thing
+
+-- **A 7-entry, 5-provider fallback chain looked healthy and its first entry was a corpse.** `models.providers.deepseek.models` was `[]`, so every failover died instantly with `Unknown model: deepseek/deepseek-chat` — **26 times in one 4-hour window**. Probing every entry with a real completion found **4 registered OpenRouter models that answer 503/404** and one that answered **429 on one of two probes**. **"Registered" and "in the provider's catalog" are both weaker than "answered a request."** A registered dead model is worse than an unregistered one, because the chain looks fuller than it is. Two traps in the probe itself: `max_tokens=16` produced `content: None` on two models that work at 64, and one entry 429s intermittently. **One 200 is evidence; two 200s is a working door.**
+-- **Three failure classes that all read as provider outages were not provider outages.** (1) **A per-job model override disables the entire fallback chain** — the runtime source says it: `modelFallbackAvailability.kind === "disabled_by_model_override"`. Six of 32 jobs were pinned to one provider and died on its quota error while a healthy chain sat unused. (2) **`payload.model` must be a full `provider/model` id** — the allow-list holds full ids, so the alias `flash` was rejected in **0.4s** with `rejected by agents.defaults.modelPolicy.allow`. **A one-second failure naming a policy is a config mismatch, not an outage.** (3) **The provider timeout is not the job timeout** — four consecutive failures at *exactly* 300s on a job whose own timeout was 900s. The phase in the error is the discriminator: `model-call-started` = provider ceiling, `tool-execution-started` = job budget.
+-- **The receipt history is the evidence, and the latest error alone misleads.** One job, three runs, three causes: `0.2s error: override 'flash' rejected by modelPolicy.allow` → `602.4s error: timed out (model-call-started)` → `19.3s ok`. The middle run is the trap: the log showed the fallback **working** (`candidate_failed` on the primary, `candidate_succeeded` on the fallback) and the job **still died**, because the walk ate the remaining budget. **Eight of nine jobs showing errors had last run the previous day and had not fired since** — `consecutiveErrors` survives between runs, so a counter is a statement about the past, not about now.
+-- **A retry that could never succeed burned 8 attempts.** `dots-studio/dots-3-note-preview:free` failed **49x HTTP 400** in 14 minutes: `estimatedPromptTokens=666035` against a **512,000-token** window. The runtime classified it as `transient ... reason=timeout`. **A context-length 400 is not retryable.** The reason string was unreliable anyway: the helper used `curl -sf`, which discards the body on a non-2xx, so the caller saw `command failed` — no `403`, no `rate limit` — and **every failure was classified as 'not a rate limit'**. The band query then burned its three retries in 20 seconds against a 60-second window, and **every `label:bounty` issue from the last 7 months was silently missing** from a scan that reported the market as `INCOMPLETE` without saying why.
+-- **A dead credential named in a prompt fails every run that trusts it.** Three job prompts said *"push using the hussain-alsaibai account (token from the `GitHUB_PAT` env var)"*. Live, same host, same moment: `GitHUB_PAT` (93-char fine-grained) → **HTTP 401 DEAD**; `gh auth token` (40-char classic) → **HTTP 200 LIVE**. **The prompt is the credential**, and it was never updated when the credential died. One grep found all three. **The fix is not to remove the reference — it is to name the dead credential as dead in the prompt**, so the next agent does not rediscover it.
+-- **A rule that cannot fire is not a rule.** `tiny-skill-lint` rule `E017` (*"first sentence longer than 100 chars"*) **could never fire**: the helper that extracted the sentence capped its own output at 100 characters, so `len(sentence) > 100` was never true. The catalogue listed the code, the docstring described the behaviour, and the rule had never fired once. Fixed, with 4 regression tests of which **3 fail on the old code**. Same shape as an untested `requires-python` claim and a README API that does not exist: **a description exists, and the description is not connected to the code.**
+-- **Eight broken snippets survived in a guide that had already been corrected twice for exactly that.** `fast-cache-guide.md` documented `Cache(default_ttl=...)`, `claims.add(...)`, `claims.touch(...)`, `@cache(ttl=..., stale_ttl=...)`, `Cache(max_size=...)`, `leases.add(...)`, `SingleFlightCache(default_ttl=...)` and `cache.stats.as_dict()` — **every one raises `TypeError`, `ImportError` or `AttributeError` on use.** All three fast-cache guides also carried the wrong sidecar import path (`from fast_cache._v080 import ...` → `ModuleNotFoundError`, because `fast_cache` is a single file, not a package — the wrong path was in the sidecar's own docstring). All fixed, and **every corrected snippet was executed before the text was written down**.
+-- **The bounty market was mostly a template.** A `label:bounty` search returned two repos posting the same *"Bounty Seguro ($$250)"* template against `starlette` forks; a `label:opire` search resolved to 74 results, **all** random-named forks of `kafka-go`/`minio`/`chi` with `score: 1`. The funding was unverifiable too — the aggregator's bounties API returned an empty item list to unauthenticated callers. The one credible target was explicitly **zero-bounty**. Funnel: **9,323 found → 6,087 with a `$` → 234 filtered → 1 in top.**
+-- **Added:** `prompts/fallback-chain-needs-a-live-probe.md`, `prompts/a-model-override-disables-the-fallback-chain.md`, `prompts/classify-by-status-code-not-by-reason-string.md`, `prompts/a-stale-error-counter-is-not-a-live-failure.md`, `prompts/a-dead-credential-named-in-a-prompt-fails-every-run.md`, `prompts/a-rule-that-cannot-fire-is-not-a-rule.md`, `prompts/a-stale-clone-is-a-loaded-weapon.md`, `prompts/check-tmp-space-before-any-multi-step-run.md`, `prompts/check-the-repo-before-you-recommend-the-bounty.md` (**9 new**).
+-- **Added:** `skills/runtime-reliability/SKILL.md` (new, 220 lines) and `skills/rule-reachability/SKILL.md` (new, 160 lines) — the two procedures, written as procedures rather than as post-mortems.
+-- **Added:** `daily-updates/2026-11-02.md` (1 new). **Rewritten:** `tools/tiny-skill-lint-guide.md`, `tools/tiny-skill-md-guide.md` (both had stale upstream-404 claims and wrong API surfaces). **Amended (15 guides, in place):** `fast-cache-guide.md` (8 broken snippets), `fast-cache-v0.8.0-guide.md`, `fast-cache-operator-note.md` (both had the wrong sidecar import path), `tiny-log-guide.md` (v0.6.0 W3C trace context), `tiny-router-guide.md`, `tiny-cli-guide.md`, `tiny-config-guide.md`, `tiny-validator-guide.md`, `tiny-skill-loader-guide.md`, `tiny-agent-scope-guide.md` (both had 404 claims and stale failing-test counts), `tiny-agentskills-guide.md`, `tiny-bounty-guide.md`, `tiny-bounty-queue-guide.md`, `tiny-cost-ledger-guide.md`, `tiny-observability-guide.md`.
+-- **Removed:** `skills/repo-monitor/repo-monitor.js` (73 lines) — strictly superseded by `repo-monitor-enhanced.js` (207 lines: stars, forks, issues, new issues/PRs, new comments, open PRs, last push, action items). **Removed:** `skills/cost-tracker/data.json` — runtime state with a personal Telegram user ID, tracked in a **public** repo; `tracker.js` recreates it with a fresh ID on first run, so nothing is lost.
+-- **Removed the `Tools | 98` stat row** — frozen since 2026-09-17, and it counted a category that no longer exists: `tools/` has only ever held markdown guides, so it was double-counting **Tool Guides**. Replaced with a `Scripts | 2` row. **A stat row that measures nothing is worse than no stat row**, because it looks like a fact.
+-- **Every count was measured, not quoted:** `fast-cache` 138, `tiny-log` 98, `tiny-router` 176 passed / 1 skipped, `tiny-validator` 114, `tiny-config` 54, `tiny-cli` 59, `tiny-skill-lint` 35, `tiny-skill-md` 20, `tiny-agent-scope` 41, `tiny-skill-loader` 25 — all by running the suite on 2026-11-02. Upstream state checked with the GitHub API the same day: `tiny-skill-lint`, `tiny-skill-md`, `tiny-skill-loader` and `tiny-agent-scope` **now exist** (404 notes removed); `tiny-observability`, `tiny-bounty`, `tiny-bounty-queue` and `tiny-cost-ledger` **still 404** (notes re-verified, not deleted).
+-- **Stats:** Prompts **60 → 69**. Tool Guides **138** (17 amended, 2 rewritten). Skills **42 → 44** directories, **37 → 39** loadable, **0 pending frontmatter** (verified by `scripts/check_structure.py`). Reports 28. Daily Updates 127 → **128**. Commands 5, Agents 3, Orchestrators 1, Scripts 2. tiny-* ecosystem repos **121**, other hussain-alsaibai repos **25**.
+- Last verified 2026-11-02.
+
 ### 🆕 Latest additions (2026-10-29 cron sync, 00:30) — a scanner upgrade silently invalidated a suppression baseline, and nothing was watching it
 
 -- **NVIDIA/SkillSpector shipped v2.13.2 on 2026-10-28. Our suppression baseline was written for v2.13.1.** SkillSpector binds every baseline fingerprint to the scanner version, so the upgrade invalidated all of them at once. The baseline suppressed **0 of 69** findings it should have suppressed, and a scan of our 37 skills reported **124 unsuppressed findings — every one a false alarm**, all reviewed and accepted by hand on 2026-10-27. The risk score read **100/100 CRITICAL / "DO NOT INSTALL"** for a skills directory whose worst real finding was a documented cross-reference between two of our own skills.
@@ -452,21 +471,28 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 42 | 2026-10-28 |
-| Prompts | 60 | 2026-10-28 |
+| Skills | 44 | 2026-11-02 |
+| Prompts | 69 | 2026-11-02 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 138 | 2026-10-28 |
+| Tool Guides | 138 | 2026-11-02 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Tools | 98 | 2026-10-18 |
-| Daily Updates | 126 | 2026-10-28 |
-| Reports | 27 | 2026-10-28 |
-| tiny-* Ecosystem Repos | 66 | 2026-10-23 |
-| Additional hussain-alsaibai Repos | 42 | 2026-10-23 |
+| Scripts | 2 | 2026-10-29 |
+| Daily Updates | 128 | 2026-11-02 |
+| Reports | 28 | 2026-11-02 |
+| tiny-* Ecosystem Repos | 121 | 2026-11-02 |
+| Additional hussain-alsaibai Repos | 25 | 2026-11-02 |
 
-**All 37 `SKILL.md` files carry AgentSkills YAML frontmatter** (36 pre-existing + `ci-census`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `37 total, 37 loadable, 0 pending frontmatter`.
+**All 39 `SKILL.md` files carry AgentSkills YAML frontmatter** (37 pre-existing + `runtime-reliability` + `rule-reachability`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `39 total, 39 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-10-28**, not carried forward.
+**Every count above was measured against the tree on 2026-11-02**, not carried forward.
+
+> **The `Tools | 98` row was removed on 2026-11-02.** It had been frozen since
+> 2026-09-17 and counted a category that no longer exists: `tools/` has only
+> ever held markdown guides, so it was double-counting **Tool Guides**. The
+> two `scripts/` entries (the structure check and the SkillSpector gate) are
+> now counted on their own row. **A stat row that measures nothing is worse
+> than no stat row** - it looks like a fact.
 
 ## Structure
 
@@ -514,6 +540,15 @@ dev-masterkit/
 │   ├── commonjs-esm-default-export.md            # Named import of a CJS default fails at startup, not install [NEW 2026-10-25]
 │   ├── zero-result-indexer.md                    # Indexed 0 files is a broken matcher, not an empty repo [NEW 2026-10-25]
 │   └── npm-name-ownership-before-install.md      # Check registry.npmjs.org before telling users to install [NEW 2026-10-25]│   ├── credential-order-is-not-validity.md     # Validate every credential candidate; order is not evidence [NEW 2026-10-27]│   ├── reserve-before-work.md                 # A scan is not a reservation; re-verify before acting [NEW 2026-10-27]│   └── python-support-is-a-claim.md           # A declared requires-python is a promise you must test [NEW 2026-10-27]
+│   ├── fallback-chain-needs-a-live-probe.md   # Registered is weaker than answered a request [NEW 2026-11-02]
+│   ├── a-model-override-disables-the-fallback-chain.md # A pinned job has NO fallback [NEW 2026-11-02]
+│   ├── classify-by-status-code-not-by-reason-string.md # A status code is a fact; a reason string is a guess [NEW 2026-11-02]
+│   ├── a-stale-error-counter-is-not-a-live-failure.md # Read the receipts, not the counter [NEW 2026-11-02]
+│   ├── a-dead-credential-named-in-a-prompt-fails-every-run.md # The prompt is the credential [NEW 2026-11-02]
+│   ├── a-rule-that-cannot-fire-is-not-a-rule.md # A rule whose input is capped can never fire [NEW 2026-11-02]
+│   ├── a-stale-clone-is-a-loaded-weapon.md # A backup clone that can push to the real remote [NEW 2026-11-02]
+│   ├── check-tmp-space-before-any-multi-step-run.md # A full /tmp fails in the middle of a success [NEW 2026-11-02]
+│   └── check-the-repo-before-you-recommend-the-bounty.md # A bounty label is a claim about the repo [NEW 2026-11-02]
 ├── skills/                       # Reusable skill files
 │   ├── repo-creator/             # Create zero-dependency Python repos
 │   ├── test-automation/          # Auto-generate test suites
@@ -529,6 +564,8 @@ dev-masterkit/
 │   ├── bounty-scanner/          # Scan GitHub for official bounties (Algora/Opire)
 │   ├── credential-recovery/     # Recover a dead credential from local session archives [NEW 2026-10-25]│   ├── dev-env-defects/       # Triage an install/build/test failure as an environment defect [NEW 2026-10-27]
 │   ├── ci-census/             # Find the repos whose tests nothing executes [NEW 2026-10-28]
+│   ├── runtime-reliability/   # Audit a job runtime for failures that hide behind plausible errors [NEW 2026-11-02]
+│   ├── rule-reachability/     # Prove every rule in a catalogue can actually fire [NEW 2026-11-02]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -653,6 +690,8 @@ dev-masterkit/
 | `browser-automation` | Web browser automation and data extraction | "Browse this" / "Fill this form" |
 | `bounty-verifier` | Two-stage verification gate (hard filters + behavioral) | "Verify this bounty" / "Is this legit?" |
 | `ci-census` | Find the repos whose tests nothing executes | "Add CI to these" / "Which repos are untested?" |
+| `runtime-reliability` | Audit a job runtime for failures hiding behind plausible errors | "Why do my cron jobs fail differently each time?" |
+| `rule-reachability` | Prove every rule in a catalogue can actually fire | "Which of these lint rules has ever triggered?" |
 
 ### 🧩 tiny-* Ecosystem Skills (built using these patterns)
 
@@ -774,6 +813,15 @@ dev-masterkit/
 | `never-compare-partial-calendar-months` | Compare trailing 30d vs the previous 30d | A report written on the 25th compares a partial month [NEW 2026-10-28] |
 | `pypi-name-collision-is-a-silent-success` | `pip install` succeeding is not the check | The name on PyPI belongs to someone else [NEW 2026-10-28] |
 | `a-slot-budget-is-not-a-slice-budget` | A positional slice lets list order decide the outcome | 100 tasks came from 39 repos; one repo held 14 [NEW 2026-10-28] |
+| `fallback-chain-needs-a-live-probe` | Registered and in-catalog are weaker than answered a request | The dead first hop failed 26 times in 4 hours [NEW 2026-11-02] |
+| `a-model-override-disables-the-fallback-chain` | A pinned job has NO fallback, whatever the chain says | 6 of 32 jobs were pinned and died on one provider [NEW 2026-11-02] |
+| `classify-by-status-code-not-by-reason-string` | A status code is a fact; a reason string is a guess | 49 HTTP 400s retried 8x as 'transient timeout' [NEW 2026-11-02] |
+| `a-stale-error-counter-is-not-a-live-failure` | Read the run receipts, not the counter | 8 of 9 error jobs had not run since the day before [NEW 2026-11-02] |
+| `a-dead-credential-named-in-a-prompt-fails-every-run` | The prompt is the credential | 3 job prompts named a token that returns 401 [NEW 2026-11-02] |
+| `a-rule-that-cannot-fire-is-not-a-rule` | A rule whose input is capped can never fire | E017 was unreachable for the life of the package [NEW 2026-11-02] |
+| `a-stale-clone-is-a-loaded-weapon` | A backup clone that can push to the real remote | 3 clones were 67-72 commits behind a live remote [NEW 2026-11-02] |
+| `check-tmp-space-before-any-multi-step-run` | A full /tmp fails in the middle of a success | 163 unrotated spill files filled a 512M tmpfs [NEW 2026-11-02] |
+| `check-the-repo-before-you-recommend-the-bounty` | A bounty label is a claim about the repository | The credible target found was explicitly zero-bounty [NEW 2026-11-02] |
 
 ## 🏗️ Our Tools
 

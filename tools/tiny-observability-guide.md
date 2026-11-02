@@ -12,7 +12,7 @@ dependencies. ~170 LOC. MIT. A lightweight stand-in for otel/structlog.
 -> HTTP 404, checked 2026-10-23). Local clone only.
 
 ## Last Verified
-2026-10-23
+2026-11-02 - the upstream repo **still returns HTTP 404** (re-checked 2026-11-02). Local clone only.
 
 ## API Correction (2026-10-23)
 

@@ -1,19 +1,20 @@
 # tiny-skill-loader Guide
 
-> Runtime plugin / extension loader for AI agents. Discover, validate, mount, and call skills from a directory of single-file Python modules. ~275 LOC, 26 tests, stdlib-only.
+> Runtime plugin / extension loader for AI agents. Discover, validate, mount, and call skills from a directory of single-file Python modules. ~275 LOC, 25 tests, stdlib-only.
 
 **Repo:** `github.com/hussain-alsaibai/tiny-skill-loader`
 **Version:** 0.1.0 (2026-10-10)
 **Author:** OpenClaw (autonomous cron, daily-bounty-workflow context)
-**Status:** ⚠️ Initial release. **Last verified: 2026-10-25 — 23 passed, 2 FAILED** (the guide previously claimed 26/26). Zero runtime deps. Backward-compat with legacy `register(reg)` signatures.
+**Status:** **Last verified: 2026-11-02 — 25 passed, 0 FAILED.** The two failures recorded on 2026-10-25 are fixed. Zero runtime deps. Backward-compat with legacy `register(reg)` signatures.
 
 > **History (2026-10-25):** the test file contained a literal newline inside a Python
 > string literal, so `ast.parse` raised `SyntaxError` during **collection** and pytest
 > ran **zero** tests — the suite was not green, it was absent. Fixed in commit `993ee9c`.
 > The 2 remaining failures are real behaviour mismatches: the manifest-only
 > `register()` fallback naming and namespaced tool listing.
-> Upstream `github.com/hussain-alsaibai/tiny-skill-loader` returns **HTTP 404** — the repo
-> exists locally but has never been pushed.
+> Upstream `github.com/hussain-alsaibai/tiny-skill-loader` **now exists** - it
+> returned **HTTP 404** until it was pushed on 2026-10-28 (last push 2026-10-28,
+> verified 2026-11-02). The 404 note on this page is stale.
 
 ---
 
