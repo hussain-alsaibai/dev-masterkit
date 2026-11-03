@@ -57,10 +57,10 @@ returning **403** mid-sweep, which looks like "the repo does not exist".
 **That is a false negative and it will poison the whole sweep.**
 
 ```bash
-TOKEN=$(gh auth token)
+# `gh api` reads the credential from the store, so no token is typed,
+# exported, or embedded in the command. `--include` prints the status line.
 while read g; do
-  code=$(curl -s -H "Authorization: Bearer $TOKEN" -o /dev/null \
-         -w '%{http_code}' "https://api.github.com/repos/OWNER/$g")
+  code=$(gh api "repos/OWNER/$g" --include 2>/dev/null | head -1 | awk '{print $2}')
   echo "$g -> $code"
 done < /tmp/family.txt
 ```
@@ -71,17 +71,20 @@ A `403` in this loop means **rate limited**, not absent. Re-read it.
 
 ```bash
 for n in $(cat /tmp/names.txt); do
-  curl -s "https://pypi.org/pypi/$n/json" | python3 -c "
-import json,sys
-try:
-    i = json.load(sys.stdin)['info']
-    urls = i.get('project_urls') or {}
-    home = i.get('home_page') or ''
-    ours = 'hussain-alsaibai' in str(urls) or 'hussain-alsaibai' in home
-    print('$n', i.get('version'), 'OURS' if ours else 'FOREIGN',
-          '|', (i.get('summary') or '')[:50])
-except Exception:
-    print('$n', '404')
+  # Download to a file FIRST, then parse the file. Never pipe a remote
+  # response straight into an interpreter - that runs whatever the
+  # registry returns.
+  if ! curl -sSf -o "/tmp/pypi-$n.json" "https://pypi.org/pypi/$n/json" 2>/dev/null; then
+    echo "$n 404"; continue
+  fi
+  python3 -c "
+import json
+i = json.load(open('/tmp/pypi-$n.json'))['info']
+urls = i.get('project_urls') or {}
+home = i.get('home_page') or ''
+ours = 'hussain-alsaibai' in str(urls) or 'hussain-alsaibai' in home
+print('$n', i.get('version'), 'OURS' if ours else 'FOREIGN',
+      '|', (i.get('summary') or '')[:50])
 "
 done
 ```
@@ -144,5 +147,5 @@ Not: "checked the repos" and not "found some stale ones".
 - `prompts/pypi-n…cess.md` (stored with a truncated filename in this repo)
 - `prompts/readme-claims-must-be-runnable.md`
 - `prompts/check-the-repo-before-you-recommend-the-bounty.md`
-- `skills/rule-reachability/SKILL.md` - proving a rule can fire at all
-- `skills/runtime-reliability/SKILL.md` - the same discipline applied to job runtimes
+- the **rule-reachability** skill - proving a rule can fire at all
+- the **runtime-reliability** skill - the same discipline applied to job runtimes
