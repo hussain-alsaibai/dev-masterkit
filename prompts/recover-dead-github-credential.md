@@ -69,28 +69,58 @@ grep -rhoE 'ghp_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{50,}' \
 wc -l < /tmp/toks.txt
 ```
 
-**2. Test each candidate against the API and report only the verdict.**
+**2. Test EVERY candidate against the API. Do not stop at the first 200.**
+
+The candidates are a set, not a queue. More than one of them is usually
+alive, and the archive holds old tokens from earlier credential rotations.
+`sort -u` orders by string, not by age and not by scope, so "the first
+200" is arbitrary: it can be an orphaned token with wider scopes than the
+one you meant to use.
+
+Record the verdict for every candidate, then choose deliberately:
 
 ```bash
-i=0; while read -r t; do
+i=0; : > /tmp/tok_alive.txt
+while read -r t; do
   i=$((i+1))
   code=$(curl -s -o /dev/null -m 12 -w '%{http_code}' \
-    -H "Authorization: Bearer $t" https://api.github.com/user)
-  [ "$code" = "200" ] && echo "WORKING index=$i"
+    -H "Authorization: $t" https://api.github.com/user)
+  [ "$code" = "200" ] && echo "$i" >> /tmp/tok_alive.txt
+  echo "index=$i code=$code"
 done < /tmp/toks.txt
+wc -l < /tmp/tok_alive.txt   # how many candidates are alive
 ```
 
-**Never echo the token itself.** Write the winner to a file with restrictive
-permissions and use it from there:
+**Never echo the token itself.** Pick the winner by index, then write it to
+a file with restrictive permissions:
 
 ```bash
-umask 077; printf '%s' "$t" > /tmp/valid_token.txt
+# after reading the verdicts above and choosing deliberately:
+umask 077
+sed -n "${WINNER_INDEX}p" /tmp/toks.txt > /tmp/valid_token.txt
 ```
+
+**Choosing the winner.** Prefer, in order:
+
+1. the token already in the credential store (it is the one in use),
+2. a token for the intended account with the narrowest scope that still
+   covers the job,
+3. only then any other working token for the right account.
+
+If more than one candidate returns 200, **all** of them need the account
+check in step 3. Pick the one whose scopes in step 4 match what the work
+needs, not the one with the most scopes.
 
 **3. Confirm it is the RIGHT account, not just a working token.**
 
 A working token for the wrong account is a worse outcome than no token — it
 would push your work somewhere you did not intend.
+
+**Two tokens for the SAME account are also a trap.** The login check alone
+cannot separate them, because both authenticate as the same user. When two
+candidates return 200 with the same login, decide between them by scope in
+step 4 and by which one the credential store is actually using — not by
+which one appeared first.
 
 ```bash
 curl -s -H "Authorization: Bearer $(cat /tmp/valid_token.txt)" \
@@ -172,9 +202,15 @@ is a credential that will be dead again within a day.**
    still on disk in shell snapshots, session archives, and logs.
 3. **Verify the account, not just the token.** A working token for the
    wrong account pushes your work to the wrong place.
-4. **Check the scope header.** Read is not write.
-5. **Never print the token.** Extract, test, and use it from a file.
-6. **Fix the source of truth, not just the running process.**
+4. **Test every candidate; never stop at the first 200.** The archive
+   holds tokens from earlier rotations, and `sort -u` orders by string,
+   not by age or scope. The first working candidate can be an orphaned
+   token with wider permissions than the one in use.
+5. **Two tokens for the same account are indistinguishable by login.**
+   Separate them by scope and by which one the credential store holds.
+6. **Check the scope header.** Read is not write.
+7. **Never print the token.** Extract, test, and use it from a file.
+8. **Fix the source of truth, not just the running process.**
 
 ## The Generalisation
 
