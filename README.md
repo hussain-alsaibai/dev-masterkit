@@ -920,6 +920,8 @@ Production-tested tools and libraries built by this team:
 | [tiny-otel](https://github.com/hussain-alsaibai/tiny-otel) | OTLP/HTTP trace exporter — ships to Honeycomb/Tempo/SigNoz/Datadog, ~250 LOC zero-dep | ⭐0 | Node |
 | [tiny-pipeline-js](https://github.com/hussain-alsaibai/tiny-pipeline-js) | Async stream pipeline builder — fluent `.pipe()` chaining, 44 tests, zero-dep | ⭐0 | Node |
 | [tiny-retry-js](https://github.com/hussain-alsaibai/tiny-retry-js) | Exponential backoff with jitter, hooks and `AbortSignal` — 11 tests, zero-dep | ⭐0 | Node |
+| [tiny-semaphore-js](https://github.com/hussain-alsaibai/tiny-semaphore-js) | Weighted async semaphore — concurrency control, timeout handling, 33 tests, zero-dep | ⭐0 | Node |
+| [tiny-json](https://github.com/hussain-alsaibai/tiny-json) | Zero-dep JSON pipeline — query, transform, merge, validate in one file, 22 tests | ⭐0 | Python |
 | [tiny-memory](https://github.com/hussain-alsaibai/tiny-memory) | Zero-dep agent memory — BM25 + TF-IDF hybrid search, Semantic/Episodic/Declarative stores, JSONL persistence | ⭐0 | Python |
 | [tiny-chain](https://github.com/hussain-alsaibai/tiny-chain) | Streaming LLM processor — retries, model fallbacks, function calling, JSON extraction, ~600 LOC zero deps | ⭐0 | Python |
 | [tiny-workflow](https://github.com/hussain-alsaibai/tiny-workflow) | Async DAG orchestrator — parallel steps, retry, approval gates, dead-letter queue, JSON state persistence | ⭐0 | Python |
