@@ -11,6 +11,14 @@ Zero-dep SSE and WebSocket helpers for AI agent streaming responses. Handles SSE
 pip install tiny-realtime
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-realtime` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-realtime.git
+> ```
+
 ## Key Components
 - **`SSEEmitter`** — send `data: ...\n\n` events with auto content-type and proper headers
 - **`AIStreamer`** — buffer and yield LLM token chunks as SSE/WS streams

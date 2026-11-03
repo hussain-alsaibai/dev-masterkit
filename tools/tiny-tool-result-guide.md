@@ -190,3 +190,10 @@ Supported subset (no `jsonschema` dependency):
 - [tiny-skill-loader-guide.md](./tiny-skill-loader-guide.md) — runtime plugin system that mounts tools `tiny-tool-result` wraps
 - [tiny-agent-scope-guide.md](./tiny-agent-scope-guide.md) — budget / policy layer that gates every tool call
 - [MEMORY.md](../../MEMORY.md) — Tiny-* stack overview (50+ repos)
+  > **Not published (verified 2026-11-03).** `pip install tiny-tool-result` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-tool-result.git
+  > ```

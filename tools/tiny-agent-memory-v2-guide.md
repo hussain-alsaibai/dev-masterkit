@@ -69,6 +69,14 @@ python -m tiny_agent_memory export --agent-id my-agent --output memory.json
 pip install tiny-agent-memory
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-agent-memory` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-agent-memory.git
+> ```
+
 Or copy the single file:
 ```bash
 curl -O https://raw.githubusercontent.com/hussain-alsaibai/tiny-agent-memory-v2/main/tiny_agent_memory/tiered_memory.py

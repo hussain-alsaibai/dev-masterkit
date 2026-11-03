@@ -4,6 +4,13 @@
 
 - **Repo:** hussain-alsaibai/tiny-mcp-audit (local clone: `~/workspace/tiny-mcp-audit`)
 - **Install:** `pip install tiny-mcp-audit`
+  > **Not published (verified 2026-11-03).** `pip install tiny-mcp-audit` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-mcp-audit.git
+  > ```
 - **Size:** ~1 module, 0 runtime dependencies, Python 3.9+
 - **Version:** 0.2.0 (2026-10-24) — added the `protocol` check group
 - **Tests:** 84 passing
@@ -105,7 +112,7 @@ contract, not added a feature.
 ## CI Integration
 
 ```yaml
-- run: pip install tiny-mcp-audit
+- run: pip install git+https://github.com/hussain-alsaibai/tiny-mcp-audit.git
 - run: mcp-audit ./mcp/*.json --fail-on high --format sarif > mcp-audit.sarif
 ```
 
@@ -174,9 +181,19 @@ See `prompts/mcp-dual-dialect-bridge.md` and
 
 ## Status
 
-The repo does not exist on GitHub yet — `GET /repos/hussain-alsaibai/tiny-mcp-audit`
-returns **404** as of 2026-10-24. Local clone and passing tests only. Treat the
-install line above as the intended distribution, not a live one.
+**Upstream status (verified 2026-11-03 12:25 UTC):**
+`GET /repos/hussain-alsaibai/tiny-mcp-audit` returns **200**. The repo is
+published under the MIT licence, last pushed **2026-10-28T17:32:46Z**.
+
+> **Correction.** This block previously read *"The repo does not exist on
+> GitHub yet — returns **404** as of 2026-10-24"*. That claim was stale: the
+> repo had already been published by the time the 404 note was written, and
+> it survived two re-checks because a re-check of a *wrong* method keeps
+> returning the wrong answer. Install from the repository:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-mcp-audit.git
+> ```
 
 ## See Also
 

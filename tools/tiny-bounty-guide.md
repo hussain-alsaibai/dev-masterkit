@@ -12,7 +12,16 @@ tracking. Pure Python stdlib. JSON-based state. MIT.
 -> HTTP 404, checked 2026-10-23). Local clone only.
 
 ## Last Verified
-2026-11-02 - the upstream repo **still returns HTTP 404** (re-checked 2026-11-02). Local clone only.
+2026-11-03 12:25 UTC - `GET /repos/hussain-alsaibai/tiny-bounty`
+**still returns HTTP 404** (authenticated request, re-checked). Local clone
+only. The same claim was re-verified on 2026-11-02 and has held unchanged
+across three checks, so it is one of the two "local only" claims in this
+repo that is still true.
+
+> **Note the timestamp.** `Last Verified` here names the *moment*, not the
+> day - see `prompts/a-date-is-a-timestamp-not-a-property.md`. Two other
+> guides in this repo carried the same 404 wording with the same date and
+> were wrong by 17:10 UTC that same afternoon.
 
 ## API Correction (2026-10-23)
 

@@ -5,6 +5,13 @@
 
 - **Repo:** github.com/hussain-alsaibai/tiny-event-emitter
 - **Install:** `pip install tiny-event-emitter` or copy `tiny_event_emitter.py`
+  > **Not published (verified 2026-11-03).** `pip install tiny-event-emitter` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-event-emitter.git
+  > ```
 - **Size:** ~400 LOC, 0 dependencies
 - **Tests:** 12 passing (verified by run 2026-10-25 — the guide previously said 16)
 

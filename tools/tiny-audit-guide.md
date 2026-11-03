@@ -4,6 +4,14 @@
 
 **Repo:** https://github.com/hussain-alsaibai/tiny-audit
 **Install:** `pip install tiny-audit`
+
+> **Not published (verified 2026-11-03).** `pip install tiny-audit` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-audit.git
+> ```
 **Last verified:** 2026-08-06
 
 ---

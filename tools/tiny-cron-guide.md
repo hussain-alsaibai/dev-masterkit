@@ -11,6 +11,14 @@ Standard cron parsing + scheduler in one file. Handles 5-field syntax, `@hourly`
 pip install tiny-cron
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-cron` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-cron.git
+> ```
+
 ## Quick Example
 
 ```python

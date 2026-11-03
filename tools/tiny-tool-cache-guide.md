@@ -2,6 +2,11 @@
 
 **Repo:** https://github.com/hussain-alsaibai/tiny-tool-cache
 **Install:** `pip install tiny-tool-cache` *(pending first push; copy `tiny_tool_cache.py` until then)*
+
+> **Not published (verified 2026-11-03).** `pip install tiny-tool-cache` fails - the
+> name returns **HTTP 404** on the PyPI JSON API, and there is no GitHub
+> repository under this name either. Copy the single file into your
+> project instead.
 **Last verified:** 2026-09-23
 **Tests:** 33/33 in 0.055s
 
@@ -44,8 +49,8 @@ It is **not**:
 # Copy one file
 curl -O https://raw.githubusercontent.com/hussain-alsaibai/tiny-tool-cache/main/tiny_tool_cache.py
 
-# or, once published:
-pip install tiny-tool-cache
+# or, once published (NOT on PyPI as of 2026-11-03 - the name returns HTTP 404):
+# pip install tiny-tool-cache
 ```
 
 ## Quickstart

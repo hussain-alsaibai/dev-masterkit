@@ -1,6 +1,6 @@
 # Skills pending AgentSkills frontmatter
 
-Generated from the repository state on 2026-11-02.
+Generated from the repository state on 2026-11-03.
 
 A `SKILL.md` file is only loadable as an AgentSkill when it begins
 with a YAML frontmatter block that declares at least `name` and
@@ -13,7 +13,7 @@ description: What this skill does and when to use it.
 ---
 ```
 
-All 39 skills in this directory now carry that block, so every one of
+All 40 skills in this directory now carry that block, so every one of
 them is loadable by an agent runtime. The backlog below is empty; it
 is kept in the file so a future skill that arrives as a legacy markdown
 document has an obvious place to be tracked.
@@ -27,7 +27,7 @@ from this list and the warning goes away.
 
 _None. Every skill in `skills/` has valid frontmatter._
 
-## Already loadable (39)
+## Already loadable (40)
 
 - api-dev
 - api-retry
@@ -67,4 +67,5 @@ _None. Every skill in `skills/` has valid frontmatter._
 - youtube-analyzer
 - youtube-api-skill
 - youtube-transcript
+- verification-sweep
 - zero-dep-pattern

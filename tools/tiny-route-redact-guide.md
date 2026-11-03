@@ -22,6 +22,11 @@ pip install tiny-route-redact
 # also requires tiny-secret-mask >= 0.4.0 (auto-installed)
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-route-redact` fails - the
+> name returns **HTTP 404** on the PyPI JSON API, and there is no GitHub
+> repository under this name either. Copy the single file into your
+> project instead.
+
 ## Quick Start
 
 ```python

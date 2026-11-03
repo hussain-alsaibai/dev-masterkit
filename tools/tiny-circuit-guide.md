@@ -15,6 +15,14 @@ automatically.
 
 The previous version of this guide documented a **Python** API —
 `pip install tiny-circuit` and `from tiny_circuit import circuit_breaker, Result`.
+
+> **Not published (verified 2026-11-03).** `pip install tiny-circuit` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-circuit.git
+> ```
 **Neither exists.** `tiny-circuit` is a **JavaScript/Node.js** package
 (`circuit.js`, `index.js`, `circuit.test.js`, `package.json` upstream — no
 Python files at all). It is not installable with pip.

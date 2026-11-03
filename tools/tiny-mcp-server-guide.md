@@ -2,6 +2,14 @@
 
 **Repo:** github.com/hussain-alsaibai/tiny-mcp-server
 **Install:** `pip install tiny-mcp-server` or copy `tiny_mcp_server.py`
+
+> **Not published (verified 2026-11-03).** `pip install tiny-mcp-server` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-mcp-server.git
+> ```
 **Version:** 0.2.0 (2026-10-24) — migrated to the 2026-07-28 MCP revision
 **Last verified:** 2026-10-24 (16/16 by test run)
 

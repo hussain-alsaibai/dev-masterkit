@@ -10,6 +10,14 @@ Cron expressions, interval timers, one-shot timers, and async support — all in
 ```bash
 pip install tiny-scheduler
 ```
+
+> **Not published (verified 2026-11-03).** `pip install tiny-scheduler` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-scheduler.git
+> ```
 Or drop `tiny_scheduler.py` into your project — it's a single file.
 
 ## Quick Example

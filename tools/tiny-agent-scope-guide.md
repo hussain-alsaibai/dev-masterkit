@@ -140,6 +140,7 @@ This means `denied_tools={"exec"}` always wins over `allowed_tools={"*"}`.
 ## Adoption Path
 
 1. `pip install tiny-agent-scope`
+   (not on PyPI - use `pip install git+https://github.com/hussain-alsaibai/tiny-agent-scope.git`)
 2. Wrap your agent loop: `scope = scope_for(name, max_cost_usd=..., max_wall_seconds=...)`
 3. Replace `if cost > 1.0: break` with `if scope.remaining()["cost_usd"] < 0.05: scope.abort()`
 4. Add `allowed_tools=` and `denied_tools=` per agent role
@@ -160,3 +161,10 @@ This means `denied_tools={"exec"}` always wins over `allowed_tools={"*"}`.
 - [tiny-tool-result-guide.md](./tiny-tool-result-guide.md) — uniform envelope that every scoped call returns
 - [tiny-skill-loader-guide.md](./tiny-skill-loader-guide.md) — plugin loader; pair with `allowed_tools` for the loaded skills
 - [MEMORY.md](../../MEMORY.md) — Tiny-* stack overview (50+ repos)
+  > **Not published (verified 2026-11-03).** `pip install tiny-agent-scope` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-agent-scope.git
+  > ```

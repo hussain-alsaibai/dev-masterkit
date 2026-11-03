@@ -12,6 +12,14 @@ Sync + async auto-detect, `use()` / `set_layer()` global layer, `peek()` / `remo
 pip install tiny-compose
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-compose` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-compose.git
+> ```
+
 ## Quick Example
 
 ```python

@@ -5,6 +5,13 @@
 
 - **Repo:** github.com/hussain-alsaibai/tiny-circuit-breaker
 - **Install:** `pip install tiny-circuit-breaker` or copy `tiny_circuit_breaker.py`
+  > **Not published (verified 2026-11-03).** `pip install tiny-circuit-breaker` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-circuit-breaker.git
+  > ```
 - **Size:** ~250 LOC, 0 dependencies
 - **Tests:** 25 passing (verified by run 2026-10-25 — the guide previously said 12)
 

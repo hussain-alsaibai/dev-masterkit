@@ -6,11 +6,21 @@ CLI tool for [SnapDB](tools/snapdb-guide.md) — ultra-lightweight in-memory Pyt
 
 ## Installation
 
-```bash
-# Via pip
-pip install snapdb
+> **The PyPI name `snapdb` belongs to someone else** — the PyPI project
+> `snapdb` (v1.0.0) is *"Python adapter for SnapDB"* by **Scott Cruwys**
+> (`github.com/scruwys/snapdb-python`), a different project. **
+> `pip install snapdb` succeeds and installs that adapter, not this CLI.**
+> Verified live against the PyPI JSON API on 2026-11-03.
+>
+> **Our SnapDB library is published as `pysnapdb`** (v0.14.0, verified live
+> 2026-11-03 — its project URLs point at `github.com/hussain-alsaibai/snapdb`).
+> `snapdb-cli` itself is **not** on PyPI.
 
-# Standalone — just copy the file, zero deps
+```bash
+# The library (ours):
+pip install pysnapdb
+
+# The CLI (not on PyPI) — standalone, zero deps:
 curl -O https://raw.githubusercontent.com/hussain-alsaibai/snapdb-cli/main/snapdb_cli.py
 chmod +x snapdb_cli.py
 ```
@@ -60,3 +70,7 @@ snapdb-cli watch users --interval 0.5 --path ./data
 - MIT License, zero runtime dependencies
 
 ## Last Verified: 2026-08-10
+
+**Last verified:** 2026-11-03 — upstream repo `hussain-alsaibai/snapdb-cli`
+returns HTTP 200 (last push 2026-08-10); the PyPI names `snapdb` and
+`pysnapdb` were probed live and their owners confirmed.

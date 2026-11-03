@@ -6,6 +6,14 @@
 **Repo:** https://github.com/hussain-alsaibai/tiny-rbac
 **PyPI:** `pip install tiny-rbac`
 
+> **Not published (verified 2026-11-03).** `pip install tiny-rbac` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-rbac.git
+> ```
+
 ## Overview
 
 Single-file, zero-dependency authorization library supporting Role-Based Access Control (RBAC) and Attribute-Based Access Control (ABAC) with a **deny-overrides** evaluation model. JSON policies, glob resource matching, and role inheritance built in.

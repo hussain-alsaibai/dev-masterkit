@@ -14,6 +14,14 @@ is ~14x faster there, because it does no clock read. See Benchmarks below.
 pip install fast-cache
 ```
 
+> **Not published (verified 2026-11-03).** `pip install fast-cache` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/fast-cache.git
+> ```
+
 ## Quick Example
 ```python
 from fast_cache import Cache

@@ -39,6 +39,14 @@ pip install tiny-agentskills
 # or copy tiny_agentskills.py directly
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-agentskills` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-agentskills.git
+> ```
+
 ## Minimal Example
 
 ```python

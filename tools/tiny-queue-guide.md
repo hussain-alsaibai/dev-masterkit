@@ -7,9 +7,20 @@ https://github.com/hussain-alsaibai/tiny-queue
 Append-only NDJSON job queue with cross-process flock, exponential backoff, dead-letter handling, and crash recovery. Celery-in-one-file.
 
 ## Install
+
+> **The PyPI name `tiny-queue` belongs to someone else** — the PyPI project
+> `tiny-queue` (v0.1.0) is *"A modular, extensible Python queue service"*,
+> a different project with no `hussain-alsaibai` project URL. **
+> `pip install tiny-queue` succeeds and installs that package, not this one.**
+> Verified live against the PyPI JSON API on 2026-11-03.
+>
+> This package is **not published to PyPI**. Install from the repository:
+
 ```bash
-pip install tiny-queue
+pip install git+https://github.com/hussain-alsaibai/tiny-queue.git
 ```
+
+or copy `tiny_queue.py` into your project (single file, zero deps).
 
 ## Quick Example
 
@@ -17,13 +28,29 @@ pip install tiny-queue
 from tiny_queue import Queue, Worker
 
 q = Queue("./jobs", cross_process_lock=True)
-q.enqueue("send_email", {"to": "user@example.com"}, job_id="email-42")
+q.put({"to": "user@example.com"}, id="email-42")
 
-def handler(payload, job_id):
-    send_email(**payload)
+def handler(job):
+    send_email(**job.payload)
 
-Worker(q, handler).run()
+Worker(q, handler, poll_interval=0.5).tick()   # or .run_forever() to loop
 ```
+
+**Executed on 2026-11-03** against the local clone. Real output:
+
+```
+size: 1
+pending: ['email-42']
+handler saw: [Job(id='email-42', payload={'to': 'user@example.com'}, status='inflight', ...)]
+```
+
+> **Corrections applied 2026-11-03.** The previous snippet called
+> `q.enqueue("send_email", {...}, job_id="email-42")` and `Worker(...).run()`.
+> **Neither method exists.** The API is `Queue.put(payload, *, delay=0.0,
+> max_retries=None, id=None)` and the worker methods are `tick()` and
+> `run_forever()`. The handler receives a **`Job` object**, not
+> `(payload, job_id)`. The old snippet raised `AttributeError` on the first
+> line.
 
 ## File layout
 
@@ -103,3 +130,7 @@ get infinite recursion on first use. Use `_ProcessLock` (capitalized) or a
 distinct attribute name.
 
 Last verified: 2026-07-03
+
+**Last verified:** 2026-11-03 — upstream repo returns HTTP 200 (MIT, last push
+2026-07-04); the PyPI name was probed live and found to belong to another
+project; the snippet above was executed against the local clone.

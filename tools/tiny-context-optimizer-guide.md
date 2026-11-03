@@ -13,6 +13,11 @@ pip install tiny-context-optimizer
 # Or: copy tiny_context_optimizer.py directly
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-context-optimizer` fails - the
+> name returns **HTTP 404** on the PyPI JSON API, and there is no GitHub
+> repository under this name either. Copy the single file into your
+> project instead.
+
 ## Quick Example
 ```python
 from tiny_context_optimizer import TinyContextOptimizer

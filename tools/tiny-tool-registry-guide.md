@@ -2,6 +2,14 @@
 
 **Repo:** https://github.com/hussain-alsaibai/tiny-tool-registry
 **Install:** `pip install tiny-tool-registry`
+
+> **Not published (verified 2026-11-03).** `pip install tiny-tool-registry` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-tool-registry.git
+> ```
 **Last verified:** 2026-08-24
 
 ---

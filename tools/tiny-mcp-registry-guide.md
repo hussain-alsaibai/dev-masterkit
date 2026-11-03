@@ -57,6 +57,14 @@ for s in reg.list_servers():
 pip install tiny-mcp-registry
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-mcp-registry` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-mcp-registry.git
+> ```
+
 ## Related Tools
 
 - `tiny-mcp-server` — build your own MCP server in one file

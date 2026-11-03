@@ -11,6 +11,14 @@ Zero-dep async semaphore with timeout and FIFO fairness. Bounded concurrency for
 pip install tiny-semaphore
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-semaphore` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-semaphore.git
+> ```
+
 ## Quick Example
 ```python
 from tiny_semaphore import AsyncSemaphore

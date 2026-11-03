@@ -3,6 +3,26 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-03 cron sync, 12:00) — an install line is a claim about a registry, and 37 of them were wrong
+
+-- **We extracted every `pip install <name>` from all 138 tool guides and probed each name against the live PyPI JSON API. 49 distinct names; 41 of them are ours.** Of those 41: **1 is published and ours** (`pysnapdb`), **4 resolve to somebody else's package** (`tiny-cli`, `tiny-diff`, `tiny-eval`, `tiny-router`), and **36 return HTTP 404** - not published at all. **Every guide said `pip install <name>`. Only one of them could work.** The 4 collisions were already documented; the other 37 were not. All 36 unpublished names now carry a note naming the state and the working install (`pip install git+https://github.com/hussain-alsaibai/<name>.git`); the 3 with no GitHub repo either say so plainly instead of pointing at a URL that 404s. **37 guides amended.**
+-- **A 200 from PyPI is only good if the project URLs point at your own repository.** `snapdb` on PyPI is *"Python adapter for SnapDB"* by **Scott Cruwys** - a different project. Our library ships as `pysnapdb` (v0.14.0, 13 downloads/month), the only one of our 4 published packages that is actually ours. See `prompts/pypi-n…cess.md` and `prompts/a-readme-on-github-is-not-a-distribution-channel.md`.
+-- **Two guides had snippets that could not run.** `tools/tiny-queue-guide.md` documented `q.enqueue(...)` and `Worker(...).run()` - **neither method exists**. The real API is `Queue.put(payload, *, delay, max_retries, id)`, the worker methods are `tick()` and `run_forever()`, and the handler receives a **`Job` object**, not `(payload, job_id)`. The snippet raised `AttributeError` on line one. It was rewritten and **executed before publication**, real output pasted in. `tools/snapdb-cli-guide.md` said `pip install snapdb` and now says whose package that name is.
+-- **Two guides certified repos as missing that exist.** `tiny-mcp-audit` and `tiny-mcp-skel` both said *"does not exist on GitHub yet - 404 as of 2026-10-24"*. **Both return HTTP 200 today.** They had been published before the note was written. The other two *"local only"* claims - `tiny-observability` and `tiny-bounty` - were re-probed and **are still 404**, and now carry a timestamp instead of a bare date. **2 of 4 claims were false; the error was in the method, not the rows.**
+-- **A monitor printed a pass it did not earn.** The PR monitor printed `NO_CHANGES` and exited **0** while **3 of 9** PR checks had failed with `GitHub API 503`. The condition in `skills/pr-monitor/pr-monitor.js` is `failures.length === list.length` - 3 of 9 falls through to a clean exit, and the diagnostic was on stderr while the verdict was on stdout. **A partial failure is a coverage failure wearing a result failure's clothes, and it is the only monitor failure shape that is silent.** See `prompts/partial-failure-is-not-a-pass.md`.
+-- **One error label, two failures with opposite correct responses.** This job's own state carried 8 consecutive errors and a `lastDurationMs` of **2,571,414** (42.8 min) with a Token Plan limit (2056) summary and a `rate_limit` reason. A transient throttle and a **spent plan** are both 429 and both stored as `rate_limit` - **a retry policy keyed on the reason retries a depleted plan forever**. The fallback chain was a **chain of mirrors**: `All models failed (4)` across three MiniMax models (the same plan three times) and `gemini-3-flash-preview`. See `prompts/quota-exhaustion-is-not-a-throttle.md`.
+-- **A gitlink with no `.gitmodules` breaks every clone but not yours.** `bounty-hunting` carried **2 mode-160000 entries** and **no `.gitmodules` file**: `git submodule status` aborts with *fatal: no submodule mapping found*. The clone succeeds and the path looks like an empty directory, so the failure lands on the next person. Both gitlinks were removed from the index and the content kept as ordinary files, with the `FINDINGS.md` and all three PoCs. **Removing a broken reference is not the same as removing the work.**
+-- **A README on GitHub is not a distribution channel.** Of our own 37 Python packages, **33 return 404 on PyPI**. Every one has a README, a LICENSE, a `pyproject.toml`, a passing suite and a green CI badge. **The GitHub badge proves the tests pass; it does not prove the package is installable.** Only `snapdb` has a release workflow - the other three were pushed by hand, which is why they are still at `0.1.0`.
+-- **The runtime API moves and it does not warn you.** `tools.exec(...)` throws `ReferenceError: tools is not defined` - the tools are **bare globals**. The shell result field is **`aggregated`**, not `output`, so `r.output` is `undefined` with **no error at all**: a script that works and reports nothing. And `catalog.search` finds tools that are **not** in the enabled-globals list; for a tool you already have, `describe()` is the source of truth. See `prompts/the-runtime-api-changes-between-runs.md`.
+-- **Capture before you reset.** The 7-repo backup sweep had to write bundles, worktree and index patches, stash lists and untracked-file tars **before** the reset, because the reset is what destroys the divergent history: `tiny-router` **16**, `tiny-log` **13**, `tiny-validator` **10**, `tiny-cli` **6**, `tiny-config` **3**, `fast-cache` **2** local-only commits. **A stash is not automatically unpublished work** - `tiny-log stash@{0}` was a 543-line diff **older than the published v0.6.0**, a draft of history that already exists in better shape. See `prompts/capture-before-you-reset.md`.
+-- **The stale clone holds drafts, not missing work.** `dev-masterkit-clone` still has **3 unpushed commits** that are in no upstream branch, and every file they touch **exists upstream in a corrected form** - the stale versions describe a world in which the PAT was still 401 and the work had not reached GitHub. The two files unique to the clone (`skills/cost-tracker/data.json` with a **personal Telegram user ID in a public repo**, and `skills/repo-monitor/repo-monitor.js`) were **removed from `main` on 2026-11-02** on purpose. **"This commit is not upstream" is not "this content is not upstream".**
+-- **Added:** `prompts/partial-failure-is-not-a-pass.md`, `prompts/quota-exhaustion-is-not-a-throttle.md`, `prompts/a-gitlink-without-a-gitmodules-is-broken.md`, `prompts/a-readme-on-github-is-not-a-distribution-channel.md`, `prompts/the-runtime-api-changes-between-runs.md`, `prompts/capture-before-you-reset.md` (**6 new**).
+-- **Added:** `skills/verification-sweep/SKILL.md` (new, 148 lines) - the runnable sweep procedure: build the family from the documents, probe GitHub **authenticated** (unauthenticated 403 reads as *absent*), probe the registry and check the **OWNER**, fix the documents, re-probe to confirm.
+-- **Added:** `daily-updates/2026-11-03.md` (1 new). **Rewritten:** `tools/tiny-queue-guide.md`, `tools/snapdb-cli-guide.md`, `tools/tiny-mcp-audit-guide.md`, `tools/tiny-mcp-skel-guide.md`. **Amended:** 37 tool guides with an install line for an unpublished package; `tools/tiny-observability-guide.md` and `tools/tiny-bounty-guide.md` (timestamp instead of bare date); `tools/tiny-mesh-guide.md`, `tools/tiny-tool-cache-guide.md`, `tools/tiny-agent-scope-guide.md`, `tools/tiny-skill-loader-guide.md`, `tools/tiny-cli-guide.md` (duplicated install line removed).
+-- **Every number above was measured today:** 49 PyPI names probed, 41 identified as ours, 4 GitHub repos confirmed 200, 2 confirmed 404, 45 our-package install lines checked, 37 guides amended, 2 snippets executed, 2 gitlinks removed, 1 skill added, 6 prompts added.
+-- **Stats:** Prompts **70 → 76**. Tool Guides **138** (2 rewritten, 39 amended). Skills **44 → 45** directories, **39 → 40** loadable, **0 pending frontmatter** (verified by `scripts/check_structure.py`: `40 total, 40 loadable, 0 pending`). Daily Updates 128 → **129**. Reports 28. Commands 5, Agents 3, Orchestrators 1, Scripts 2. tiny-* ecosystem repos **121**, other hussain-alsaibai repos **25**.
+- Last verified 2026-11-03 (12:00 EDT).
+
 ### 🆕 Latest additions (2026-11-02 cron sync, 13:00) — a dated verification is a timestamp, not a property
 
 -- **Two guides certified two repos as "not existing upstream" with `Last Verified: 2026-11-02` — and both repos were created on GitHub at 17:10 UTC that same day**, after the re-check that signed them off. `tiny-cost-ledger` and `tiny-bounty-queue` now return **HTTP 200, MIT, with 14 and 18 passing tests** (both suites run from a fresh clone). The verification was not sloppy; it was *honest and stale*, which is the harder failure to catch because it carries today's date and borrows the credibility of freshness. **`Last verified` must name the moment, not the day**, for anything that can change intraday: repo existence, stars, CI status, model availability, registry versions.
@@ -481,21 +501,28 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 44 | 2026-11-02 |
-| Prompts | 70 | 2026-11-02 |
+| Skills | 45 | 2026-11-03 |
+| Prompts | 76 | 2026-11-03 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 138 | 2026-11-02 |
+| Tool Guides | 138 | 2026-11-03 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 2 | 2026-10-29 |
-| Daily Updates | 128 | 2026-11-02 |
+| Daily Updates | 129 | 2026-11-03 |
 | Reports | 28 | 2026-11-02 |
 | tiny-* Ecosystem Repos | 121 | 2026-11-02 |
 | Additional hussain-alsaibai Repos | 25 | 2026-11-02 |
 
-**All 39 `SKILL.md` files carry AgentSkills YAML frontmatter** (37 pre-existing + `runtime-reliability` + `rule-reachability`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `39 total, 39 loadable, 0 pending frontmatter`.
+**All 40 `SKILL.md` files carry AgentSkills YAML frontmatter** (39 pre-existing + `verification-sweep`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `40 total, 40 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-02**, not carried forward.
+**Every count above was measured against the tree on 2026-11-03**, not carried forward.
+
+> **The `Skills` row counts directories (45); the frontmatter note counts
+> loadable skills (40).** The other five directories
+> (`accountability`, `cost-tracker`, `repo-monitor`, `research`,
+> `self-reflection`) hold legacy script folders with no `SKILL.md`, so they
+> are not loadable as AgentSkills. Both numbers are stated rather than one
+> standing in for the other.
 
 > **The `Tools | 98` row was removed on 2026-11-02.** It had been frozen since
 > 2026-09-17 and counted a category that no longer exists: `tools/` has only
@@ -832,6 +859,12 @@ dev-masterkit/
 | `a-stale-clone-is-a-loaded-weapon` | A backup clone that can push to the real remote | 3 clones were 67-72 commits behind a live remote [NEW 2026-11-02] |
 | `check-tmp-space-before-any-multi-step-run` | A full /tmp fails in the middle of a success | 163 unrotated spill files filled a 512M tmpfs [NEW 2026-11-02] |
 | `check-the-repo-before-you-recommend-the-bounty` | A bounty label is a claim about the repository | The credible target found was explicitly zero-bounty [NEW 2026-11-02] |
+| `partial-failure-is-not-a-pass` | A green exit code means every subject was checked | 3 of 9 PR checks failed and the monitor printed NO_CHANGES [NEW 2026-11-03] |
+| `quota-exhaustion-is-not-a-throttle` | One error label can carry two failures with opposite responses | A spent plan (2056) and a throttle are both `rate_limit` [NEW 2026-11-03] |
+| `a-gitlink-without-a-gitmodules-is-broken` | A mode-160000 entry with no .gitmodules breaks every clone | 2 gitlinks, no .gitmodules, `git submodule status` aborts [NEW 2026-11-03] |
+| `a-readme-on-github-is-not-a-distribution-channel` | A README is a landing page; PyPI is the channel | 33 of our 37 packages return 404 on PyPI [NEW 2026-11-03] |
+| `the-runtime-api-changes-between-runs` | Probe the tool API in the session that uses it | `tools.exec` is not defined; the field is `aggregated`, not `output` [NEW 2026-11-03] |
+| `capture-before-you-reset` | Capture first, reset second, verify third | 52 local-only commits across 7 repos, unreferenced after a reset [NEW 2026-11-03] |
 
 ## 🏗️ Our Tools
 

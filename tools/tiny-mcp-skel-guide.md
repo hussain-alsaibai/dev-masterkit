@@ -4,6 +4,13 @@
 
 - **Repo:** hussain-alsaibai/tiny-mcp-skel (local clone: `~/workspace/tiny-mcp-skel`)
 - **Install:** `pip install tiny-mcp-skel` (pulls `tiny-router>=0.7.0`, `tiny-validator>=0.5.0`)
+  > **Not published (verified 2026-11-03).** `pip install tiny-mcp-skel` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-mcp-skel.git
+  > ```
   - **The PyPI install line cannot work — checked 2026-10-26.** `tiny-validator` has
     **no PyPI project at all** (the JSON endpoint 404s), and `tiny-router`'s
     newest release on PyPI is **0.0.8**, while this package pins `>=0.7.0`.
@@ -96,11 +103,20 @@ will drift.
 
 ## Status
 
-The repo does not exist on GitHub yet — `GET /repos/hussain-alsaibai/tiny-mcp-skel`
-returns **404** as of 2026-10-24. The local clone has README, LICENSE, CI, a
-CHANGELOG, `llms.txt`, an example server, and a vendored schema, and the git
-tree has zero committed junk (`__pycache__`/`.pyc`). Treat the install line
-above as the intended distribution, not a live one.
+**Upstream status (verified 2026-11-03 12:25 UTC):**
+`GET /repos/hussain-alsaibai/tiny-mcp-skel` returns **200**. The repo is
+published under the MIT licence, last pushed **2026-10-26T17:19:45Z**. The
+published tree has README, LICENSE, CI, a CHANGELOG, `llms.txt`, an example
+server, and a vendored schema, and zero committed junk
+(`__pycache__`/`.pyc`).
+
+> **Correction.** This block previously read *"The repo does not exist on
+> GitHub yet — returns **404** as of 2026-10-24"*. The repo was published by
+> the time that note was written. Install from the repository:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-mcp-skel.git
+> ```
 
 ## See Also
 

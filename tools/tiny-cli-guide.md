@@ -19,8 +19,6 @@ pip install tiny-cli
 > ```bash
 > pip install "git+https://github.com/hussain-alsaibai/tiny-cli.git"
 > ```
-pip install tiny-cli
-```
 
 ## Quick Example
 ```python

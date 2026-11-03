@@ -8,6 +8,14 @@
 **Repo:** https://github.com/hussain-alsaibai/fast-cache
 **Version:** 0.8.0 (2026-10-23)
 **Install:** `pip install fast-cache` or copy `fast_cache.py`
+
+> **Not published (verified 2026-11-03).** `pip install fast-cache` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/fast-cache.git
+> ```
 **Size:** ~530 LOC core + `_v072.py` + `_v080.py` sidecars, 0 dependencies
 **Tests:** 138 passing (verified by run, 2026-11-02)
 **Last verified:** 2026-11-02 (snippets re-executed; sidecar import paths corrected)

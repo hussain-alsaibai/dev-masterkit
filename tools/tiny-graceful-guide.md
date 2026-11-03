@@ -4,6 +4,13 @@
 
 - **Repo:** github.com/hussain-alsaibai/tiny-graceful
 - **Install:** `pip install tiny-graceful` or copy `tiny_graceful.py`
+  > **Not published (verified 2026-11-03).** `pip install tiny-graceful` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-graceful.git
+  > ```
 - **Size:** ~280 LOC, 0 dependencies
 - **Tests:** 55 passing (verified by run 2026-10-26)
 - **Last verified:** 2026-10-26

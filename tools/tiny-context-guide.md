@@ -18,6 +18,14 @@
 pip install tiny-context
 ```
 
+> **Not published (verified 2026-11-03).** `pip install tiny-context` fails - the
+> name returns **HTTP 404** on the PyPI JSON API. Install from the
+> repository instead:
+>
+> ```bash
+> pip install git+https://github.com/hussain-alsaibai/tiny-context.git
+> ```
+
 Or just copy `tiny_context.py` into your project — single file, zero dependencies.
 
 ## Core Concepts

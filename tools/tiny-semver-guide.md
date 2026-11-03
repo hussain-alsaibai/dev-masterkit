@@ -4,6 +4,13 @@
 
 - **Repo:** github.com/hussain-alsaibai/tiny-semver
 - **Install:** `pip install tiny-semver` or copy `tiny_semver.py`
+  > **Not published (verified 2026-11-03).** `pip install tiny-semver` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-semver.git
+  > ```
 - **Size:** ~620 LOC, 0 dependencies
 - **Tests:** 115 passing (was 22 at v0.1.0)
 - **Last verified:** 2026-10-20

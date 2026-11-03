@@ -148,6 +148,7 @@ This makes it safe to mix new skills and old skills in the same directory.
 ## Adoption Path
 
 1. `pip install tiny-skill-loader`
+   (not on PyPI - use `pip install git+https://github.com/hussain-alsaibai/tiny-skill-loader.git`)
 2. Create a `skills/` directory; each file is a `MANIFEST` + `register(reg, manifest)`
 3. `reg = SkillRegistry(); [reg.register_skill(s) for s in discover_skills(["./skills/"])`
 4. Use `reg.call_tool("skill.tool_name", ...)` from your agent loop
@@ -169,3 +170,10 @@ This makes it safe to mix new skills and old skills in the same directory.
 - [tiny-agent-scope-guide.md](./tiny-agent-scope-guide.md) — the guardrail that wraps every `call_tool` invocation
 - [tiny-skill-lint-guide.md](./tiny-skill-lint-guide.md) — pre-flight linter for every skill file
 - [MEMORY.md](../../MEMORY.md) — Tiny-* stack overview (50+ repos)
+  > **Not published (verified 2026-11-03).** `pip install tiny-skill-loader` fails - the
+  > name returns **HTTP 404** on the PyPI JSON API. Install from the
+  > repository instead:
+  >
+  > ```bash
+  > pip install git+https://github.com/hussain-alsaibai/tiny-skill-loader.git
+  > ```
