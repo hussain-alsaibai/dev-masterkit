@@ -41,3 +41,21 @@ jobs:
 
       - name: Scan skills
         run: python3 scripts/scan_skills.py
+
+  script-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # The scripts/ directory holds executable checks that were never
+      # covered by a test, so a bug in one of them could ship silently.
+      # This job runs the tests that exist for those scripts.
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run script tests
+        run: python -m pytest tests/ -q

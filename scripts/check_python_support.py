@@ -66,6 +66,23 @@ PY_VERSION_LINE = re.compile(
 )
 VERSION_TOKEN = re.compile(r"\b3\.\d{1,2}\b")
 
+# A job can pin its interpreter through a container image instead of a
+# setup-python matrix entry:
+#
+#     test-python37:
+#       runs-on: ubuntu-latest
+#       container: python:3.7
+#
+# This matters for old versions. setup-python only ever published 3.7 for
+# linux 20.04, and the ubuntu-20.04 runner images are retired, so the
+# official python:3.7 container is the only way to actually execute 3.7 on
+# Actions today. A checker that reads only the matrix would report such a
+# package as untested when it is not.
+CONTAINER_VERSION_LINE = re.compile(
+    r"^\s*container:\s*[\"']?(?:[\w.\-]+[/\-])?python:(?P<value>[\d.]+)",
+    re.MULTILINE | re.IGNORECASE,
+)
+
 # '>=3.8' -> (3, 8)
 FLOOR = re.compile(r">=\s*3\.(\d{1,2})")
 
@@ -109,6 +126,14 @@ def matrix_versions(pkg_dir):
         except OSError:
             continue
         for line in PY_VERSION_LINE.findall(text):
+            for tok in VERSION_TOKEN.findall(line):
+                major, minor = tok.split(".")
+                versions.add((int(major), int(minor)))
+
+        # A job can pin its interpreter through a container image rather
+        # than a setup-python matrix entry, which is the only way to
+        # execute 3.7 on Actions now.
+        for line in CONTAINER_VERSION_LINE.findall(text):
             for tok in VERSION_TOKEN.findall(line):
                 major, minor = tok.split(".")
                 versions.add((int(major), int(minor)))
