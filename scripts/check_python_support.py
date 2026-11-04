@@ -116,6 +116,19 @@ def matrix_versions(pkg_dir):
     return sorted(versions), bool(versions)
 
 
+def has_python_source(pkg_dir):
+    """True when the package contains at least one .py file."""
+    for dirpath, dirnames, filenames in os.walk(pkg_dir):
+        dirnames[:] = [
+            d for d in dirnames
+            if d not in (".git", "__pycache__", "node_modules", "dist", "build")
+        ]
+        for fn in filenames:
+            if fn.endswith(".py"):
+                return True
+    return False
+
+
 def find_packages(root):
     """Locate candidate Python packages under root."""
     pkgs = []
@@ -158,6 +171,20 @@ def check_package(pkg_dir):
     spec = m.group("spec")
     floor = parse_floor(spec)
     versions, parsed_ok = matrix_versions(pkg_dir)
+
+    # A package with no Python source has no version support to test. The
+    # reports repos carry a pyproject.toml so they can be pip-installed as
+    # data, but there is no code that could break on a version.
+    if not has_python_source(pkg_dir):
+        return {
+            "name": name,
+            "path": pkg_dir,
+            "spec": spec,
+            "floor": "%d.%d" % floor if floor else None,
+            "ci_versions": [],
+            "status": "PASS",
+            "detail": "no Python source in this package",
+        }
 
     result = {
         "name": name,
