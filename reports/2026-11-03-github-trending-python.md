@@ -176,7 +176,7 @@ rather than a spike. Worth a look for our vision/media work.
 These came out of comparing the trending repos against our own code, and both are
 confirmed by reading the source, not inferred.
 
-### A. context-bridge README advertises five tools; the server implements four
+### A. context-bridge README advertises five tools; the server implements four - FIXED
 Published README tool table: `search_code`, `get_symbol`, `get_dependencies`,
 **`get_callers`**, `summarize_module`.
 
@@ -192,7 +192,16 @@ Actual state in the published `src/server.js`:
 So the README describes a graph feature that does not exist. The existing test asserts
 only that `tools/list` advertises `search_code`, which is why this survived.
 
-### B. context-bridge claims "FTS5 + precomputed embeddings"; there are no embeddings
+**Fixed in v0.2.2 (pushed 2026-11-03).** The README tool table now lists the four
+real tools, `tools/list` advertises all four with input schemas, and
+`test/readme-consistency.test.js` parses the README and fails if it documents a
+tool the server does not implement and advertise. The test was verified to fail
+against the unfixed code first. A third defect surfaced while fixing this one:
+`get_dependencies` returned `imports: []` for `import { a } from "./x"`, because
+the pattern only matched a bare specifier directly after the keyword. That is
+fixed too, with a regression test verified against the unfixed code.
+
+### B. context-bridge claims "FTS5 + precomputed embeddings"; there are no embeddings - FIXED
 README line 21: "Sub-millisecond Queries — FTS5 + precomputed embeddings". The
 SQLite schema has `files`, `symbols`, `relationships`, and the FTS5 virtual tables
 `file_search` and `symbol_search`. **There is no embeddings table, no vector column,
@@ -209,6 +218,11 @@ keyword engine. Verified directly:
 Natural-language phrasing does not match. It needs an `OR` of tokens or a prefix
 wildcard. The tool description in `tools/list` is honest ("FTS5 query string"); it is
 the README that overclaims.
+
+**Fixed in v0.2.2.** The README now says "Fast Code Search" and "SQLite FTS5",
+documents the actual query syntax, and the tool table describes `search_code` as a
+keyword query. A test asserts the Features and MCP Tools sections make no
+embedding or natural-language claim.
 
 ### C. Six of our `tiny-*` packages declare `requires-python = ">=3.8"` with no CI
 Packages with `>=3.8` and **no CI workflow at all**:
@@ -232,13 +246,14 @@ extract --cookies)".
 
 ## Recommended actions, in order
 
-1. **Fix context-bridge's README** — remove `get_callers` from the tool table, or
-   implement it and populate `relationships`. Remove the "precomputed embeddings"
-   claim or implement embeddings. Add a test that asserts every tool in the README
-   table is both implemented and advertised by `tools/list`. **This is our published
-   repo and it is drifting the same way the snapdb README drifted.** (AGENTS.md:
-   "a recovered file that nobody reviewed is a liability" — the same applies to a
-   README nobody executes against.)
+1. ~~**Fix context-bridge's README**~~ - **done, v0.2.2 pushed 2026-11-03.**
+   Removed `get_callers` from the tool table, dropped the embeddings and
+   natural-language claims, and made `tools/list` advertise all four real tools.
+   Added `test/readme-consistency.test.js`, which parses the README and fails on
+   drift - verified to fail against the unfixed code first. Also fixed the
+   `get_dependencies` import regex, which missed `import { a } from "./x"`.
+   Still open: the `relationships` table is created and never populated, and
+   `get_callers` could now be implemented on top of it.
 2. **Port Soup's `test_requires_python_bound.py`** into dev-masterkit as a reusable
    check, and run it across all `tiny-*` packages. Fix the six+ packages with
    `>=3.8` and no CI.
