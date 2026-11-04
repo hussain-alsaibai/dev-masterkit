@@ -93,3 +93,35 @@ automatically unpublished work) and
 version of this problem).
 
 <!-- project: github.com/hussain-alsaibai/dev-masterkit -->
+
+## The Machine Check (added 2026-11-04, 18:35 UTC)
+
+Everything above is a procedure you have to remember to run. It now has a
+script, because remembering is the part that fails.
+
+> **Last verified:** 2026-11-04 — `scripts/check_duplicate_modules.py` over
+> the published `main` of all 134 `tiny-*` repos (92 with a `pyproject.toml`,
+> 162 distinct modules): **2 duplicate groups**, one known and one new.
+> 14 tests in `tests/test_check_duplicate_modules.py`.
+
+    python3 scripts/check_duplicate_modules.py ~/github --json
+    python3 scripts/check_duplicate_modules.py ~/github --ignore tiny-safeexec:tiny-sandbox
+
+It hashes every shipped `.py` file (SHA-256, 200-byte floor, `build/`,
+`dist/`, `__pycache__/` and `test_*.py` skipped) and exits 1 when one hash
+appears under two package names.
+
+Two things it found today that reading had not:
+
+- **`tiny-safeexec` / `tiny-sandbox`** — the known byte-identical copy, already
+  declared in its README H1. An admitted copy is an `--ignore` entry, not a
+  suppressed class.
+- **`benchmark.py`, 684 bytes, identical in `tiny-mcp-gateway`, `tiny-retry`
+  and `tiny-task`** — all committed `2026-08-04T13:11:34Z`. The file's only
+  behaviour is a `pass` and `print("Run: python -m pytest benchmark.py")`.
+  Measured: `python3 benchmark.py` exits **0**, `pytest benchmark.py` exits
+  **5** with no tests collected. **The instruction the file prints cannot
+  succeed.** A shared file can be a shared stub.
+
+> **A file that ships in three repos is three files, and a fix lands in one.
+> Record the duplicate that says it is a copy; report the one that does not.**

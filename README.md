@@ -3,6 +3,18 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-04 cron sync, 18:35 UTC) — the rule about copies finally got a proof, and it found a stub shipped three times
+
+-- **"One fix in one repo is not a fix" was a rule with no check behind it.** `scripts/check_duplicate_modules.py` (new, 14 tests) SHA-256-hashes every shipped `.py` file across a fleet and exits 1 when one hash appears under two package names. Swept the published `main` of all **134** `tiny-*` repos: 92 with a `pyproject.toml`, 162 distinct modules, **2 duplicate groups**.
+-- **The new finding is a 684-byte `benchmark.py` shipped identically in `tiny-mcp-gateway`, `tiny-retry` and `tiny-task`**, all committed `2026-08-04T13:11:34Z`. Its only behaviour is a `pass` and `print("Run: python -m pytest benchmark.py")`. Measured on fresh extractions: `python3 benchmark.py` exits **0**, `python3 -m pytest benchmark.py` exits **5** with no tests collected. **The instruction the file prints cannot succeed**, and it is the only thing the file does. `tiny-retry` ships a working `bench_tiny_retry.py` alongside it; the other two have no working benchmark. **Not fixed upstream** — recorded as a measurement.
+-- **The other duplicate is the one that admits it.** `tiny-safeexec`/`tiny-sandbox` (`tiny_sandbox.py`, 23,321 B) is already declared in the README H1, so it is an `--ignore` entry by name, not a suppressed class. **Recording a declared copy is not the same as lowering the bar.**
+-- **A file that ships in three repos is three files, and a fix lands in one.** The copy nobody re-opens is the one still carrying the bug, under a green badge, because its tests agree with it. See `prompts/one-fix-in-one-repo-is-not-a-fix.md` (new *Machine Check* section).
+-- **A smoke test that exits 0 can be a stub.** The wrapper's exit code is not the work's result.
+-- **Corrected:** this README said Skills had **46** directories; the measured count is **45** — the earlier number counted `skills/AGENTSKILLS_PENDING.md`, a file, as a directory. Confirmed by `scripts/check_structure.py` (`40 total, 40 loadable, 0 pending`).
+-- **Added:** `scripts/check_duplicate_modules.py`, `tests/test_check_duplicate_modules.py` (14 tests), `reports/2026-11-04-duplicate-modules.md`, and an 18:35 UTC addendum to `daily-updates/2026-11-04.md`. **Updated:** `prompts/one-fix-in-one-repo-is-not-a-fix.md`, skills count above.
+-- **Stats:** Prompts **83**. Tool Guides **138**. Skills **45** directories, **40** loadable, **0 pending frontmatter**. Daily Updates **130**. Reports **30 → 31**. Commands 5, Agents 3, Orchestrators 1, Scripts **4**, Tests **2**. tiny-* ecosystem repos **134**, other hussain-alsaibai repos **38** (**172 total**).
+- Last verified 2026-11-04 (18:35 UTC).
+
 ### 🆕 Latest additions (2026-11-04 cron sync, 12:15) — the index was missing two thirds of the ecosystem, and nine published packages could not do their job
 
 -- **The index was the wrong artifact.** The README claimed **42 libraries, ~23,800 library LOC, ~890 test LOC**; the measured figures were **130 libraries, ~89,400 LOC, ~44,300 test LOC**. 132 `tiny-*` repos existed and 79 unindexed ones were substantive. **85 rows added** (78 never listed + 7 listed with no entry), every description taken from the repo's own GitHub description or README rather than from memory. The ecosystem now reports **134 `tiny-*` repos and 38 others (172 total)**.
@@ -19,8 +31,8 @@
 -- **CI now covers 18 more repos; 15 were being wasted.** Of 34 repos with no CI, **15 had a passing suite that nothing ever ran again**. The remaining 16 have **zero test files** - a workflow there would be a green badge over no work, so they were left alone rather than covered.
 -- **Added:** seven prompts above; `daily-updates/2026-11-04.md`. **Updated:** `README.md` index (+85 rows, +2 new libraries today: `tiny-worktree`, `tiny-mcp-contract`), stats section corrected to measured values.
 -- **Every number above was measured today:** 172 repos counted, 85 index rows added, 23 PRs merged, 18 CI workflows added, 9 defects fixed, 2 duplicate modules hashed, 2 template workflows reproduced against real `setup-python`, 7 claims re-fetched from `main` before publication.
--- **Stats:** Prompts **76 → 83**. Tool Guides **138**. Skills **46** directories, **40** loadable, **0 pending frontmatter** (`40 total, 40 loadable, 0 pending`). Daily Updates **129 → 130**. Reports **30**. Commands 5, Agents 3, Orchestrators 1, Scripts 4. tiny-* ecosystem repos **134**, other hussain-alsaibai repos **38** (**172 total**).
-- Last verified 2026-11-04 (12:15 EST).
+-- **Stats:** Prompts **76 → 83**. Tool Guides **138**. Skills **45** directories, **40** loadable, **0 pending frontmatter** (`40 total, 40 loadable, 0 pending`). Daily Updates **129 → 130**. Reports **30**. Commands 5, Agents 3, Orchestrators 1, Scripts 4. tiny-* ecosystem repos **134**, other hussain-alsaibai repos **38** (**172 total**). *(Skills corrected 18:35 UTC: the earlier `46` counted `skills/AGENTSKILLS_PENDING.md` as a directory; the measured count is 45.)*
+- Last verified 2026-11-04 (12:15 EST; stats re-measured 18:35 UTC).
 
 ### 🆕 Latest additions (2026-11-03 cron sync, 13:00) — two yellow repos were two real bugs, and the scanner gate caught the skill that fixed them
 
