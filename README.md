@@ -941,8 +941,93 @@ Production-tested tools and libraries built by this team:
 | [tiny-mcp-server](https://github.com/hussain-alsaibai/tiny-mcp-server) | Build MCP servers with @tool decorator — stdio + SSE transports, auto JSON Schema, zero deps | ⭐0 | Python |
 | [tiny-mcp-audit](https://github.com/hussain-alsaibai/tiny-mcp-audit) | Static security auditor for MCP server manifests — 19 checks / 7 groups, 0-100 score + A-F grade, SARIF 2.1.0, zero deps | ⭐0 | Python |
 | [tiny-hll](https://github.com/hussain-alsaibai/tiny-hll) | HyperLogLog distinct counting — 128 bytes fixed, merge() for global counts from per-shard partials, zero deps | ⭐0 | Python |
+| [tiny-agent-memory](https://github.com/hussain-alsaibai/tiny-agent-memory) | Zero-dependency memory system for AI agents. Semantic + working + episodic memory in one file | ⭐0 | Python |
+| [tiny-agent-memory-v2](https://github.com/hussain-alsaibai/tiny-agent-memory-v2) | Three-tier agent memory — working (zero-latency) → episodic → semantic, ~550 LOC | ⭐0 | Python |
+| [tiny-agent-scope](https://github.com/hussain-alsaibai/tiny-agent-scope) | Resource budgets and blast-radius limits for AI agents. Cap steps, tool calls, tokens, cost, wall time; allow/deny tools, paths, and hosts | ⭐0 | Python |
+| [tiny-agent-toolkit](https://github.com/hussain-alsaibai/tiny-agent-toolkit) | Zero-dependency toolkit for building reliable AI agents. Context, budget, idempotency, and more. MIT | ⭐0 | Python |
+| [tiny-agentskills](https://github.com/hussain-alsaibai/tiny-agentskills) | Zero-dependency runtime for Agent Skills (Anthropic-style SKILL.md bundles). Discover, render, search, and run skills from one stdlib-only Python file | ⭐0 | Python |
+| [tiny-bloom](https://github.com/hussain-alsaibai/tiny-bloom) | Zero-dependency Bloom filter in pure Python | ⭐0 | Python |
+| [tiny-bounty-queue](https://github.com/hussain-alsaibai/tiny-bounty-queue) | Zero-dependency bounty issue scoring, queueing, and dispatch for autonomous coding agents | ⭐0 | Python |
+| [tiny-bounty-workflow](https://github.com/hussain-alsaibai/tiny-bounty-workflow) | Autonomous bounty workflow state machine — scan → score → plan → implement → test → PR, ~500 LOC | ⭐0 | Python |
+| [tiny-bucket-quota](https://github.com/hussain-alsaibai/tiny-bucket-quota) | Hierarchical token-bucket quota — org/team/user budgets that auto-balance, ~370 LOC | ⭐0 | Python |
+| [tiny-budget-js](https://github.com/hussain-alsaibai/tiny-budget-js) | Zero-dependency runtime budget enforcement for AI agents: USD + token caps, crash-safe persistence | ⭐0 | Node |
+| [tiny-budget-ledger](https://github.com/hussain-alsaibai/tiny-budget-ledger) | File-backed per-task spend ledger for autonomous AI agents. Stdlib only | ⭐0 | Python |
+| [tiny-bulkhead](https://github.com/hussain-alsaibai/tiny-bulkhead) | Zero-dependency bulkhead / concurrency limiter for Python. Caps in-flight work per resource so one slow dependency cannot exhaust the pool. Part of... | ⭐0 | Python |
+| [tiny-callback](https://github.com/hussain-alsaibai/tiny-callback) | Zero-dependency async callbacks, promise pattern, and event emitter for Python | ⭐0 | Python |
+| [tiny-checkpoint](https://github.com/hussain-alsaibai/tiny-checkpoint) | Zero-dependency crash recovery for AI agents. Checkpoint, resume, rollback — one file | ⭐0 | Python |
+| [tiny-circuit](https://github.com/hussain-alsaibai/tiny-circuit) | Zero-dependency circuit breaker for Node.js — built for AI agent resilience | ⭐0 | Node |
+| [tiny-circuit-breaker](https://github.com/hussain-alsaibai/tiny-circuit-breaker) | Circuit breaker for Python 3.9+ — fail-fast on a failing downstream | ⭐0 | 0 |
+| [tiny-circuit-py](https://github.com/hussain-alsaibai/tiny-circuit-py) | Circuit breaker for Python 3.8+ — purpose-built for AI agent resilience | ⭐0 | 0 |
+| [tiny-cli-progress](https://github.com/hussain-alsaibai/tiny-cli-progress) | Zero-dependency progress bar for CLI tools. Multi-bar, spinners, and a no-TTY fallback that stays quiet in pipes. Part of the tiny-* ecosystem | ⭐0 | Python |
+| [tiny-cli-table](https://github.com/hussain-alsaibai/tiny-cli-table) | A beautiful zero-dependency Python CLI table renderer with multiple styles, alignment, colors, and nested tables | ⭐0 | Python |
+| [tiny-context](https://github.com/hussain-alsaibai/tiny-context) | Zero-dependency LLM context window manager — budgeting, importance-aware fitting, pluggable compression, model routing | ⭐0 | Python |
+| [tiny-cors](https://github.com/hussain-alsaibai/tiny-cors) | RFC-compliant CORS middleware for WSGI and ASGI — stdlib only, ~530 LOC | ⭐0 | Python |
+| [tiny-cost-ledger](https://github.com/hussain-alsaibai/tiny-cost-ledger) | Zero-dependency LLM cost ledger with multi-period budgets and alert hooks | ⭐0 | Python |
+| [tiny-cost-tracker](https://github.com/hussain-alsaibai/tiny-cost-tracker) | Per-agent cost tracking with token budgeting — LLM calls, embeddings, tool invocations | ⭐0 | 0 |
+| [tiny-diff](https://github.com/hussain-alsaibai/tiny-diff) | Zero-dependency patch, diff, and three-way merge library for Python | ⭐0 | Python |
+| [tiny-eval](https://github.com/hussain-alsaibai/tiny-eval) | Zero-dependency sandboxed expression evaluator for Python — like eval() but safe. For dynamic configs, rule engines, and agent tool parameters | ⭐0 | Python |
+| [tiny-evaluator](https://github.com/hussain-alsaibai/tiny-evaluator) | Zero-dependency LLM evaluation harness for AI agents and tool-using systems | ⭐0 | Python |
+| [tiny-event-bus](https://github.com/hussain-alsaibai/tiny-event-bus) | In-process pub/sub event bus for Python | ⭐0 | 0 |
+| [tiny-event-emitter](https://github.com/hussain-alsaibai/tiny-event-emitter) | Node-style EventEmitter — pub/sub, async listeners, once, wildcard patterns | ⭐0 | 0 |
+| [tiny-feature-flag](https://github.com/hussain-alsaibai/tiny-feature-flag) | Zero-dependency feature flag evaluation for Python. Weighted rollout, user targeting, and kill switches with a single call. Part of the tiny-* ecos... | ⭐0 | Python |
+| [tiny-feature-flags](https://github.com/hussain-alsaibai/tiny-feature-flags) | Feature flags with percentage rollouts and user targeting. Zero deps, single file | ⭐0 | Python |
+| [tiny-file-watcher](https://github.com/hussain-alsaibai/tiny-file-watcher) | Zero-dependency Python file system watcher with debounce, throttle, and glob filtering. Pure polling, stdlib-only | ⭐0 | Python |
+| [tiny-graceful](https://github.com/hussain-alsaibai/tiny-graceful) | Graceful shutdown — signal handling, reverse-order cleanup hooks, bounded drains | ⭐0 | Python |
+| [tiny-graph](https://github.com/hussain-alsaibai/tiny-graph) | Graph data structure — nodes, edges, traversal, shortest paths | ⭐0 | 0 |
+| [tiny-headers-redact](https://github.com/hussain-alsaibai/tiny-headers-redact) | Zero-dependency HTTP header redaction. Masks Authorization, Cookie, X-API-Key and 13 more headers by name. Part of the tiny-* ecosystem | ⭐0 | Python |
+| [tiny-input-sanitize](https://github.com/hussain-alsaibai/tiny-input-sanitize) | Input sanitization for HTTP, shell, SQL, filenames, logs and JSONPath, ~380 LOC | ⭐0 | Python |
+| [tiny-inspector](https://github.com/hussain-alsaibai/tiny-inspector) | Zero-dependency runtime object introspection. Fields, types, defaults, nested structure | ⭐0 | Python |
+| [tiny-jsonpath](https://github.com/hussain-alsaibai/tiny-jsonpath) | RFC 9535 (JSONPath 1.0) parser and evaluator — stdlib only | ⭐0 | Python |
+| [tiny-llm](https://github.com/hussain-alsaibai/tiny-llm) | Unified LLM client: OpenAI, Anthropic, Ollama, Grok, Gemini — zero dependencies, MIT licensed | ⭐0 | Python |
+| [tiny-llm-budget](https://github.com/hussain-alsaibai/tiny-llm-budget) | Zero-dependency LLM token budget for Python. Per-model and per-caller spend caps with pre-request estimation. Part of the tiny-* ecosystem | ⭐0 | Python |
+| [tiny-llm-chain](https://github.com/hussain-alsaibai/tiny-llm-chain) | Streaming LLM processor with retries, fallbacks, function calling and JSON extraction. Zero dependencies | ⭐0 | Python |
+| [tiny-llm-router](https://github.com/hussain-alsaibai/tiny-llm-router) | Zero-dependency model router for Python AI agents — role-based, cost-capped, latency-aware, with circuit-breakers | ⭐0 | Python |
+| [tiny-lock](https://github.com/hussain-alsaibai/tiny-lock) | Zero-dependency async locks: AsyncLock, FileLock, RLock, Semaphore with timeouts and stats | ⭐0 | Python |
+| [tiny-mcp-client](https://github.com/hussain-alsaibai/tiny-mcp-client) | Zero-dependency Model Context Protocol client. Stdio + SSE. MIT | ⭐0 | Python |
+| [tiny-mcp-registry](https://github.com/hussain-alsaibai/tiny-mcp-registry) | Zero-dependency MCP server discovery and health checker | ⭐0 | Python |
+| [tiny-mcp-skel](https://github.com/hussain-alsaibai/tiny-mcp-skel) | tiny-mcp-skel - Stdlib-Only MCP Server Skeleton | ⭐0 | Python |
+| [tiny-memo](https://github.com/hussain-alsaibai/tiny-memo) | Zero-dependency Python pub/sub event bus with topic globs, async, DLQ, batching & history | ⭐0 | Python |
+| [tiny-mesh](https://github.com/hussain-alsaibai/tiny-mesh) | Zero-dependency service mesh proxy. Circuit breakers, retries, load balancing, rate limiting, health checks — one file | ⭐0 | Python |
+| [tiny-middleware](https://github.com/hussain-alsaibai/tiny-middleware) | Composable middleware chain for Python handlers — sync or async | ⭐0 | Python |
+| [tiny-mq](https://github.com/hussain-alsaibai/tiny-mq) | Zero-dependency in-process message queue with pub/sub for Python agents. Fast queues, topics, fan-out, and dead-letter handling — one file | ⭐0 | Python |
+| [tiny-pipeline](https://github.com/hussain-alsaibai/tiny-pipeline) | Zero-dependency streaming data pipeline builder for Python. UNIX pipes for Python iterators, with async support | ⭐0 | Python |
+| [tiny-prompt-cache](https://github.com/hussain-alsaibai/tiny-prompt-cache) | Semantic + LRU + TTL cache for LLM prompts. Zero dependencies | ⭐0 | Python |
+| [tiny-rate-window](https://github.com/hussain-alsaibai/tiny-rate-window) | Sliding-window rate limiter for HTTP APIs and agent pipelines, ~350 LOC | ⭐0 | Python |
+| [tiny-rbac](https://github.com/hussain-alsaibai/tiny-rbac) | Zero-dependency RBAC/ABAC policy engine for AI agents and APIs. JSON policies, glob matching, deny-overrides, context-aware authorization | ⭐0 | Python |
+| [tiny-registry](https://github.com/hussain-alsaibai/tiny-registry) | Zero-dependency file-backed service registry and config store for Python | ⭐0 | Python |
+| [tiny-repl](https://github.com/hussain-alsaibai/tiny-repl) | Interactive debugging REPL for AI agent pipelines. Replay steps, diff runs, inspect state | ⭐0 | Python |
+| [tiny-retry-plus](https://github.com/hussain-alsaibai/tiny-retry-plus) | Zero-dependency retry with jitter, adaptive backoff, and circuit-breaker integration. Sync + async. MIT | ⭐0 | Python |
+| [tiny-rfc9457](https://github.com/hussain-alsaibai/tiny-rfc9457) | Zero-dependency RFC 9457 Problem Details for Python. Structured error responses with the standard type/title/status/detail/instance fields. Part of... | ⭐0 | Python |
+| [tiny-sandbox](https://github.com/hussain-alsaibai/tiny-sandbox) | Tiny secure Python code execution sandbox using AST transformation. Zero dependencies | ⭐0 | Python |
+| [tiny-scheduler](https://github.com/hussain-alsaibai/tiny-scheduler) | Zero-dependency cron scheduler for Python. Cron expressions, intervals, one-shot timers, async. Pure stdlib | ⭐0 | Python |
+| [tiny-secret-mask](https://github.com/hussain-alsaibai/tiny-secret-mask) | Stdlib-only secret redaction for logs, HTTP headers, URLs, and JSON. REDACT sentinel, safe_repr(), NDJSON streaming, and a pattern catalog with sev... | ⭐0 | Python |
+| [tiny-semaphore](https://github.com/hussain-alsaibai/tiny-semaphore) | Zero-dep async semaphore with timeout + fairness for Python | ⭐0 | Python |
+| [tiny-semver](https://github.com/hussain-alsaibai/tiny-semver) | Semantic Versioning — parse, compare, bump, validate, constrain-check SemVer 2.0.0 | ⭐0 | 0 |
+| [tiny-sentinel](https://github.com/hussain-alsaibai/tiny-sentinel) | Zero-dependency circuit breaker + rate limiter + timeout wrapper | ⭐0 | Python |
+| [tiny-skill-lint](https://github.com/hussain-alsaibai/tiny-skill-lint) | Zero-dependency SKILL.md frontmatter linter. 18-code catalogue, CI-ready exit codes, stdlib only | ⭐0 | Python |
+| [tiny-skill-loader](https://github.com/hussain-alsaibai/tiny-skill-loader) | Runtime skill/extension loader for AI agents. Discovers and loads single-file Python skill modules, validates manifests, mounts them into a shared... | ⭐0 | Python |
+| [tiny-skill-md](https://github.com/hussain-alsaibai/tiny-skill-md) | Zero-dependency SKILL.md parser, validator and quality scorer for agent skill catalogs. No PyYAML | ⭐0 | Python |
+| [tiny-sliding-window](https://github.com/hussain-alsaibai/tiny-sliding-window) | Zero-dependency sliding window rate limiter for AI agents | ⭐0 | Python |
+| [tiny-state](https://github.com/hussain-alsaibai/tiny-state) | Zero-dependency finite state machine for Python. Built for AI agents and workflows | ⭐0 | Python |
+| [tiny-statemachine](https://github.com/hussain-alsaibai/tiny-statemachine) | Zero-dependency state machine for Python AI agent behavior trees. States, transitions, guards, and actions — one file | ⭐0 | Python |
+| [tiny-store](https://github.com/hussain-alsaibai/tiny-store) | Zero-dependency filesystem KV store with TTL, search, pagination, and watch. MIT licensed | ⭐0 | Python |
+| [tiny-stream](https://github.com/hussain-alsaibai/tiny-stream) | Streaming response parser for LLM APIs (SSE, JSON-lines, chunked transfer) | ⭐0 | Python |
+| [tiny-task-runner](https://github.com/hussain-alsaibai/tiny-task-runner) | Zero-dependency async task pipeline for Python agents. Retries, timeouts, concurrency control, and DAG support — one file | ⭐0 | Python |
+| [tiny-tool-cache](https://github.com/hussain-alsaibai/tiny-tool-cache) | Zero-dependency cache for LLM and tool-call results - stdlib only, TTL, LRU, namespacing | ⭐0 | Python |
+| [tiny-tool-registry](https://github.com/hussain-alsaibai/tiny-tool-registry) | Zero-dependency dynamic tool registry with versioning, discovery, and hot-reload for AI agents | ⭐0 | Python |
+| [tiny-tool-result](https://github.com/hussain-alsaibai/tiny-tool-result) | Structured tool-call result handling for AI agents — normalize, validate, truncate, redact | ⭐0 | 0 |
+| [tiny-trace-otel](https://github.com/hussain-alsaibai/tiny-trace-otel) | Tiny, stdlib-only OpenTelemetry-compatible OTLP/HTTP tracing exporter for Python | ⭐0 | Python |
+| [tiny-tracer](https://github.com/hussain-alsaibai/tiny-tracer) | OpenTelemetry-style distributed tracing for AI agents. Zero deps, single file | ⭐0 | Python |
+| [tiny-watch](https://github.com/hussain-alsaibai/tiny-watch) | Zero-dependency file watcher with debounce, coalescing, and glob filtering for Python | ⭐0 | Python |
+| [tiny-supervisor](https://github.com/hussain-alsaibai/tiny-supervisor) | Process supervisor — restart policies with backoff, reports launcher failures instead of dying silently | ⭐0 | Python |
+| [tiny-agent-eval](https://github.com/hussain-alsaibai/tiny-agent-eval) | Agent evaluation harness — suites, criteria, weighted scores, JSONL result index, regression checks | ⭐0 | Python |
+| [tiny-realtime](https://github.com/hussain-alsaibai/tiny-realtime) | SSE + WebSocket helpers for agent streaming — reconnect, backoff, event replay | ⭐0 | Python |
+| [tiny-agent-service](https://github.com/hussain-alsaibai/tiny-agent-service) | AI agent service in one file — REST + MCP, budget cap, rate limiter, circuit breaker | ⭐0 | Python |
+| [tiny-audit](https://github.com/hussain-alsaibai/tiny-audit) | Immutable audit log — HMAC-SHA256 signatures, tamper-evident chain, JSONL | ⭐0 | Python |
+| [tiny-prompt](https://github.com/hussain-alsaibai/tiny-prompt) | Prompt templating, chain-of-thought and few-shot management for agents | ⭐0 | Python |
+| [tiny-webhook](https://github.com/hussain-alsaibai/tiny-webhook) | Production webhook handler — HMAC verification, idempotency guard, dead-letter queue, retry policy | ⭐0 | Python |
 
-*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **42 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~23,800+ LOC lib + ~890+ tests across the stack). Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07.*
+*All tools follow the "zero-dependency, single-file" philosophy where the target runtime allows it. Total ecosystem: **130 tiny-* libraries** spanning routers, config, CLI, logging, validation, workers, events, HTTP, agents, embeddings, MCP, rate limiting, retry, RBAC, pooling, composition, tracing, secrets, cron, feature flags, queues, metrics, timeouts, idempotency, budgets, durable event streams, authorization, eval, LLM clients, and OTLP tracing (~89,400+ LOC lib + ~44,300+ LOC of tests across the stack). Counts measured from the published `main` branches on 2026-11-04; the previous figures (42 libraries, ~23,800 LOC, ~890 tests) were stale and predated 88 libraries. Note: 16 unfilled template entries removed from ecosystem count on 2026-08-07; `tiny-safeexec` is a duplicate of `tiny-sandbox` and `tiny-mem` has no code yet, so neither is counted.*
 
 ### 🆕 Latest additions (2026-08-31) — tiny-semantic-cache + tiny-workflow-engine + tiny-ai-workflow
 - **tiny-semantic-cache** — Vector-similarity cache with BM25+cosine scoring, auto-threshold, TTL, LRU eviction. ~580 LOC · 38 tests · MIT. https://github.com/hussain-alsaibai/tiny-semantic-cache
