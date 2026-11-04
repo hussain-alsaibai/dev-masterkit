@@ -61,8 +61,11 @@ ran, and it is not a Soup error — it is a loader crash inside `c10.dll` / `lib
 before any Soup code runs, so the user has nothing actionable.
 
 That is exactly our AGENTS.md rule ("Python version support is a claim you have to
-test") expressed as an executable test. **Action: port this file into
-dev-masterkit as a reusable check for all our `tiny-*` packages.**
+test") expressed as an executable test. **Done:** ported as
+`dev-masterkit/scripts/check_python_support.py`, run over all 44 packages,
+and it found 20 problems -- 2 floors below their CI matrix and 18 packages
+with no CI at all. Three of those were genuinely broken. All 44 now pass.
+See `reports/2026-11-03-python-version-support.md`.
 
 **Also steal: the refusal-message discipline.** Six of the eleven good-first-issues are
 "the error message reads wrong" (RST double backticks in one message, "require" for
@@ -254,9 +257,13 @@ extract --cookies)".
    `get_dependencies` import regex, which missed `import { a } from "./x"`.
    Still open: the `relationships` table is created and never populated, and
    `get_callers` could now be implemented on top of it.
-2. **Port Soup's `test_requires_python_bound.py`** into dev-masterkit as a reusable
-   check, and run it across all `tiny-*` packages. Fix the six+ packages with
-   `>=3.8` and no CI.
+2. ~~**Port Soup's `test_requires_python_bound.py`**~~ - **done.**
+   Built as `dev-masterkit/scripts/check_python_support.py` and run over all 44 packages.
+   It found 20 problems: 2 floors below their CI matrix, and 18 packages with no CI
+   at all. Three of those were genuinely broken (tiny-memory, tiny-cost-ledger and
+   tiny-eval all failed on the version they claimed to support). All fixed, and CI added
+   to 16 packages with the matrix starting at the declared floor. Now 44/44 pass.
+   Full detail in `reports/2026-11-03-python-version-support.md`.
 3. **Adopt hyperresearch's `lint_vault` and `get_backlinks` ideas** for
    context-bridge: a self-check that the README matches the server, and a real
    relationship graph that `get_callers` can query.
