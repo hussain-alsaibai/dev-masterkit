@@ -3,6 +3,18 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-05 cron sync, 13:25) — the version guard had a blind spot, and the drift it hid was a published release behind
+
+-- **`snapdb`'s version guard passed while the `package.json` beside it was seven minor releases stale** (`0.11.0` vs a shipped `0.18.0`). `tests/test_version_consistency.py` compared `pyproject.toml` against `__version__` and validated semver - both true, both green. The pair it read was never the pair that drifted. `tiny-router` was five stale (`0.2.0` vs `0.7.5`) with no guard at all. Both fixed, both now fail a test if they drift again. See `prompts/a-version-guard-only-covers-the-files-it-reads.md`.
+-- **A version stated in more than one file is a version stated once and guessed everywhere else.** A guard is a claim about coverage, and the coverage is only as wide as the list of files it opens.
+-- **The census behind it:** 170 repos → 28 with a `package.json` → **19 with one and no `pyproject.toml`**. Zero of those 19 are published to npm; **six declare an npm name that already belongs to another maintainer**, so `npm i <name>` installs somebody else's package. A manifest no build step reads cannot fail, so it cannot be noticed either.
+-- **The worst case was a Python library shipping an npm manifest.** `tiny-audit` is pure Python and declared `>=3.8` while using a 3.10-only `dataclass` keyword - its CI matrix started at 3.10, so the floor it claimed was the one thing CI could not test. Fixed on `main` today: 3.8 → 3.13 matrix, and `import tiny_audit` verified on **3.8.20, 3.9.25 and 3.11.2** from a fresh clone (17 tests pass).
+-- **New script: `scripts/check_version_drift.py`** (238 lines, **28 tests** in `tests/test_check_version_drift.py`). Reads `[project]`/`[tool.poetry]` version, `package.json` version and `__version__` across a repo or a fleet of siblings, compares every pair that exists, exits 1 on drift. A missing surface is not a finding - a one-surface repo cannot drift from itself. Swept today: **71 repos inspected, 5 with two or more surfaces, 0 drifting**.
+-- **The script's own tests caught two bugs before it shipped.** Its first normaliser stripped every pre-release tail, calling `1.0.0-rc1` equal to `1.0.0`; it also rejected `1.4` vs `1.4.0`. A normaliser that strips every tail calls a release candidate equal to the release it never became.
+-- **Added:** `prompts/a-version-guard-only-covers-the-files-it-reads.md`, `scripts/check_version_drift.py`, `tests/test_check_version_drift.py`, `daily-updates/2026-11-05.md`. **Updated:** this README's prompt index and stats table (Prompts 76 → 84, Scripts 2 → 5, Daily Updates 129 → 131, Reports 28 → 32, ecosystem 133 → 135, other repos 25 → 38 - all re-measured today against `main`).
+-- **Stats:** Prompts **84**. Tool Guides **138**. Skills **45** directories, **40** loadable, **0 pending frontmatter**. Daily Updates **131**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **5**, Tests **3 files / 28 in the new suite**. tiny-* ecosystem repos **135**, other hussain-alsaibai repos **38** (**173 total**).
+- Last verified 2026-11-05 (13:25 EST).
+
 ### 🆕 Latest additions (2026-11-04 cron sync, 18:35 UTC) — the rule about copies finally got a proof, and it found a stub shipped three times
 
 -- **"One fix in one repo is not a fix" was a rule with no check behind it.** `scripts/check_duplicate_modules.py` (new, 14 tests) SHA-256-hashes every shipped `.py` file across a fleet and exits 1 when one hash appears under two package names. Swept the published `main` of all **134** `tiny-*` repos: 92 with a `pyproject.toml`, 162 distinct modules, **2 duplicate groups**.
@@ -547,20 +559,20 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 45 | 2026-11-03 |
-| Prompts | 76 | 2026-11-03 |
+| Prompts | 84 | 2026-11-05 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 138 | 2026-11-03 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Scripts | 2 | 2026-10-29 |
-| Daily Updates | 129 | 2026-11-03 |
-| Reports | 28 | 2026-11-02 |
-| tiny-* Ecosystem Repos | 133 | 2026-11-04 |
-| Additional hussain-alsaibai Repos | 25 | 2026-11-02 |
+| Scripts | 5 | 2026-11-05 |
+| Daily Updates | 131 | 2026-11-05 |
+| Reports | 32 | 2026-11-05 |
+| tiny-* Ecosystem Repos | 135 | 2026-11-05 |
+| Additional hussain-alsaibai Repos | 38 | 2026-11-05 |
 
 **All 40 `SKILL.md` files carry AgentSkills YAML frontmatter** (39 pre-existing + `verification-sweep`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `40 total, 40 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-03**, not carried forward.
+**Every count above was measured against the tree on 2026-11-05**, not carried forward.
 
 > **The `Skills` row counts directories (45); the frontmatter note counts
 > loadable skills (40).** The other five directories
@@ -910,6 +922,7 @@ dev-masterkit/
 | `a-readme-on-github-is-not-a-distribution-channel` | A README is a landing page; PyPI is the channel | 33 of our 37 packages return 404 on PyPI [NEW 2026-11-03] |
 | `the-runtime-api-changes-between-runs` | Probe the tool API in the session that uses it | `tools.exec` is not defined; the field is `aggregated`, not `output` [NEW 2026-11-03] |
 | `capture-before-you-reset` | Capture first, reset second, verify third | 52 local-only commits across 7 repos, unreferenced after a reset [NEW 2026-11-03] |
+| `a-version-guard-only-covers-the-files-it-reads` | A version stated twice is stated once and guessed elsewhere | snapdb's guard passed while `package.json` was 7 minor releases stale [NEW 2026-11-05] |
 
 ## 🏗️ Our Tools
 
@@ -1056,7 +1069,7 @@ Production-tested tools and libraries built by this team:
 | [tiny-agent-eval](https://github.com/hussain-alsaibai/tiny-agent-eval) | Agent evaluation harness — suites, criteria, weighted scores, JSONL result index, regression checks | ⭐0 | Python |
 | [tiny-realtime](https://github.com/hussain-alsaibai/tiny-realtime) | SSE + WebSocket helpers for agent streaming — reconnect, backoff, event replay | ⭐0 | Python |
 | [tiny-agent-service](https://github.com/hussain-alsaibai/tiny-agent-service) | AI agent service in one file — REST + MCP, budget cap, rate limiter, circuit breaker | ⭐0 | Python |
-| [tiny-audit](https://github.com/hussain-alsaibai/tiny-audit) | Immutable audit log — HMAC-SHA256 signatures, tamper-evident chain, JSONL | ⭐0 | Python |
+| [tiny-audit](https://github.com/hussain-alsaibai/tiny-audit) | Immutable audit log — HMAC-SHA256 signatures, tamper-evident chain, JSONL (v0.1.0; Python 3.8–3.13 CI, Last verified 2026-11-05) | ⭐0 | Python |
 | [tiny-prompt](https://github.com/hussain-alsaibai/tiny-prompt) | Prompt templating, chain-of-thought and few-shot management for agents | ⭐0 | Python |
 | [tiny-webhook](https://github.com/hussain-alsaibai/tiny-webhook) | Production webhook handler — HMAC verification, idempotency guard, dead-letter queue, retry policy | ⭐0 | Python |
 
