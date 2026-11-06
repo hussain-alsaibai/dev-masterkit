@@ -3,6 +3,19 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-06 cron sync, 18:00 UTC) — a new tool for release artifacts, and two scans that were asking the wrong question
+
+-- **New repo: `tiny-dist-audit` 0.1.0** — deterministic release-artifact manifests and drift detection for wheels, sdists and trees. Stdlib only, 3.9+, one module, **45 tests** (verified fresh-clone today), CI on 3.9-3.13 plus a self-audit job that builds a real wheel. `python3 -m tiny_dist_audit --help` exit 0. Guide: `tools/tiny-dist-audit-guide.md`.
+-- **The census behind it: 70 `tiny-*` repos, 63 with a `pyproject.toml`, 3 with a `package.json`, and exactly 1 containing an artifact manifest - the tool written that morning.** Release artifacts are the one surface nothing in the ecosystem compared. A manifest proves what was built, never which commit it came from; that is provenance, a separate control.
+-- **The signature guard passed all 43 tests while it could not reject anything.** Making `verify()` return `True` unconditionally survived the suite. Only `assert verify({}) is False` - a negative case - fails it. **A positive-only suite proves the code runs, not that it checks.**
+-- **The health scan reported 42 of 173 repos red. 41 were false, 0 were real.** It took `gh run list --limit 5` and called any failure in that window "failing" without asking whether a later success on the **default branch** existed. `snapdb` was green 13:05:47 the same day. `reload` was read as red on `main` while its default branch is **`master`**. **A window scan over-reports in proportion to how busy the fleet is.**
+-- **The same scan had a dead credential read as truth:** `GH_TOKEN = GH_TOKEN || GitHUB_PAT || ...` - the dead PAT shadowed the gh keyring and every call returned 401. Fixed: the script now deletes `GitHUB_PAT` and falls back to `GH_TOKEN`/`GITHUB_TOKEN` only when explicitly set, else the keyring. `heartbeat-state.json` now stores `green/yellow/red` counts and each repo's `default_branch`.
+-- **A tool-call contract check that validates the arguments you sent proves nothing about the arguments the tool receives.** A serialiser that drops `None` turns a validated payload into one the tool rejects, and the failure surfaces at side-effect time. See `prompts/validate-the-args-the-tool-receives.md` and `tiny-validator`'s `reports/2026-11-06-tool-call-contract-regression.md`.
+-- **`tiny-log` gained `TraceContext.child()`** (`0930a6b`, 8 tests, reparenting test proven to fail without it) so nested spans report the parent span as their caller instead of appearing as siblings. **106 tests passing**, README counts corrected 98 -> 106.
+-- **Added:** `tools/tiny-dist-audit-guide.md`, `prompts/a-binary-you-cannot-read-is-a-claim-you-have-to-check.md`, `prompts/the-last-five-runs-are-not-the-default-branch.md`, `prompts/validate-the-args-the-tool-receives.md`. **Amended:** `tools/tiny-validator-guide.md` (114 -> 140 tests), `tools/tiny-log-guide.md` (98 -> 106 tests, `child()` section). **Updated earlier today:** `daily-updates/2026-11-06.md` (addendum below), README prompt index and stats.
+-- **Stats:** Prompts **84 -> 87**. Tool Guides **138 -> 139**. Skills **45** directories / **40** loadable / **0** pending. Daily Updates **132**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts 5, Tests 3 files / 28 tests. tiny-* ecosystem **135 -> 136**, other hussain-alsaibai repos **38** (**174 total**).
+- Last verified 2026-11-06 (18:00 UTC).
+
 ### 🆕 Latest additions (2026-11-06 cron sync, 12:00 EST) — the sweep that found the drift was measuring a stale clone
 
 -- **The 11-05 fixes are real and were re-proved today.** `snapdb` published `main` is **0.18.0** on `pyproject.toml`, `package.json` and `__version__`; `tiny-router` is **0.7.5** on both of its surfaces. Both tarballs fetched from `codeload` today.
@@ -570,15 +583,15 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 45 | 2026-11-03 |
-| Prompts | 84 | 2026-11-05 |
+| Prompts | 87 | 2026-11-06 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 138 | 2026-11-03 |
+| Tool Guides | 139 | 2026-11-06 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 5 | 2026-11-05 |
 | Daily Updates | 132 | 2026-11-06 |
 | Reports | 32 | 2026-11-05 |
-| tiny-* Ecosystem Repos | 135 | 2026-11-05 |
+| tiny-* Ecosystem Repos | 136 | 2026-11-06 |
 | Additional hussain-alsaibai Repos | 38 | 2026-11-05 |
 
 **All 40 `SKILL.md` files carry AgentSkills YAML frontmatter** (39 pre-existing + `verification-sweep`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `40 total, 40 loadable, 0 pending frontmatter`.
@@ -934,6 +947,9 @@ dev-masterkit/
 | `the-runtime-api-changes-between-runs` | Probe the tool API in the session that uses it | `tools.exec` is not defined; the field is `aggregated`, not `output` [NEW 2026-11-03] |
 | `capture-before-you-reset` | Capture first, reset second, verify third | 52 local-only commits across 7 repos, unreferenced after a reset [NEW 2026-11-03] |
 | `a-version-guard-only-covers-the-files-it-reads` | A version stated twice is stated once and guessed elsewhere | snapdb's guard passed while `package.json` was 7 minor releases stale [NEW 2026-11-05] |
+| `a-binary-you-cannot-read-is-a-claim-you-have-to-check` | What an artifact contains is a separate fact from what the repo says | 63 pyprojects, 1 artifact manifest — and that one was written that morning [NEW 2026-11-06] |
+| `the-last-five-runs-are-not-the-default-branch` | "Is this repo red?" means the newest run on the default branch | 42 of 173 repos reported red; 41 false, 0 real [NEW 2026-11-06] |
+| `validate-the-args-the-tool-receives` | A contract check on the prepared payload proves nothing | a serialiser dropping `None` fails at side-effect time [NEW 2026-11-06] |
 
 ## 🏗️ Our Tools
 
@@ -1265,6 +1281,7 @@ Production-tested tools and libraries built by this team:
 | [fast-cache Guide](tools/fast-cache-guide.md) | LRU+TTL+stale-while-revalidate cache with operator leases | 2026-07-15 |
 | [tiny-router Guide](tools/tiny-router-guide.md) | Stdlib WSGI routing + agent callback receiver pattern | 2026-07-14 |
 | [tiny-validator Guide](tools/tiny-validator-guide.md) | Data validation + typed tool boundaries for side effects | 2026-07-15 |
+| [tiny-dist-audit Guide](tools/tiny-dist-audit-guide.md) | Release-artifact manifests + drift detection for wheels/sdists | 2026-11-06 |
 | [tiny-compose Guide](tools/tiny-compose-guide.md) | Decorator stacker with async auto-detect | 2026-07-02 |
 | [tiny-trace Guide](tools/tiny-trace-guide.md) | OTel-API-compat tracing + W3C propagation | 2026-07-02 |
 | [tiny-secret Guide](tools/tiny-secret-guide.md) | 7-source secret loader + redacting formatter | 2026-07-02 |

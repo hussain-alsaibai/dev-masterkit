@@ -106,7 +106,31 @@ trace ids** is not a traceable bundle. The trace id is the join key between
 unjoinable, and there is no error - it just looks like two unrelated
 histories.
 
-## Last verified: 2026-11-02
+## Nested spans: `TraceContext.child()` (2026-11-06)
+
+Two same-level blocks under one parent both report the *parent* span as their
+caller, so a trace viewer shows two siblings instead of a chain. `child()`
+keeps the trace id, sampling flags and tracestate and reparents the new span:
+
+```python
+with TraceContext.from_headers(incoming) as root:
+    with root.child() as db:
+        log.info("query")   # parent_span_id == root.span_id
+```
+
+The result is a plain context; it becomes the active scope only inside its own
+`with` block. Landed in `0930a6b` with 8 tests in
+`tests/test_tiny_log_v060_trace.py`; the reparenting test fails without it.
+
+## Last verified: 2026-11-06 (18:00 UTC)
+
+- Repo: `hussain-alsaibai/tiny-log`, `main` `0930a6b`, **106 tests passing**
+  (`python3 -m pytest -q`, measured). README counts corrected 98 -> 106 and
+  trace tests 20 -> 28 in the same commit.
+- `TraceContext.child()` present and verified by reading `tiny_log.py:261`
+  and running the suite.
+
+## Earlier verification: 2026-11-02
 
 - Repo: `hussain-alsaibai/tiny-log` - v0.6.0, **98 tests passing** (measured
   by run)

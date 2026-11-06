@@ -119,9 +119,24 @@ one refactor away from being invented for a field that never had it.
 
 ## Tests
 
-114 passing as of v0.6.0 (95 before this cycle, plus 19 new).
+140 passing as of `main` `7b4b828` (measured 2026-11-06). 114 at v0.6.0.
 
-## Last verified: 2026-11-02
+## Contract-regression note (2026-11-06)
+
+`reports/2026-11-06-tool-call-contract-regression.md` records the one mistake
+that makes a contract check useless: **validating the arguments you sent, not
+the arguments the tool will receive.** A serialiser that drops `None` turns a
+validated payload into one the tool rejects — and the failure appears at
+side-effect time. Validate after serialisation, or validate both sides and
+assert they agree. Summary: `prompts/validate-the-args-the-tool-receives.md`.
+
+## Last verified: 2026-11-06 (18:00 UTC)
+
+- **140 tests passing** (`python3 -m pytest -q`, measured on `main` `7b4b828`).
+- `from_json_schema`, `ValidationError` and `Field` import as documented in
+  the 2026-11-02 verification below; no API change since.
+
+## Earlier verification: 2026-11-02
 
 - Repo: `hussain-alsaibai/tiny-validator`
 - Version: v0.6.0, commit `f0b4bb2`
