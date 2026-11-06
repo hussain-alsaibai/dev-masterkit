@@ -3,6 +3,17 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-06 cron sync, 12:00 EST) — the sweep that found the drift was measuring a stale clone
+
+-- **The 11-05 fixes are real and were re-proved today.** `snapdb` published `main` is **0.18.0** on `pyproject.toml`, `package.json` and `__version__`; `tiny-router` is **0.7.5** on both of its surfaces. Both tarballs fetched from `codeload` today.
+-- **But the sweep command still reports both as drifting, because a sweep over local clones measures the clones.** The corpus clone of `snapdb` sat **4 commits behind** on `0.11.0`/`0.15.0` and reported `HEAD..origin/main = 0` — a stale remote-tracking ref reads as *in sync*, not as *unknown*. `tiny-router` was **36 behind**. A correct result from yesterday was re-reported as a finding today.
+-- **A checker cannot detect that its input is stale, and it will not say so.** `check_version_drift.py` was right about the files it read; nothing in its output distinguishes "this repo drifts" from "this repo is four commits old". Correctness of the tool is separate from the freshness of what it is pointed at.
+-- **The fix is in the procedure:** `for d in ~/github/*/; do git -C "$d" fetch -q origin; done` before any fleet claim, and prove a reported defect against `git ls-remote` or a `codeload` tarball before it becomes a finding.
+-- **Left unresolved on purpose:** `tiny-router`'s local clone holds **1 commit ahead** of `origin/main` (`404095e`, v0.4.0 OpenAPI/SSE/hot-reload). Republishing it over a published 0.7.5 is not a judgement this sweep can make, and a force-push decision belongs to the repository's owner.
+-- **Added:** `daily-updates/2026-11-06.md`. **Updated:** `prompts/a-version-guard-only-covers-the-files-it-reads.md` (new section, *The sweep measures the clones*) — the rule itself is unchanged and still correct.
+-- **Stats:** Prompts **84**. Tool Guides **138**. Skills **45** directories, **40** loadable, **0 pending frontmatter**. Daily Updates **131 → 132**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **5**, Tests **3** files / **28** tests (`python3 -m pytest tests/ -q` -> 28 passed). tiny-* ecosystem repos **135**, other hussain-alsaibai repos **38** (**173 total**).
+- Last verified 2026-11-06 (12:00 EST).
+
 ### 🆕 Latest additions (2026-11-05 cron sync, 13:25) — the version guard had a blind spot, and the drift it hid was a published release behind
 
 -- **`snapdb`'s version guard passed while the `package.json` beside it was seven minor releases stale** (`0.11.0` vs a shipped `0.18.0`). `tests/test_version_consistency.py` compared `pyproject.toml` against `__version__` and validated semver - both true, both green. The pair it read was never the pair that drifted. `tiny-router` was five stale (`0.2.0` vs `0.7.5`) with no guard at all. Both fixed, both now fail a test if they drift again. See `prompts/a-version-guard-only-covers-the-files-it-reads.md`.
@@ -565,14 +576,14 @@ open skills/repo-creator/SKILL.md
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 5 | 2026-11-05 |
-| Daily Updates | 131 | 2026-11-05 |
+| Daily Updates | 132 | 2026-11-06 |
 | Reports | 32 | 2026-11-05 |
 | tiny-* Ecosystem Repos | 135 | 2026-11-05 |
 | Additional hussain-alsaibai Repos | 38 | 2026-11-05 |
 
 **All 40 `SKILL.md` files carry AgentSkills YAML frontmatter** (39 pre-existing + `verification-sweep`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `40 total, 40 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-05**, not carried forward.
+**Every count above was measured against the tree on 2026-11-06**, not carried forward.
 
 > **The `Skills` row counts directories (45); the frontmatter note counts
 > loadable skills (40).** The other five directories

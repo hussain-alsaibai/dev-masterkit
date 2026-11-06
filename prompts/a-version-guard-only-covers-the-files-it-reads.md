@@ -1,8 +1,9 @@
 # A version guard only covers the files it reads
 
-**Last verified:** 2026-11-05 (13:20 EST) — `snapdb` and `tiny-router` drift fixed
-and re-checked on published `main`; `tiny-audit` import proven on 3.8, 3.9 and
-3.11 from a fresh clone.
+**Last verified:** 2026-11-06 (12:00 EST) — `snapdb` and `tiny-router` published
+`main` re-downloaded as tarballs today (0.18.0 / 0.7.5, both consistent). The
+2026-11-05 fixes and the `tiny-audit` 3.8 import claim were verified then from a
+fresh clone; the sweep caveat below is from 2026-11-06.
 
 ## The rule
 
@@ -76,3 +77,33 @@ never see the floor it claimed. Fixed: the keyword is gone, the matrix now runs
    "nothing", delete it or make it a `pyproject.toml`.
 
 **A guard whose green badge you trust is a guard you have not read.**
+
+## The sweep measures the clones (2026-11-06)
+
+The census above is only as fresh as the trees it walks. Run against a local
+corpus four commits behind, the checker reported `snapdb` and `tiny-router`
+drifting **after both had been fixed on `main` the previous day** — and the
+same stale clone reported `behind=0`, because `HEAD..origin/main` compares two
+refs and both were old.
+
+| repo | clone before `fetch` | after `fetch` | published `main` |
+|---|---|---|---|
+| `snapdb` | `0.11.0` / `0.15.0`, "behind 0" | behind **4** | `0.18.0` on all three surfaces |
+| `tiny-router` | `0.2.0` / `0.1.0` | behind **36**, ahead 1 | `0.7.5` on both surfaces |
+
+The checker was right about the files it read. It cannot know they are stale,
+and it says nothing about it. **Correctness of the tool is separate from the
+freshness of what it is pointed at.**
+
+```bash
+for d in ~/github/*/; do git -C "$d" fetch -q origin 2>/dev/null; done
+python3 scripts/check_version_drift.py --root ~/github
+
+# before reporting a finding, prove it against the remote, not the ref
+git -C repo ls-remote origin main
+curl -sL codeload.github.com/<owner>/<repo>/tar.gz/refs/heads/main \
+  | tar xzO --wildcards '*/package.json' | grep '"version"'
+```
+
+> **A sweep over local clones is a measurement of the clones.** Fetch first,
+> and prove a reported defect against the remote before it becomes a finding.
