@@ -3,6 +3,18 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-07 cron sync, 12:00 EST) — the guard that fails open, and 43 passing tests on top of it
+
+- **`tiny-mcp-client` called `tools/list` on servers that never advertised `tools`.** It parsed the `initialize` `capabilities` object and then ignored it, so the missing capability surfaced as an opaque `-32601 Method not found` at call time instead of a named contract error at `initialize` time. Now: `MCPCapabilityError` (subclasses `MCPError`, code `-32601`, carries `.capability` / `.method`), a `capabilities` property, `supports()`, and `_require()` guarding both `list_tools()` and `call_tool()`. **33 → 40 tests** on a fresh clone of `main`.
+- **The suite was green on top of a guard that fails open.** Deleting `_require()` leaves every happy-path test passing, because happy-path tests only exercise servers that *do* advertise the capability. Proved by mutation: guard stubbed → **5 failed, 35 passed**; restored → **40 passed**. One of the seven new tests is a **positive control**, so the guard cannot be satisfied by blocking everything. See `prompts/a-guard-that-fails-open-passes-every-happy-path-test.md`.
+- **A malformed payload is an absent one.** `"capabilities": "tools"` — a string where an object belongs — now means *advertised nothing*, not `TypeError` raised from inside a property. Garbage and absence both mean "cannot use this", and both get the named error.
+- **The server side is the same defect, measured and still open.** `tiny-mcp-server` (`16 passed`, fresh clone) answers `resources/list` with `-32601 method not found` while its own `initialize` / `server/discover` advertise only `{"tools": ...}`. The caller is sent to check its spelling when the real answer is "this capability was never offered". Recorded as a measurement; no server change in this run.
+- **Capability census over the 65 locally cloned Python repos:** README **65/65**, `requires-python` **65/65**, CI **63/65**, test file **62/65**, LICENSE **56/65**, **validates a peer's capabilities 1/65**. Reported row by row because the average ("89% compliant") is entirely made of declarations that nothing executes. See `prompts/report-the-floor-and-the-ceiling-separately.md`.
+- **Corrected:** `tools/tiny-mcp-client-guide.md` was a four-line page whose `Last verified` read **2026-08-14**; it now documents the capability API, the mutation proof, and the open server-side gap, re-verified today.
+- **Added:** `prompts/a-guard-that-fails-open-passes-every-happy-path-test.md`, `prompts/report-the-floor-and-the-ceiling-separately.md`, `daily-updates/2026-11-07.md`. **Updated:** `tools/tiny-mcp-client-guide.md`, README prompt index and stats.
+- **Stats:** Prompts **87 → 89**. Tool Guides **139**. Skills **46** directories / **40** loadable / **0** pending. Daily Updates **132 → 133**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts 5, Tests **3 files / 28 tests**. tiny-* ecosystem **135**, other hussain-alsaibai repos **38** (**173 total**, counted over two API pages).
+- Last verified 2026-11-07 (12:00 EST).
+
 ### 🆕 Latest additions (2026-11-06 cron sync, 18:00 UTC) — a new tool for release artifacts, and two scans that were asking the wrong question
 
 -- **New repo: `tiny-dist-audit` 0.1.0** — deterministic release-artifact manifests and drift detection for wheels, sdists and trees. Stdlib only, 3.9+, one module, **45 tests** (verified fresh-clone today), CI on 3.9-3.13 plus a self-audit job that builds a real wheel. `python3 -m tiny_dist_audit --help` exit 0. Guide: `tools/tiny-dist-audit-guide.md`.
@@ -950,6 +962,8 @@ dev-masterkit/
 | `a-binary-you-cannot-read-is-a-claim-you-have-to-check` | What an artifact contains is a separate fact from what the repo says | 63 pyprojects, 1 artifact manifest — and that one was written that morning [NEW 2026-11-06] |
 | `the-last-five-runs-are-not-the-default-branch` | "Is this repo red?" means the newest run on the default branch | 42 of 173 repos reported red; 41 false, 0 real [NEW 2026-11-06] |
 | `validate-the-args-the-tool-receives` | A contract check on the prepared payload proves nothing | a serialiser dropping `None` fails at side-effect time [NEW 2026-11-06] |
+| `a-guard-that-fails-open-passes-every-happy-path-test` | A silent-absence check cannot be proved by the success path | guard stubbed → 5 failed; restored → 40 passed [NEW 2026-11-07] |
+| `report-the-floor-and-the-ceiling-separately` | A census is a distribution, not an average | docs 65/65, validates peer capabilities 1/65 [NEW 2026-11-07] |
 
 ## 🏗️ Our Tools
 
