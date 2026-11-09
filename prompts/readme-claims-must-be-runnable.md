@@ -130,3 +130,26 @@ See also `prompts/fail-closed-on-unavailable-data.md` for the sibling lesson
 (absence of data is not a pass) and
 `prompts/reentrant-lock-discipline.md` for the deadlock class that a
 never-executed snippet would have caught.
+
+## 2026-11-09 addendum — the scale, measured
+
+This prompt stated the principle from a single repository. On 2026-11-09 the
+principle was measured against the whole ecosystem:
+
+- **371 fenced ```` ```python ```` blocks across 62 repos**, each run in its
+own subprocess: **103 ran clean (27.8%)**, 214 were fragments, 22 needed a
+missing dependency, and **19 were real code/doc defects**.
+- **Every one of the 19 lived in a repo with green unit tests.**
+`tiny-router` had 196 passing tests while its README advertised `@app.middleware`
+and `@app.websocket` — neither existed.
+- **The taxonomy matters more than the pass rate.** "27.8% of blocks ran"
+conflates honest fragments with real defects; the actionable number is 19.
+- **A positional-argument defect raised nothing.** `Response(401, {...})` against
+`(body, status)` produced `body=b'401'` with no exception. Reading cannot find
+this; running can.
+
+Full taxonomy, procedure and the per-shape fix: see
+`prompts/a-readme-block-is-a-claim-with-no-executor.md`.
+
+**Last re-verified:** 2026-11-09 (the census above was run from the build host;
+the five timed-out blocks were excluded rather than counted as passes).

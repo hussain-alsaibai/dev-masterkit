@@ -3,7 +3,20 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
-### 🆕 Latest additions (2026-11-09, ecosystem audit) — the ecosystem list nobody could install from
+### 🆕 Latest additions (2026-11-09 cron sync, 12:00 EST) — every README example, executed
+
+- **371 fenced ```python blocks across 62 published repos, each run in its own subprocess.** 103 ran clean (**27.8%**), 214 were fragments of a larger example, 22 needed a missing dependency, and **19 were real code/doc defects**. Report: `dev-tooling-trends-2026/reports/2026-11-09-running-every-readme-example.md`.
+- **The pass rate is not the finding — the taxonomy is.** Seven outcomes ask seven different questions and only one is a bug. Collapsing them into "27.8% work" cannot tell a reader whether to fix code, fix docs, or ignore the block. The actionable number is **19**.
+- **(A) The doc documents an API that does not exist — 6.** `tiny-router` `@app.middleware` and `@app.websocket` (`use()`/`ws()` only), `tiny-eval` `EvalSuite`, keyword-vs-positional callbacks in `tiny-event-emitter` and `tiny-memo`, and three unimportable classes in `tiny-agent-toolkit`. The doc was written from the design and the code shipped from the implementation; nothing compared them.
+- **(B) Positional arguments in the wrong order — 3, and they raise nothing.** `Response(401, {...})` against a `(body, status)` constructor produced `body=b'401'` with no exception. Every other HTTP library is `(status, body)`, so it is written from instinct. **Not findable by reading; findable by running.**
+- **(C) Examples needing the outside world with no fixture — 10.** `tiny-mcp-client`, `tiny-llm`, `tiny-mcp-audit`, `tiny-dist-audit`, `tiny-config`, `tiny-budget-ledger`, `tiny-bloom`. A README that requires a fixture should ship the fixture, or the example is unverifiable forever.
+- **`tiny-router` had 196 passing tests while its README advertised two methods it did not have.** A unit test exercises whichever of doc-or-code you wrote; it cannot find a disagreement between them, because it only reads one.
+- **Shipped:** tiny-cli **1.3.0** (`c934347`), tiny-router **0.9.0** (`eb75bc0`) and **0.9.1** (`28b94da` — `middleware()` decorator, `websocket` alias, `Response(body, status=)` README fix; **6 of 9 new tests fail on 0.9.0**), tiny-log **0.8.0** (`737403a` — `TextFormatter` dropped every `extra=` field; **7 of 11 tests fail on 0.7.0**). All four CI runs green. The README block is now executed by `test_v091_documented_api.py`, so doc and code cannot drift apart again.
+- **Added:** `prompts/a-readme-block-is-a-claim-with-no-executor.md` (new — the taxonomy, the procedure, the per-shape fix). **Amended:** `prompts/readme-claims-must-be-runnable.md` (2026-11-09 addendum with the 371-block census). **Updated:** `daily-updates/2026-11-09.md` (third addendum), README prompt index and stats.
+- **Stats:** Prompts **92 → 93**. Tool Guides **140**. Skills **13** dirs in this repo / **40** loadable workspace-wide / **0** pending. Daily Updates **134**. Reports **33**. Commands 5, Agents 3, Orchestrators 1, Scripts **6**, Tests **4 files / 48 tests** (`python3 -m pytest tests/ -q` → **48 passed**).
+- Last verified 2026-11-09 (17:00 UTC; census run from the build host, five timed-out blocks excluded rather than counted as passes).
+
+### 🆕 Previous additions (2026-11-09, ecosystem audit) — the ecosystem list nobody could install from
 
 - **`scripts/ecosystem_smoke.py` (new, 20 tests): installs every package the `tiny-*` READMEs advertise, instead of reading its badge.** All 25 READMEs carry the same 25-entry "Ecosystem" list and call it a coherent toolkit. Taken from the user's position — clone, build the wheel, check the wheel, install it, import it — it reads **11 ok, 4 warn, 14 fail**.
 - **13 of 25 advertised packages ship no `pyproject.toml` and no `setup.py`.** `pip install git+https://github.com/hussain-alsaibai/<name>.git` fails with *"does not appear to be a Python project"*. They each have a single module, a test file and a green CI badge, so nothing inside the repo notices.
@@ -701,6 +714,7 @@ dev-masterkit/
 │   ├── a-dead-credential-named-in-a-prompt-fails-every-run.md # The prompt is the credential [NEW 2026-11-02]
 │   ├── a-rule-that-cannot-fire-is-not-a-rule.md # A rule whose input is capped can never fire [NEW 2026-11-02]
 │   ├── a-rule-must-pass-on-the-repos-own-fixture.md # A new lint rule must pass the dogfood fixture [NEW 2026-11-09]
+│   ├── a-readme-block-is-a-claim-with-no-executor.md # A README block is a claim with no executor [NEW 2026-11-09]
 │   ├── a-stale-clone-is-a-loaded-weapon.md # A backup clone that can push to the real remote [NEW 2026-11-02]
 │   ├── check-tmp-space-before-any-multi-step-run.md # A full /tmp fails in the middle of a success [NEW 2026-11-02]
 │   └── check-the-repo-before-you-recommend-the-bounty.md # A bounty label is a claim about the repo [NEW 2026-11-02]
@@ -952,6 +966,7 @@ dev-masterkit/
 | `parallel-issue-scoring-pattern` | Bound the fan-out when scoring many issues | 250 issues x 3 API calls hangs the scanner |
 | `pr-squash-staleness-blocker` | Block a squash-merge that silently discards the branch | The PR is behind main and its commits will vanish |
 | `readme-claims-must-be-runnable` | Every documented API must actually be importable | A guide names a symbol the package does not export [NEW 2026-10-23] |
+| `a-readme-block-is-a-claim-with-no-executor` | Execute every README block; report the taxonomy, not a pass rate | 371 blocks / 62 repos → 19 real defects inside green-tested packages [NEW 2026-11-09] |
 | `recover-dead-github-credential` | Search where the secret was typed, not where it is stored | Every stored credential path returns 401 [NEW 2026-10-25] |
 | `reentrant-lock-discipline` | A plain `Lock` is not reentrant | All dots then a permanent hang [NEW 2026-10-23] |
 | `safe-file-write-append` | Never append through a whole-file writer | `write({append:true})` replaces the file [NEW 2026-10-22] |
