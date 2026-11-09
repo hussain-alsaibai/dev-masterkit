@@ -1,12 +1,48 @@
 # tiny-skill-lint Guide
 
-> Zero-dependency SKILL.md frontmatter linter. 310 LOC, 35 tests, stdlib-only.
+> Zero-dependency SKILL.md frontmatter linter. 329 LOC, 38 tests, stdlib-only.
 
 **Repo:** `github.com/hussain-alsaibai/tiny-skill-lint`
-**Version:** 0.2.0
-**Last verified:** 2026-11-02 - **35 tests passing** (measured by run), CI
-green. The repo **now exists upstream** (it returned HTTP 404 until
-2026-11-02) and has a CI workflow.
+**Version:** 0.3.0 (branch `fix/e019-dogfood`, commit `d2e70d9`)
+**Last verified:** 2026-11-09 - **38 tests passing**, `E019` added, dogfood
+step fixed and re-run locally (see *E019* below). `main` is still 0.2.0; the
+0.3.0 work is open in PRs #2 (feature) and #3 (dogfood fix, stacked).
+
+## E019 — `name` must match the parent directory name
+
+The most plainly stated rule in the agentskills.io spec, and the linter was
+missing it until 2026-11-08. A skill directory `foo/` must contain a SKILL.md
+whose frontmatter declares `name: foo`; kebab-case on the basename is not
+enough (that was E004).
+
+| Code | Level | Description |
+|---|---|---|
+| E019 | error | `name` does not match the parent directory name |
+
+**It shipped green and broke CI on the repo's own fixture.** The branch passed
+38 unit tests and a mutation check; the failing step was the **dogfood** step,
+which lints `examples/`:
+
+```
+examples/SKILL.md
+  E019 [error] 'name' (skill-authoring) does not match parent directory (examples)
+```
+
+Fixed by moving the fixture to `examples/skill-authoring/SKILL.md` — the shape
+the spec requires and every real bundle has. **Run the linter against
+`examples/` before calling a new rule done**; it takes one second and no unit
+test in `tests/` can substitute for it.
+
+## Verification status (2026-11-09)
+
+| surface | result |
+|---|---|
+| `pytest -q` on `fix/e019-dogfood` | **38 passed** |
+| `python -m tiny_skill_lint examples/` | `no issues`, exit **0** |
+| `python -m tiny_skill_lint examples/ --format=json` | `[]`, exit **0** |
+| same on `feat/e019-dir-name` (pre-fix) | **E019** on `examples/SKILL.md`, exit **1** |
+| CI for PR #3 | **no run queued** (stacked branch) - local result only |
+| CI for PR #2 | RED: `test (3.8)` failed on dogfood; 3.9-3.12 `cancelled` |
 
 ## Install
 
@@ -35,7 +71,7 @@ what makes it usable as a CI gate as-is:
   run: python -m tiny_skill_lint skills/ --format=json
 ```
 
-## The 18-Code Catalogue
+## The 19-Code Catalogue
 
 Verified by importing `ERROR_CODES` on 2026-11-02:
 
@@ -59,6 +95,7 @@ Verified by importing `ERROR_CODES` on 2026-11-02:
 | E016 | warn | Version is pre-1.0.0 (warn only for libraries in use) |
 | E017 | warn | Description first sentence is > 100 chars |
 | E018 | error | Invalid `version` semver (E006 supersedes; retained for compat) |
+| E019 | error | `name` does not match the parent directory name (agentskills.io spec) |
 
 ## E017 Was Unreachable Until 2026-11-02
 

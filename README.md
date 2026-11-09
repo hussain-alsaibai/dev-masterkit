@@ -3,6 +3,17 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-09 cron sync, 06:35 UTC) — the rule that failed on the repo's own example
+
+- **`tiny-skill-lint` 0.3.0 shipped `E019` — "`name` must match the parent directory name" — and it rejected the repo's own fixture.** The branch was green the way a branch gets called done: **38 tests passing** plus a mutation proof (stub the check -> a test goes red). CI failed on a different step, the **dogfood** lint of `examples/`: `E019 [error] 'name' (skill-authoring) does not match parent directory (examples)`. The new rule failed on the only file in the repo that exists to prove the linter works.
+- **Why the suite could not see it:** unit tests build throwaway fixtures and call the checker directly; none of them linted `examples/`. Mutation testing answers *"does the check reject?"*, never *"does the check accept the correct case?"*. And a matrix where `3.8` fails and `3.9`-`3.12` are `cancelled` is **four untested versions**, not "one flaky failure".
+- **Fixed:** `examples/SKILL.md` -> `examples/skill-authoring/SKILL.md`. Verified on the fix branch `fix/e019-dogfood` (`d2e70d9`), fresh clone: `pytest -q` -> **38 passed**; linter on `examples/` -> `no issues`, exit **0**; `--format=json` -> `[]`, exit **0**. The pre-fix branch reproduces E019, exit **1**. PR **#3** is stacked on `feat/e019-dir-name` and GitHub queued **no CI run** - the result is local, and said so. See `prompts/a-rule-must-pass-on-the-repos-own-fixture.md`.
+- **Corrected denominators:** the fleet is **172** repos (**135** `tiny-*` + **37** other, two API pages), not 173 - the "other" bucket was one high. The **45** skills figure quoted since 2026-11-04 matches neither tree: this repo has **13** `skills/` directories, the workspace has **25** `SKILL.md` files, and **40 loadable** counts the whole workspace including plugin trees. A count whose unit is unnamed drifts.
+- **Added:** `prompts/a-rule-must-pass-on-the-repos-own-fixture.md`, `prompts/a-lint-rule-must-be-proven-to-reject.md`, `daily-updates/2026-11-09.md`. **Updated:** `tools/tiny-skill-lint-guide.md` (0.2.0/35 tests -> 0.3.0/38 tests, 19-code catalogue, E019 section, verification table), ecosystem index row, README prompt index and stats.
+- **And the fixed rule still accepted `name: "--"` with exit 0.** E019 passes when `parent_dir == name` and nothing else, so a name invalid on every *other* axis passes it **if the directory is misspelled the same way**. Measured on the same branch: `mut5/--/SKILL.md` -> E005 **warning**, exit **0**; `mut3/Some_Dir../SKILL.md` -> E014 warning, exit 0. Cause: `_check_kebab()` early-returns `False` for `len(name) < 3`, and the caller records E004 only when `not kebab_ok and not short and not upper` — so for any short name **the kebab-case rule is unreachable**, and "too short" is a *warning*. A rule is shipped on three proofs, not one: rejection, dogfood, and a **negative control** that fails every other rule and asserts this one still rejects it. Not fixed upstream in this run. See `prompts/a-lint-rule-must-be-proven-to-reject.md`.
+- **Stats:** Prompts **90 -> 91**. Tool Guides **140** (1 amended). Skills **13** dirs in this repo / **40** loadable workspace-wide / **0** pending. Daily Updates **133 -> 134**. Reports 32. Commands 5, Agents 3, Orchestrators 1, Scripts 5, Tests **3 files / 28 tests** (`python3 -m pytest tests/ -q` -> 28 passed). tiny-* ecosystem **135**, other hussain-alsaibai repos **37** (**172 total**).
+- Last verified 2026-11-09 (06:35 UTC; negative-control probes re-run against the same branch at 01:45 EST).
+
 ### 🆕 Latest additions (2026-11-07 cron sync, 12:00 EST) — the guard that fails open, and 43 passing tests on top of it
 
 - **`tiny-mcp-client` called `tools/list` on servers that never advertised `tools`.** It parsed the `initialize` `capabilities` object and then ignored it, so the missing capability surfaced as an opaque `-32601 Method not found` at call time instead of a named contract error at `initialize` time. Now: `MCPCapabilityError` (subclasses `MCPError`, code `-32601`, carries `.capability` / `.method`), a `capabilities` property, `supports()`, and `_require()` guarding both `list_tools()` and `call_tool()`. **33 → 40 tests** on a fresh clone of `main`.
@@ -678,6 +689,7 @@ dev-masterkit/
 │   ├── a-stale-error-counter-is-not-a-live-failure.md # Read the receipts, not the counter [NEW 2026-11-02]
 │   ├── a-dead-credential-named-in-a-prompt-fails-every-run.md # The prompt is the credential [NEW 2026-11-02]
 │   ├── a-rule-that-cannot-fire-is-not-a-rule.md # A rule whose input is capped can never fire [NEW 2026-11-02]
+│   ├── a-rule-must-pass-on-the-repos-own-fixture.md # A new lint rule must pass the dogfood fixture [NEW 2026-11-09]
 │   ├── a-stale-clone-is-a-loaded-weapon.md # A backup clone that can push to the real remote [NEW 2026-11-02]
 │   ├── check-tmp-space-before-any-multi-step-run.md # A full /tmp fails in the middle of a success [NEW 2026-11-02]
 │   └── check-the-repo-before-you-recommend-the-bounty.md # A bounty label is a claim about the repo [NEW 2026-11-02]
@@ -967,6 +979,8 @@ dev-masterkit/
 | `a-guard-that-fails-open-passes-every-happy-path-test` | A silent-absence check cannot be proved by the success path | guard stubbed → 5 failed; restored → 40 passed [NEW 2026-11-07] |
 | `report-the-floor-and-the-ceiling-separately` | A census is a distribution, not an average | docs 65/65, validates peer capabilities 1/65 [NEW 2026-11-07] |
 | `grep-for-every-use-of-the-predicate-you-replace` | Changing the input is not changing the decision | the RED fix was "applied" yet survived a day; one `grep -n` would have caught it [NEW 2026-11-07] |
+| `a-lint-rule-must-be-proven-to-reject` | Reject, dogfood, and a negative control — three proofs, not one | E019 shipped green while failing the repo's own example, then accepted `name: "--"` with exit 0 [NEW 2026-11-09] |
+| `a-rule-must-pass-on-the-repos-own-fixture` | A new lint rule must pass on the repo's bundled example | E019 rejected `examples/SKILL.md` while unit tests + mutation were green [NEW 2026-11-09] |
 
 ## 🏗️ Our Tools
 
@@ -1094,7 +1108,7 @@ Production-tested tools and libraries built by this team:
 | [tiny-semaphore](https://github.com/hussain-alsaibai/tiny-semaphore) | Zero-dep async semaphore with timeout + fairness for Python | ⭐0 | Python |
 | [tiny-semver](https://github.com/hussain-alsaibai/tiny-semver) | Semantic Versioning — parse, compare, bump, validate, constrain-check SemVer 2.0.0 | ⭐0 | 0 |
 | [tiny-sentinel](https://github.com/hussain-alsaibai/tiny-sentinel) | Zero-dependency circuit breaker + rate limiter + timeout wrapper | ⭐0 | Python |
-| [tiny-skill-lint](https://github.com/hussain-alsaibai/tiny-skill-lint) | Zero-dependency SKILL.md frontmatter linter. 18-code catalogue, CI-ready exit codes, stdlib only | ⭐0 | Python |
+| [tiny-skill-lint](https://github.com/hussain-alsaibai/tiny-skill-lint) | Zero-dependency SKILL.md frontmatter linter. 19-code catalogue (incl. E019: name must match parent dir), CI-ready exit codes, stdlib only | ⭐0 | Python |
 | [tiny-skill-loader](https://github.com/hussain-alsaibai/tiny-skill-loader) | Runtime skill/extension loader for AI agents. Discovers and loads single-file Python skill modules, validates manifests, mounts them into a shared... | ⭐0 | Python |
 | [tiny-skill-md](https://github.com/hussain-alsaibai/tiny-skill-md) | Zero-dependency SKILL.md parser, validator and quality scorer for agent skill catalogs. No PyYAML | ⭐0 | Python |
 | [tiny-sliding-window](https://github.com/hussain-alsaibai/tiny-sliding-window) | Zero-dependency sliding window rate limiter for AI agents | ⭐0 | Python |
