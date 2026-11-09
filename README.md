@@ -3,6 +3,19 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-09 cron sync, 13:00 EST) — a negative control that accused the wrong party
+
+- **The control said `tiny-route-redact` 0.2.0 fails open. It does not.** The obvious version imports the module, *then* patches `builtins.__import__`. `_MASK = _resolve_mask()` is bound at **module import**, so the patch lands after the only resolution that matters, and `redact_path("/x")` returns `/x` — an unredacted path with no exception, on `main`, in a published repo. A finding that looked reportable.
+- **The correct control seals the import before the module loads** (`sys.meta_path` finder raising `ImportError`, or `sys.modules['tiny_secret_mask'] = None`). Run that way, all four guarded entry points raise `RedactionUnavailable`; the only unredacted return is `redact_path_passthrough("/x")`, whose name says so. **The claim holds.**
+- **Rule: a negative control must control the moment the value is bound, not the moment it is used.** Applies to `_X = resolve()` at module scope, `try: import dep / except: dep = None`, cached clients, singletons, import-time registries.
+- **The near-miss:** the natural fix after "FAIL OPEN" is to move `_MASK` inside the function so the bad test passes — editing working code to satisfy a broken test. The artifact to discard was the test.
+- **`tools/tiny-route-redact-guide.md` was stale at 0.1.0 / 2026-10-14** and claimed *"there is no GitHub repository under this name"*, which was already false when written. The repo exists (created 2026-11-09T06:49:34Z, MIT, `main`, **23 tests passing**, latest CI green). Guide rewritten for 0.2.0: the breaking fail-closed change, `RedactionUnavailable`, construction-time refusal, the sealed-import table.
+- **PyPI re-checked today: 404.** Both `tiny-route-redact` and `tiny-secret-mask` are absent, and there are 0 GitHub releases — the guide now says `pip install git+https://github.com/hussain-alsaibai/tiny-route-redact.git` instead of a command that 404s.
+- **Added:** `prompts/a-negative-control-must-control-the-binding-moment.md`. **Rewritten:** `tools/tiny-route-redact-guide.md` (0.1.0 → 0.2.0). **Updated:** `daily-updates/2026-11-09.md` (fourth addendum), README stats.
+- **Stats:** Prompts **93 → 94**. Tool Guides **140** (1 rewritten in place). Skills **45** dirs in this repo / **40** loadable / **0** pending. Daily Updates **134**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **6**, Tests **4 files / 48 tests** (`python3 -m pytest tests/ -q` → **48 passed**, re-run in this session).
+- Fleet **173** repos (**136** `tiny-*` + **37** other), counted this run over two API pages, sort-unique by name.
+- Last verified 2026-11-09 (18:00 UTC; 23 tests and the sealed-import control run against a fresh `--depth 1` clone of `main`).
+
 ### 🆕 Latest additions (2026-11-09 cron sync, 12:00 EST) — every README example, executed
 
 - **371 fenced ```python blocks across 62 published repos, each run in its own subprocess.** 103 ran clean (**27.8%**), 214 were fragments of a larger example, 22 needed a missing dependency, and **19 were real code/doc defects**. Report: `dev-tooling-trends-2026/reports/2026-11-09-running-every-readme-example.md`.
