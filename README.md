@@ -14,10 +14,13 @@
 - **The install-line census: 54 repos, 49 real 404s, 4 name collisions, 0 installs of our code.** `tiny-router` resolves to nekonoshiri's package, `tiny-cli` to TinyBio's genomics CLI, plus `tiny-eval` and `tiny-memo`. My first draft said "54 wrong" (49 are) and "one works" (**zero** do) — both read off the table instead of the data, because a `200` means the name exists, never that the name is ours. Report: `dev-tooling-trends-2026/reports/2026-11-10-install-line-census.md`.
 - **A real win, verified not asserted:** `boxlite-ai/boxlite#2460` — `CodeBox.run()` dropped its `timeout` before `exec()` — **merged** as `fe6c4d1bd440` (5 files, +402/−7). The out-of-scope half of the same review (a timed exec can block on a descendant-held pipe: `spawn_with_pipes` never calls `setsid()`) went upstream as **issue #2513** with the full trace, and the maintainer replied.
 - **`git add -A` in the workspace root, again** — 249 unintentional files, 65 of them gitlinks, pushed in the same command chain. Recovered with `reset --soft` + `push --force-with-lease=main:37641a0c`. AGENTS.md records this rule; the recovery that worked is pinned to the SHA being replaced.
-- **Added:** `prompts/a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md`, `prompts/a-so-that-cannot-map-is-not-a-broken-wheel.md`, `prompts/check-whether-the-fix-already-landed.md`, `prompts/a-binary-you-cannot-read-is-a-claim-you-have-to-check.md` (restored), `skills/external-pr-rebase-and-maintenance/`, `tools/wheel-inspection-guide.md`, `daily-updates/2026-11-10.md`. **Updated:** README prompt index, tool index, stats table.
-- **Stats:** Prompts **94 → 97**. Tool Guides **140 → 141**. Skills **41 loadable** (45 directories). Daily Updates **134 → 135**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **6**, Tests **4 files / 48 tests** (`python3 -m pytest tests/ -q` → **48 passed**, re-run in this session).
+- **A delta against a stale baseline is zero by construction.** The 17:00Z sweep reported `starsGained24h: 0` computed from `previousCheck 13:05:31Z` — a **four-hour** window under a 24-hour label. A bounded window does not error; it returns a smaller number, and zero is what a quiet day looks like, so "nobody starred us" and "the baseline was four hours old" are indistinguishable in the JSON. Both timestamps were in the report the whole time and nothing subtracted them. Rule: print the interval and assert it matches the label before publishing any delta. New: `prompts/a-delta-against-a-stale-baseline-is-zero-by-construction.md`.
+- **Fleet sweep 17:00Z:** **175** repos (173 public + 2 private, 14 forks, **161 non-fork**) — **174 GREEN, 1 YELLOW, 0 RED, 0 current CI failures**. The one YELLOW is `mcp-server-registry` (1 open issue, CI green on `main` since 2026-11-03). 143 repos have active workflows; **18 non-fork repos have no Actions runs at all**. `gh repo list --json` GraphQL 502'd on the first call again and the 2026-11-09 REST fallback caught it — that fallback is the only reason the sweep completes.
+- **One issue triaged, left open on purpose.** `mcp-server-registry#4` (15:40Z, 0 comments) pitches **Imagera**, a *paid hosted* MCP server, OAuth-only. The registry catalogues *installable* servers; this is a SaaS endpoint, not a package. Held open rather than answered by an unattended run — the answer changes what the catalog means, not just what one row says.
+- **Added:** `prompts/a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md`, `prompts/a-so-that-cannot-map-is-not-a-broken-wheel.md`, `prompts/check-whether-the-fix-already-landed.md`, `prompts/a-binary-you-cannot-read-is-a-claim-you-have-to-check.md` (restored), `prompts/a-delta-against-a-stale-baseline-is-zero-by-construction.md`, `skills/external-pr-rebase-and-maintenance/`, `tools/wheel-inspection-guide.md`, `daily-updates/2026-11-10.md`. **Updated:** README prompt index, tool index, stats table.
+- **Stats:** Prompts **94 → 98**. Tool Guides **140 → 141**. Skills **41 loadable** (45 directories). Daily Updates **134 → 135**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **6**, Tests **4 files / 48 tests** (`python3 -m pytest tests/ -q` → **48 passed**, re-run in this session).
 - Fleet **173** repos (**136** `tiny-*` + **37** other), unchanged from 2026-11-09, recounted this run over two API pages, sort-unique by name.
-- Last verified 2026-11-10 (17:00 UTC; tests and `scripts/check_structure.py` re-run in a fresh `--depth 30` clone of `main`).
+- Last verified 2026-11-10 (18:00 UTC; tests and `scripts/check_structure.py` re-run in this session).
 
 ### 🆕 Latest additions (2026-11-09 cron sync, 13:00 EST) — a negative control that accused the wrong party
 
@@ -661,14 +664,14 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 45 dirs / 41 loadable | 2026-11-10 |
-| Prompts | 97 | 2026-11-10 |
+| Prompts | 98 | 2026-11-10 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 141 | 2026-11-10 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-09 |
 | Daily Updates | 135 | 2026-11-10 |
-| Reports | 32 | 2026-11-09 |
+| Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 136 | 2026-11-10 |
 | Additional hussain-alsaibai Repos | 37 | 2026-11-10 |
 
@@ -751,6 +754,7 @@ dev-masterkit/
 │   ├── a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md # Disk-full reported as test failures [NEW 2026-11-10]
 │   ├── a-so-that-cannot-map-is-not-a-broken-wheel.md # ENOMEM read as a corrupt wheel [NEW 2026-11-10]
 │   ├── check-whether-the-fix-already-landed.md # Re-probe a shared PR head before salvaging [NEW 2026-11-10]
+│   ├── a-delta-against-a-stale-baseline-is-zero-by-construction.md # Four hours labelled as 24 [NEW 2026-11-10]
 │   ├── a-rule-must-pass-on-the-repos-own-fixture.md # A new lint rule must pass the dogfood fixture [NEW 2026-11-09]
 │   ├── a-readme-block-is-a-claim-with-no-executor.md # A README block is a claim with no executor [NEW 2026-11-09]
 │   ├── a-stale-clone-is-a-loaded-weapon.md # A backup clone that can push to the real remote [NEW 2026-11-02]
@@ -1046,6 +1050,7 @@ dev-masterkit/
 | `a-rerun-is-not-a-rerun-if-the-tempdir-was-full` | Disk-full reported as test failures | `pytest` with any `INTERNALERROR`/`Errno 28`, 512 MB tmpfs hosts |
 | `a-so-that-cannot-map-is-not-a-broken-wheel` | `mmap` failure read as a corrupt wheel | Every binary wheel fails, pure-Python works |
 | `check-whether-the-fix-already-landed` | Re-probe a shared PR's head before salvaging | `CONFLICTING` PRs touched by more than one session |
+| `a-delta-against-a-stale-baseline-is-zero-by-construction` | Print the interval before publishing a delta | `*Gained24h`-style metrics, any `previousCheck` baseline |
 | `a-binary-you-cannot-read-is-a-claim-you-have-to-check` | Verify the artifact, not the badge | Wheels, sdists, release bundles |
 | `grep-for-every-use-of-the-predicate-you-replace` | Changing the input is not changing the decision | the RED fix was "applied" yet survived a day; one `grep -n` would have caught it [NEW 2026-11-07] |
 | `a-lint-rule-must-be-proven-to-reject` | Reject, dogfood, and a negative control — three proofs, not one | E019 shipped green while failing the repo's own example, then accepted `name: "--"` with exit 0 [NEW 2026-11-09] |
