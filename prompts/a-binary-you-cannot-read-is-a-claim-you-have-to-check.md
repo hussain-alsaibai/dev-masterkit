@@ -1,79 +1,74 @@
-# A Binary You Cannot Read Is A Claim You Have To Check
+# A binary you cannot read is a claim you have to check
 
-**A rule for anything you install as a release artifact — wheel, sdist, binary,
-nightly build, RC — rather than read as source.**
+**Last verified:** 2026-11-10 (cleanup: this file had gone missing from the tree despite being cited by the README and `daily-updates/2026-11-06.md`; rewritten 2026-11-10 and re-verified with the wheel-inspection procedure below)
 
-> Found 2026-11-06. A census of 70 `tiny-*` repositories found **63 with a
-> `pyproject.toml` and exactly 1 containing an artifact manifest** — and that
-> one was the tool written the same morning to produce them (`tiny-dist-audit`,
-> created 13:05Z, manifest 13:08Z). The ecosystem that documents its source
-> carefully, and ships releases nobody compares against it.
-> **Last verified:** 2026-11-06 (18:00 UTC) — `tiny-dist-audit` cloned fresh
-> from `main`, `python3 -m tiny_dist_audit --help` exit **0**, `pytest -q`
-> **45 passed**.
+## The situation
 
-## The Rule
+A package's install instructions pointed at a wheel, and the wheel was a
+binary — no source in the tree, no build step to read, nothing to grep. It is
+tempting to treat that as "the maintainer's problem": the bytes either work or
+they do not, and CI says which.
 
-> **What a release artifact contains is a separate fact from what the repo
-> says. Record it at build time, compare it per release, or you are trusting a
-> filename.**
+CI cannot say which. **CI tests the code the maintainer has; it does not test
+the bytes a reader downloads.**
 
-"Version 0.8.0 of the package" is not evidence. The evidence is a manifest:
-file list, sizes, digests, derived at build time, checked against the previous
-one. Two days ago the same class of defect was caught in version *strings*
-(`prompts/a-version-guard-only-covers-the-files-it-reads.md`); this is the same
-failure one layer down, where the thing that drifted is the artifact itself.
+## What has to be checked, cheaply
 
-## Why it goes unnoticed
+| Claim | How it is falsified |
+|---|---|
+| "it installs" | install the wheel in a clean venv, `import` it |
+| "it is the version it says" | `pip show` in that venv, compare to the release tag |
+| "it contains the module the README imports" | list wheel contents (`unzip -l`), find the file |
+| "it is not empty" | an empty wheel builds with exit 0 and holds only `dist-info` |
+| "the `pip install <name>` you printed installs *your* code" | resolve the name on the index and check the owner |
 
-- **Nobody diffs a release.** Users install it, CI installs it, a green badge
-  reports that the *tests* passed against the *checkout*.
-- **Accounting bugs look like noise.** A digest that differs between parallel
-  builds, a file resolved twice, a timestamp in the archive — each is
-  individually ignorable and collectively means no comparison is possible.
-- **The RC is the release that was never read.** `dev-1.2.0-rc.618` is a
-  hundred builds apart from `dev-1.2.0` with nobody having compared them.
+The fourth row is the one that gets shipped. A build that produces no module
+still exits `0`, still uploads, still installs, and still fails at first import
+— often in a different repository, weeks later.
 
-## The minimum that makes a comparison possible
+## Why a build's exit code is not evidence
 
-```bash
-# Build-time: record. Release-time: compare. Both are exit-coded.
-pip wheel . -w dist --no-deps
-python -m tiny_dist_audit manifest dist/*.whl -o dist/manifest.json
-python -m tiny_dist_audit check dist/*.whl \
-    --baseline previous/manifest.json --fail-on high
-```
+`pip wheel .` and `python -m build` both exit `0` when the packaging metadata
+declares a package whose module tree the build could not find. The wheel is
+valid; it is validly empty.
 
-A `check` with no baseline proves the artifact is self-consistent; only a
-baseline proves it is *unchanged where it should be*. Ship the manifest as a
-release asset so the next run has something to diff against.
+The check that works is dull: unzip the wheel and require at least one file
+outside `dist-info`/`data`. That check must have **two directions proven** —
+exit `0` on a real wheel, exit `1` on a wheel rebuilt by hand to contain only
+`dist-info`. A guard only ever seen passing is a guard whose failure branch
+may not exist.
 
-## What the check has to be able to fail on
+## The procedure
 
-1. **A file added or removed.** This is the one that matters — an unpublished
-   module travelling inside a published wheel is invisible to every test.
-2. **A digest that moved with no version change.** Either the build is not
-   reproducible or the source moved under a tag.
-3. **A declared module missing from the package.** The classic sidecar bug: the
-   file is in the tree, absent from `py-modules`, and every install falls into
-   an `except ImportError` path.
-4. **Timestamps/metadata differing between two builds of one commit** — not a
-   defect in itself, and the reason a naive byte-compare is useless.
+1. Build the wheel. **Inspect it before installing it.** A file count of zero
+   outside metadata is a hard fail.
+2. Install that specific wheel file — not the name — into a clean venv.
+3. Import the module the README tells the reader to import.
+4. Call one documented function and assert one documented behaviour.
+5. Only then read the badge.
 
-## Test the checker by proving it can be fooled
+## The generalisable rule
 
-`tiny-dist-audit`'s signature guard passed all 43 tests in its first form. The
-mutation that exposed it: make `verify()` return `True` unconditionally. Only a
-test that asserts `verify({}) is False` — a negative case, not a positive one —
-can fail that. **A positive-only suite proves the code runs, not that it
-checks.**
+> **Distribution is a separate surface from source, and it needs its own
+> evidence.** Tests, CI badges and green checks all describe the tree the
+> maintainer built from. The artifact a reader receives is a different object,
+> built by different tooling, from a possibly different commit.
 
-## What this does not fix
+## Counter-rule
 
-A manifest proves what was built, never that it was built from the commit it
-claims. Provenance (build attestation, signed tag, rebuild-and-compare) is a
-different control, and saying so plainly is cheaper than a manifest read as a
-provenance record.
+Do not re-derive this for every package in a family. Write the check once,
+run it over the list, and print a per-package row. A 25-package sweep that
+produces a table is worth more than one package verified by hand, because the
+interesting finding is usually the *pattern* — here, that the same skeleton
+had been copied 13 times with no `pyproject.toml` at all.
 
-See also: `daily-updates/2026-11-06.md`,
-`dev-tooling-trends-2026/reports/2026-11-06-verifying-release-artifacts.md`.
+## Verified
+
+- `dev-masterkit` `scripts/ecosystem_smoke.py` performs exactly this sequence
+  over every advertised package: clone -> build -> **inspect wheel** ->
+  install -> import. 20 tests; the empty-wheel guard is proven in both
+  directions.
+- Re-run 2026-11-10: PyPI returns **404** for `tiny-route-redact`,
+  `tiny-mcp-audit`, `tiny-secret-mask` and `fast-cache`, so all four install
+  instructions now say `pip install git+...`, verified by building and
+  importing each from a fresh clone.

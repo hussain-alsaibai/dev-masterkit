@@ -3,6 +3,22 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-10 cron sync, 12:00 EST) — three environment failures wearing a code problem's clothes
+
+- **81 failing tests were a full tempdir, and the fix was one flag.** `hub/agents/email/python/tests/` reported `81 failed, 970 passed` with an `INTERNALERROR / OSError: [Errno 28] No space left on device` above it — `/tmp` is a **512 MB tmpfs** and pytest's `tmpdir` lives there. Same commit, `--basetemp` on the overlay: **2376 passed, 3 skipped**. `81 failed` reads exactly like a regression; the only separator is a line that already scrolled away. See `prompts/a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md`.
+- **Every binary wheel failing while every pure-Python wheel works is one diagnosis, not five.** `sqlalchemy`, `cryptography`, `pydantic_core`, `lxml`, `greenlet` all died with *"failed to map segment from shared object"* when installed into `/tmp`, in the same command that installed pure-Python packages fine. **"Failed to map segment" is an `ENOMEM`, not a corrupt file.** Install anything carrying a `.so` under `/home/node/`. See `prompts/a-so-that-cannot-map-is-not-a-broken-wheel.md`.
+- **The README cited a prompt that was not in the tree.** `prompts/a-binary-you-cannot-read-is-a-claim-you-have-to-check.md` was named by this README's index *and* by `daily-updates/2026-11-06.md`, and no file existed. Two documents described something nothing opened. Rewritten and re-verified; the `Last verified` line names the cleanup instead of implying a continuous history.
+- **A duplicate rebase: `CONFLICTING` is a claim with a timestamp, not a state.** #2027 went conflicting overnight; forty minutes of window later — rebase, both test blocks kept, a `git worktree` baseline showing **identical 138 pre-existing failures** — a second session had already published the identical fix as `127fea3e`. The one field that settles it is `gh pr view <n> --json headRefOid`. See `prompts/check-whether-the-fix-already-landed.md` and the new **`skills/external-pr-rebase-and-maintenance`** (Step 0: is anyone else already doing this?).
+- **A cross-repo marker is a deletion predicate.** `_cleanup_cursor`/`_patch_cursor` matched hooks against the **default** marker set, whose last resort is the bare substring `observal_cli` — so a user's own `~/src/observal_cli/guard.py --deny ...` deny hook was classified as project-managed and **deleted**. `cmd_doctor` already used the strict marker everywhere else. Fixed in 2 lines (`a9bacf36`), proved with an un-fixer that collapses the predicate back at exactly the two sites: **2 failed** pre-fix, **2 passed** after. The doctor fixture had also asserted the wrong module path and never tested the real command.
+- **Six weeks of `pip install <name>` for packages that were never published.** Re-verified live: **404** for `tiny-route-redact`, `tiny-mcp-audit`, `tiny-secret-mask`, `fast-cache`. READMEs now carry `pip install git+...` — `tiny-mcp-audit` `026999a`, `tiny-route-redact` `ead2186` (plus dependency order, since its dependency is a 404 too), verified by building and importing each in a clean venv.
+- **The install-line census: 54 repos, 49 real 404s, 4 name collisions, 0 installs of our code.** `tiny-router` resolves to nekonoshiri's package, `tiny-cli` to TinyBio's genomics CLI, plus `tiny-eval` and `tiny-memo`. My first draft said "54 wrong" (49 are) and "one works" (**zero** do) — both read off the table instead of the data, because a `200` means the name exists, never that the name is ours. Report: `dev-tooling-trends-2026/reports/2026-11-10-install-line-census.md`.
+- **A real win, verified not asserted:** `boxlite-ai/boxlite#2460` — `CodeBox.run()` dropped its `timeout` before `exec()` — **merged** as `fe6c4d1bd440` (5 files, +402/−7). The out-of-scope half of the same review (a timed exec can block on a descendant-held pipe: `spawn_with_pipes` never calls `setsid()`) went upstream as **issue #2513** with the full trace, and the maintainer replied.
+- **`git add -A` in the workspace root, again** — 249 unintentional files, 65 of them gitlinks, pushed in the same command chain. Recovered with `reset --soft` + `push --force-with-lease=main:37641a0c`. AGENTS.md records this rule; the recovery that worked is pinned to the SHA being replaced.
+- **Added:** `prompts/a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md`, `prompts/a-so-that-cannot-map-is-not-a-broken-wheel.md`, `prompts/check-whether-the-fix-already-landed.md`, `prompts/a-binary-you-cannot-read-is-a-claim-you-have-to-check.md` (restored), `skills/external-pr-rebase-and-maintenance/`, `tools/wheel-inspection-guide.md`, `daily-updates/2026-11-10.md`. **Updated:** README prompt index, tool index, stats table.
+- **Stats:** Prompts **94 → 97**. Tool Guides **140 → 141**. Skills **41 loadable** (45 directories). Daily Updates **134 → 135**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **6**, Tests **4 files / 48 tests** (`python3 -m pytest tests/ -q` → **48 passed**, re-run in this session).
+- Fleet **173** repos (**136** `tiny-*` + **37** other), unchanged from 2026-11-09, recounted this run over two API pages, sort-unique by name.
+- Last verified 2026-11-10 (17:00 UTC; tests and `scripts/check_structure.py` re-run in a fresh `--depth 30` clone of `main`).
+
 ### 🆕 Latest additions (2026-11-09 cron sync, 13:00 EST) — a negative control that accused the wrong party
 
 - **The control said `tiny-route-redact` 0.2.0 fails open. It does not.** The obvious version imports the module, *then* patches `builtins.__import__`. `_MASK = _resolve_mask()` is bound at **module import**, so the patch lands after the only resolution that matters, and `redact_path("/x")` returns `/x` — an unredacted path with no exception, on `main`, in a published repo. A finding that looked reportable.
@@ -644,28 +660,34 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 45 | 2026-11-03 |
-| Prompts | 87 | 2026-11-06 |
+| Skills | 45 dirs / 41 loadable | 2026-11-10 |
+| Prompts | 97 | 2026-11-10 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 139 | 2026-11-06 |
+| Tool Guides | 141 | 2026-11-10 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Scripts | 5 | 2026-11-05 |
-| Daily Updates | 132 | 2026-11-06 |
-| Reports | 32 | 2026-11-05 |
-| tiny-* Ecosystem Repos | 136 | 2026-11-06 |
-| Additional hussain-alsaibai Repos | 38 | 2026-11-05 |
+| Scripts | 6 | 2026-11-09 |
+| Daily Updates | 135 | 2026-11-10 |
+| Reports | 32 | 2026-11-09 |
+| tiny-* Ecosystem Repos | 136 | 2026-11-10 |
+| Additional hussain-alsaibai Repos | 37 | 2026-11-10 |
 
-**All 40 `SKILL.md` files carry AgentSkills YAML frontmatter** (39 pre-existing + `verification-sweep`), so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py`: `40 total, 40 loadable, 0 pending frontmatter`.
+**All 41 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in a fresh clone: `41 total, 41 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-06**, not carried forward.
+**Every count above was measured against the tree on 2026-11-10**, not carried forward. This run corrected four rows that had been frozen at 2026-11-06 (`Prompts 87`, `Tool Guides 139`, `Daily Updates 132`, `Scripts 5`) while the additions block above them already claimed 94 / 140 / 134 / 6 — the table and the prose disagreed for four days because nothing compared them.
 
-> **The `Skills` row counts directories (45); the frontmatter note counts
-> loadable skills (40).** The other five directories
-> (`accountability`, `cost-tracker`, `repo-monitor`, `research`,
-> `self-reflection`) hold legacy script folders with no `SKILL.md`, so they
-> are not loadable as AgentSkills. Both numbers are stated rather than one
-> standing in for the other.
+> **All three skill numbers were measured against the tree this run, and they
+> do not agree because they count different things:**
+>
+> | Measure | Count |
+> |---|---|
+> | `skills/` directories | **45**, plus this run's `external-pr-rebase-and-maintenance` = **46** on disk |
+> | directories holding a `SKILL.md` | **41** |
+> | `scripts/check_structure.py` loadable | **41**, 0 pending frontmatter |
+>
+> The five directories with no `SKILL.md` (`accountability`, `cost-tracker`,
+> `repo-monitor`, `research`, `self-reflection` — the last holds a
+> `REFLECTION.md`) are legacy material and are not loadable as AgentSkills.
 
 > **The `Tools | 98` row was removed on 2026-11-02.** It had been frozen since
 > 2026-09-17 and counted a category that no longer exists: `tools/` has only
@@ -726,6 +748,9 @@ dev-masterkit/
 │   ├── a-stale-error-counter-is-not-a-live-failure.md # Read the receipts, not the counter [NEW 2026-11-02]
 │   ├── a-dead-credential-named-in-a-prompt-fails-every-run.md # The prompt is the credential [NEW 2026-11-02]
 │   ├── a-rule-that-cannot-fire-is-not-a-rule.md # A rule whose input is capped can never fire [NEW 2026-11-02]
+│   ├── a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md # Disk-full reported as test failures [NEW 2026-11-10]
+│   ├── a-so-that-cannot-map-is-not-a-broken-wheel.md # ENOMEM read as a corrupt wheel [NEW 2026-11-10]
+│   ├── check-whether-the-fix-already-landed.md # Re-probe a shared PR head before salvaging [NEW 2026-11-10]
 │   ├── a-rule-must-pass-on-the-repos-own-fixture.md # A new lint rule must pass the dogfood fixture [NEW 2026-11-09]
 │   ├── a-readme-block-is-a-claim-with-no-executor.md # A README block is a claim with no executor [NEW 2026-11-09]
 │   ├── a-stale-clone-is-a-loaded-weapon.md # A backup clone that can push to the real remote [NEW 2026-11-02]
@@ -748,6 +773,7 @@ dev-masterkit/
 │   ├── ci-census/             # Find the repos whose tests nothing executes [NEW 2026-10-28]
 │   ├── runtime-reliability/   # Audit a job runtime for failures that hide behind plausible errors [NEW 2026-11-02]
 │   ├── rule-reachability/     # Prove every rule in a catalogue can actually fire [NEW 2026-11-02]
+│   ├── external-pr-rebase-and-maintenance/ # Resolve a CONFLICTING PR without losing anyone's work [NEW 2026-11-10]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -1017,6 +1043,10 @@ dev-masterkit/
 | `validate-the-args-the-tool-receives` | A contract check on the prepared payload proves nothing | a serialiser dropping `None` fails at side-effect time [NEW 2026-11-06] |
 | `a-guard-that-fails-open-passes-every-happy-path-test` | A silent-absence check cannot be proved by the success path | guard stubbed → 5 failed; restored → 40 passed [NEW 2026-11-07] |
 | `report-the-floor-and-the-ceiling-separately` | A census is a distribution, not an average | docs 65/65, validates peer capabilities 1/65 [NEW 2026-11-07] |
+| `a-rerun-is-not-a-rerun-if-the-tempdir-was-full` | Disk-full reported as test failures | `pytest` with any `INTERNALERROR`/`Errno 28`, 512 MB tmpfs hosts |
+| `a-so-that-cannot-map-is-not-a-broken-wheel` | `mmap` failure read as a corrupt wheel | Every binary wheel fails, pure-Python works |
+| `check-whether-the-fix-already-landed` | Re-probe a shared PR's head before salvaging | `CONFLICTING` PRs touched by more than one session |
+| `a-binary-you-cannot-read-is-a-claim-you-have-to-check` | Verify the artifact, not the badge | Wheels, sdists, release bundles |
 | `grep-for-every-use-of-the-predicate-you-replace` | Changing the input is not changing the decision | the RED fix was "applied" yet survived a day; one `grep -n` would have caught it [NEW 2026-11-07] |
 | `a-lint-rule-must-be-proven-to-reject` | Reject, dogfood, and a negative control — three proofs, not one | E019 shipped green while failing the repo's own example, then accepted `name: "--"` with exit 0 [NEW 2026-11-09] |
 | `a-rule-must-pass-on-the-repos-own-fixture` | A new lint rule must pass on the repo's bundled example | E019 rejected `examples/SKILL.md` while unit tests + mutation were green [NEW 2026-11-09] |
@@ -1342,6 +1372,7 @@ Production-tested tools and libraries built by this team:
 | Tool | Description | Last Verified |
 |------|-------------|---------------|
 | [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-02 |
+| [wheel-inspection Guide](tools/wheel-inspection-guide.md) | What a wheel actually contains — module files, `.so` presence, empty-wheel guard | 2026-11-10 |
 | [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-02 |
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [snapdb-cli Guide](tools/snapdb-cli-guide.md) | SnapDB CLI — init, insert, export, benchmark, watch | 2026-08-10 |
