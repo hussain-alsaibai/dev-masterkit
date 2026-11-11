@@ -525,3 +525,7 @@ fingerprints:
   rule_id: E1
   file: runtime-reliability/SKILL.md
   reason: The documented curl command is the live-probe recipe for verifying a model fallback entry. It sends a model id and a fixed reply string to the provider endpoint the operator already configured, using that provider's own credential from its env. No skill data, credential, or file content is transmitted. Reviewed 2026-11-02.
+- hash: sha256:e206a699080eb892410308b84e36fe8a2c35d359fe315b759c31d5bb47fd43ca
+  rule_id: TM1
+  file: external-pr-rebase-and-maintenance/SKILL.md
+  reason: "git push --force-with-lease=<sha> without a leading dash. It is the safe form, pinned to the exact SHA the branch was rebased from so it fails instead of clobbering a concurrent push. The skill's point is to contrast it with a bare --force, which it names as forbidden in prose and in the do-not list. Hash regenerated 2026-11-11 because a scan report and a baseline generation of the same file disagree on the digest: the committed baseline entry no longer matched after 7c4cd7e edited this section, and the finding itself is unchanged and reviewed."
