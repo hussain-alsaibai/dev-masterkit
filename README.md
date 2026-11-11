@@ -3,6 +3,15 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-11 late cron sync, 13:00 EST) — the proof a fix works is the failure it produces on the old version
+
+- **"Fixed" is a claim about two versions.** `tiny-audit` 0.2.0 (`242b86b`) shipped 9 tamper tests; run against 0.1.0 in the same session they are **9 failed**, against 0.2.0 **9 passed**. The pass count alone reads as progress; the fail count is what makes it evidence. New: `prompts/the-count-that-proves-it-works-is-the-count-that-fails.md`. **Trap recorded in it:** two of the nine first failed on the *fixed* tree with `ImportError` for a field that only exists in the new version — a test that fails on the old version because a name is missing has not reached the property.
+- **A test helper pytest can collect is a broken test.** `snapdb` 0.18.0 defined module-level `def test(name, ok, detail="")`; pytest treats parameters as **fixtures** and errored the module on every run — `fixture 'name' not found`, 39 call sites. It survived because `python tests/test_delta_encoding.py` works: pytest claims the `test*` namespace by prefix. Renamed to `check()`, not hidden behind `__test__ = False`. New: `prompts/a-test-helper-that-pytest-can-collect-is-a-broken-test.md`.
+- **A push you can make is not a push you are allowed to keep.** Three green pushes, none of them published: a remote pointing at a superseded legacy copy, a push to `master` on a `main`-default repo, and five "modified" files that were **byte-identical to what was already on GitHub**. Verify with `git ls-remote` plus a blob `sha256sum`, not with an exit code. New: `prompts/a-push-you-can-make-is-not-a-push-you-can-keep.md`.
+- **pysnapdb is 4 versions stale on PyPI** — 0.14.0 published, 0.18.1 shipped today. Publishing needs a token this job does not have; recorded as a concrete blocker rather than assumed away.
+- **Stats:** Prompts **104 → 107**. Skills unchanged at **42 loadable** / 47 directories. `scripts/check_structure.py` → `42 total, 42 loadable, 0 pending frontmatter`. Suite **56 passed** (`--basetemp=/home/node/ptbase`).
+- Last verified 2026-11-11 (18:00 UTC).
+
 ### 🆕 Latest additions (2026-11-11 cron sync, 12:00 EST) — every check was pointed one step away from what ships
 
 - **The published sdist could not pass its own suite.** `snapdb` 0.18.1 (`55cc77f`): `test_version_consistency.py` read `CHANGELOG.md` and `package.json`, neither of which `MANIFEST.in` shipped; and two test modules defined a module-level `def test(name, ok, detail="")` that pytest collected as a test needing a `name` fixture. Unpacked sdist: **0.18.0 → 2 failed + 2 errors**, **0.18.1 → 236 passed, 5 skipped**. The checkout was the one tree where neither defect could appear. New: `prompts/a-test-that-only-runs-in-a-checkout-is-a-test-that-never-ran.md`.
@@ -678,8 +687,8 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 46 dirs / 42 loadable | 2026-11-11 |
-| Prompts | 104 | 2026-11-11 |
+| Skills | 47 dirs / 42 loadable | 2026-11-11 |
+| Prompts | 107 | 2026-11-11 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 142 | 2026-11-11 |
 | Agents | 3 | 2026-07-23 |
@@ -690,18 +699,18 @@ open skills/repo-creator/SKILL.md
 | tiny-* Ecosystem Repos | 136 | 2026-11-10 |
 | Additional hussain-alsaibai Repos | 37 | 2026-11-10 |
 
-**All 41 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in a fresh clone: `41 total, 41 loadable, 0 pending frontmatter`.
+**All 42 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in a fresh clone: `42 total, 42 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-10**, not carried forward. This run corrected four rows that had been frozen at 2026-11-06 (`Prompts 87`, `Tool Guides 139`, `Daily Updates 132`, `Scripts 5`) while the additions block above them already claimed 94 / 140 / 134 / 6 — the table and the prose disagreed for four days because nothing compared them.
+**Every count above was measured against the tree on 2026-11-11**, not carried forward. This run corrected four rows that had been frozen at 2026-11-06 (`Prompts 87`, `Tool Guides 139`, `Daily Updates 132`, `Scripts 5`) while the additions block above them already claimed 94 / 140 / 134 / 6 — the table and the prose disagreed for four days because nothing compared them.
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
 >
 > | Measure | Count |
 > |---|---|
-> | `skills/` directories | **45**, plus this run's `external-pr-rebase-and-maintenance` = **46** on disk |
-> | directories holding a `SKILL.md` | **41** |
-> | `scripts/check_structure.py` loadable | **41**, 0 pending frontmatter |
+> | `skills/` directories | **47** on disk, 42 holding a `SKILL.md` |
+> | directories holding a `SKILL.md` | **42** |
+> | `scripts/check_structure.py` loadable | **42**, 0 pending frontmatter |
 >
 > The five directories with no `SKILL.md` (`accountability`, `cost-tracker`,
 > `repo-monitor`, `research`, `self-reflection` — the last holds a
@@ -773,6 +782,9 @@ dev-masterkit/
 │   ├── a-vendored-directory-is-an-undeclared-build-step.md # Untracking vendor/ removes the install [NEW 2026-11-11]
 │   ├── a-ci-job-with-a-credential-and-a-side-effect-must-not-share-a-trigger.md # Deploy needs workflow_dispatch [NEW 2026-11-11]
 │   ├── a-collision-warning-must-replace-the-install-command.md # Warning must replace the command [NEW 2026-11-11]
+│   ├── the-count-that-proves-it-works-is-the-count-that-fails.md # Prove the test fails on the old version [NEW 2026-11-11]
+│   ├── a-test-helper-that-pytest-can-collect-is-a-broken-test.md # def test(...) is collected, not called [NEW 2026-11-11]
+│   ├── a-push-you-can-make-is-not-a-push-you-can-keep.md # Verify the ref and the blob [NEW 2026-11-11]
 │   ├── a-so-that-cannot-map-is-not-a-broken-wheel.md # ENOMEM read as a corrupt wheel [NEW 2026-11-10]
 │   ├── check-whether-the-fix-already-landed.md # Re-probe a shared PR head before salvaging [NEW 2026-11-10]
 │   ├── a-delta-against-a-stale-baseline-is-zero-by-construction.md # Four hours labelled as 24 [NEW 2026-11-10]
@@ -1083,6 +1095,9 @@ dev-masterkit/
 | `a-vendored-directory-is-an-undeclared-build-step` | Untracking a vendored tree removes the install | `node_modules`/`vendor/` tracked in git | [NEW 2026-11-11] |
 | `a-ci-job-with-a-credential-and-a-side-effect-must-not-share-a-trigger` | Deploy jobs need `workflow_dispatch` | Any workflow with a secret that mutates the world | [NEW 2026-11-11] |
 | `a-collision-warning-must-replace-the-install-command` | Say "not on PyPI", then show the git URL | PyPI name owned by someone else | [NEW 2026-11-11] |
+| `the-count-that-proves-it-works-is-the-count-that-fails` | "Fixed" is a claim about two versions | Any bugfix whose test was written after the fix | [NEW 2026-11-11] |
+| `a-test-helper-that-pytest-can-collect-is-a-broken-test` | Pytest claims the `test*` namespace by prefix | Table-driven tests, `def test(...)` helpers | [NEW 2026-11-11] |
+| `a-push-you-can-make-is-not-a-push-you-can-keep` | Verify the ref and the blob, not the exit code | Duplicate checkouts, legacy remotes, non-default branch | [NEW 2026-11-11] |
 
 ## 🏗️ Our Tools
 
