@@ -3,6 +3,21 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-11 cron sync, 12:00 EST) — every check was pointed one step away from what ships
+
+- **The published sdist could not pass its own suite.** `snapdb` 0.18.1 (`55cc77f`): `test_version_consistency.py` read `CHANGELOG.md` and `package.json`, neither of which `MANIFEST.in` shipped; and two test modules defined a module-level `def test(name, ok, detail="")` that pytest collected as a test needing a `name` fixture. Unpacked sdist: **0.18.0 → 2 failed + 2 errors**, **0.18.1 → 236 passed, 5 skipped**. The checkout was the one tree where neither defect could appear. New: `prompts/a-test-that-only-runs-in-a-checkout-is-a-test-that-never-ran.md`.
+- **CI named seven files and the regression file was never added to the list.** `tiny-log` (`2ea3179`) ran seven files by name, so the eleven tests for the 0.8.0 `extra=` fix had **never run**. `tiny-cli` 1.3.1 (`1fe9955`) passed file-by-file and failed as a suite: `_NO_COLOR` latches at import and the test modules set the override in their module body, so alphabetical collection latched the wrong value. Fix: `pytest .` and a `conftest.py`. New: `prompts/ci-that-is-not-auto-triggered-is-ci-that-ran-once.md`.
+- **`verify()` passed on a truncated audit log, and the first fix disabled itself.** `tiny-audit` 0.2.0 (`242b86b`): `prev_hash` + HMAC satisfied by any surviving prefix, so 3 entries → 1 entry verified **True**. Fix: `seq` inside the HMAC plus an optional `high_water_path=` sidecar. The constructor wrote the sidecar **unconditionally**, so reopening a truncated log rewrote the record of its real length — the fix compared the log to itself. The write must be raise-only. 9 new tests, **9/9 fail on 0.1.0**. New: `prompts/a-witness-the-writer-can-repair-is-not-a-witness.md`.
+- **A vendored directory is an undeclared build step.** `claw-token` had **436 tracked `node_modules` files** — `.gitignore` had the rule since the first commit, and ignoring a path does not untrack it. Untracking turned CI red, not from a regression but because `foundry.toml` sets `libs = ["node_modules", "lib"]` and the vendored tree *was* the install: `forge build` had no install step. Reproduced from a clean tree (`git archive | tar -x`) with the identical `Error (6275)`; fixed by adding `npm ci` (`1c00b63`). 48 tracked `out/` files removed in the same audit (`0b22148`). New: `prompts/a-vendored-directory-is-an-undeclared-build-step.md`.
+- **Every push to main deployed a new contract.** `claw-token` deploy workflow ran on push with a live `DEPLOYER_PRIVATE_KEY`; two pushes 90 seconds apart burned two contract addresses. Now `workflow_dispatch`-only with a required `reason` (`00d0c78`), verified three ways — auto-commit triggered **0** runs, an ordinary push triggered **0**, and the live contract answered `totalTaxBps()` → 300. Turned into a fleet check: `scripts/scan_push_to_main_side_effects.py` over **499 workflows**, no other hits, with a self-test that reconstructs the old workflow and asserts it is flagged. New: `prompts/a-ci-job-with-a-credential-and-a-side-effect-must-not-share-a-trigger.md`.
+- **A collision warning is not enough if the install command is still there.** `tiny-memo` (`eae14bb`), `tiny-eval` (`d34069e`), `xvfbwrapper` (`b04eb95`) each showed `pip install <name>` for a name owned by someone else — the command **succeeds** and installs a stranger's program. Replaced by the git URL. `tiny-eval` needed a rebase, not a force push: a force push would have deleted 4 real files. New: `prompts/a-collision-warning-must-replace-the-install-command.md`.
+- **Corrected a prompt that would have dismissed a real bug.** `a-rerun-is-not-a-rerun-if-the-tempdir-was-full` says a delta between a full-tmpfs run and an overlay run proves an environment defect. That holds only if nothing else changed — snapdb's sdist failure re-runs identically. Amended with the discriminator: **the control is the same command, same inputs, same environment.**
+- **New skill `skills/self-auditing-repo/`** — the four steps in order: run the suite from the unpacked sdist, count what CI actually collected, attack the security property, prove every new test fails on the old version. Derived from the four defects above, which were all in repos with green badges.
+- **New tool guide `tools/artifact-testing-guide.md`** — `uv build --sdist` where `python3 -m build` is absent, `PKG-INFO` is RFC-822 **without** a section header (`configparser` raises `MissingSectionHeaderError`), empty-wheel inspection, and the `noexec` trap: `tests/test_scan_skills.py` read **7 failed, 49 passed** on the default tempdir and **56 passed** with `--basetemp` on an exec-capable path. The script was correct; `/tmp` is `noexec`.
+- **Name census, classified by owner:** 93 pyproject names → **85 unclaimed, 7 collisions, 1 ours**. `pysnapdb` is on PyPI at 0.14.0 while the repo shipped 0.18.1.
+- **Stats:** Prompts **98 → 104**. Tool Guides **141 → 142**. Skills **41 → 42 loadable** (46 directories). Daily Updates **135 → 136**. Reports **32**. Commands 5, Agents 3, Orchestrators 1, Scripts **6**, Tests **5 files / 56 tests** (`python3 -m pytest tests/ -q --basetemp=/home/node/ptbase` → **56 passed**, run in this session).
+- Last verified 2026-11-11 (17:00 UTC; `scripts/check_structure.py` → `42 total, 42 loadable, 0 pending frontmatter`; suite re-run in this session).
+
 ### 🆕 Latest additions (2026-11-10 cron sync, 12:00 EST) — three environment failures wearing a code problem's clothes
 
 - **81 failing tests were a full tempdir, and the fix was one flag.** `hub/agents/email/python/tests/` reported `81 failed, 970 passed` with an `INTERNALERROR / OSError: [Errno 28] No space left on device` above it — `/tmp` is a **512 MB tmpfs** and pytest's `tmpdir` lives there. Same commit, `--basetemp` on the overlay: **2376 passed, 3 skipped**. `81 failed` reads exactly like a regression; the only separator is a line that already scrolled away. See `prompts/a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md`.
@@ -663,14 +678,14 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 45 dirs / 41 loadable | 2026-11-10 |
-| Prompts | 98 | 2026-11-10 |
+| Skills | 46 dirs / 42 loadable | 2026-11-11 |
+| Prompts | 104 | 2026-11-11 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 141 | 2026-11-10 |
+| Tool Guides | 142 | 2026-11-11 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Scripts | 6 | 2026-11-09 |
-| Daily Updates | 135 | 2026-11-10 |
+| Scripts | 6 | 2026-11-11 |
+| Daily Updates | 136 | 2026-11-11 |
 | Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 136 | 2026-11-10 |
 | Additional hussain-alsaibai Repos | 37 | 2026-11-10 |
@@ -752,6 +767,12 @@ dev-masterkit/
 │   ├── a-dead-credential-named-in-a-prompt-fails-every-run.md # The prompt is the credential [NEW 2026-11-02]
 │   ├── a-rule-that-cannot-fire-is-not-a-rule.md # A rule whose input is capped can never fire [NEW 2026-11-02]
 │   ├── a-rerun-is-not-a-rerun-if-the-tempdir-was-full.md # Disk-full reported as test failures [NEW 2026-11-10]
+│   ├── a-test-that-only-runs-in-a-checkout-is-a-test-that-never-ran.md # The suite must run from the sdist [NEW 2026-11-11]
+│   ├── ci-that-is-not-auto-triggered-is-ci-that-ran-once.md # A file CI never collected is a draft [NEW 2026-11-11]
+│   ├── a-witness-the-writer-can-repair-is-not-a-witness.md # Tamper detection needs an external witness [NEW 2026-11-11]
+│   ├── a-vendored-directory-is-an-undeclared-build-step.md # Untracking vendor/ removes the install [NEW 2026-11-11]
+│   ├── a-ci-job-with-a-credential-and-a-side-effect-must-not-share-a-trigger.md # Deploy needs workflow_dispatch [NEW 2026-11-11]
+│   ├── a-collision-warning-must-replace-the-install-command.md # Warning must replace the command [NEW 2026-11-11]
 │   ├── a-so-that-cannot-map-is-not-a-broken-wheel.md # ENOMEM read as a corrupt wheel [NEW 2026-11-10]
 │   ├── check-whether-the-fix-already-landed.md # Re-probe a shared PR head before salvaging [NEW 2026-11-10]
 │   ├── a-delta-against-a-stale-baseline-is-zero-by-construction.md # Four hours labelled as 24 [NEW 2026-11-10]
@@ -778,6 +799,7 @@ dev-masterkit/
 │   ├── runtime-reliability/   # Audit a job runtime for failures that hide behind plausible errors [NEW 2026-11-02]
 │   ├── rule-reachability/     # Prove every rule in a catalogue can actually fire [NEW 2026-11-02]
 │   ├── external-pr-rebase-and-maintenance/ # Resolve a CONFLICTING PR without losing anyone's work [NEW 2026-11-10]
+│   ├── self-auditing-repo/     # Artifact suite, collected count, attack the property, prove vs old [NEW 2026-11-11]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -1055,6 +1077,12 @@ dev-masterkit/
 | `grep-for-every-use-of-the-predicate-you-replace` | Changing the input is not changing the decision | the RED fix was "applied" yet survived a day; one `grep -n` would have caught it [NEW 2026-11-07] |
 | `a-lint-rule-must-be-proven-to-reject` | Reject, dogfood, and a negative control — three proofs, not one | E019 shipped green while failing the repo's own example, then accepted `name: "--"` with exit 0 [NEW 2026-11-09] |
 | `a-rule-must-pass-on-the-repos-own-fixture` | A new lint rule must pass on the repo's bundled example | E019 rejected `examples/SKILL.md` while unit tests + mutation were green [NEW 2026-11-09] |
+| `a-test-that-only-runs-in-a-checkout-is-a-test-that-never-ran` | The suite must runnable from the published sdist | Packaging touched, "green in the checkout" | [NEW 2026-11-11] |
+| `ci-that-is-not-auto-triggered-is-ci-that-ran-once` | A file CI never collected is a draft | Named-file CI runs, per-file matrices | [NEW 2026-11-11] |
+| `a-witness-the-writer-can-repair-is-not-a-witness` | Tamper detection needs an external high-water mark | `verify()`/checksum/hash-chain designs | [NEW 2026-11-11] |
+| `a-vendored-directory-is-an-undeclared-build-step` | Untracking a vendored tree removes the install | `node_modules`/`vendor/` tracked in git | [NEW 2026-11-11] |
+| `a-ci-job-with-a-credential-and-a-side-effect-must-not-share-a-trigger` | Deploy jobs need `workflow_dispatch` | Any workflow with a secret that mutates the world | [NEW 2026-11-11] |
+| `a-collision-warning-must-replace-the-install-command` | Say "not on PyPI", then show the git URL | PyPI name owned by someone else | [NEW 2026-11-11] |
 
 ## 🏗️ Our Tools
 
@@ -1378,6 +1406,7 @@ Production-tested tools and libraries built by this team:
 |------|-------------|---------------|
 | [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-02 |
 | [wheel-inspection Guide](tools/wheel-inspection-guide.md) | What a wheel actually contains — module files, `.so` presence, empty-wheel guard | 2026-11-10 |
+| [artifact-testing Guide](tools/artifact-testing-guide.md) | Run the suite from an unpacked sdist; read `PKG-INFO`; empty-wheel guard; `noexec` tmpdir trap | 2026-11-11 |
 | [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-02 |
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [snapdb-cli Guide](tools/snapdb-cli-guide.md) | SnapDB CLI — init, insert, export, benchmark, watch | 2026-08-10 |

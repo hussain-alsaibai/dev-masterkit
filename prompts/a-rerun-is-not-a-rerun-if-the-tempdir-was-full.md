@@ -77,6 +77,30 @@ The corollary that costs the most time: **do not debug the tests until the
 environment has passed its own check.** Copying 81 failing test names into an
 analysis is 81 opportunities to find a plausible-but-wrong cause.
 
+## Addendum 2026-11-11 — a throwaway environment is still an environment
+
+This rule is right about the symptom and wrong about the proof if it is applied
+without a control. The delta between a full-tmpfs run and an overlay run
+attributes the difference to the environment **only if nothing else changed**.
+
+That condition failed on 2026-11-11: `snapdb` 0.18.0 failed in an unpacked
+sdist with 2 failed + 2 errors, and re-running it with `--basetemp` on the
+overlay **still fails**. The missing files are missing from the artifact, not
+from the disk. A session applying this prompt mechanically would have recorded
+"environment, not code" and shipped a broken sdist.
+
+**The discriminator:** re-run the same command with the same inputs in the same
+environment before blaming the environment.
+
+```
+run 1  pytest -q                      (tmpfs)     -> 2 failed + 2 errors
+run 2  pytest -q --basetemp=/overlay  (same cmd)  -> 2 failed + 2 errors   => code
+run 3  same command, offline/missing dep          -> differs               => environment
+```
+
+If run 2 differs from run 1, the environment is a factor. If it does not, the
+environment was never the variable. Run the control before writing the verdict.
+
 ## Counter-rule
 
 A full disk can also cause a *genuinely* intermittent failure — a test that
