@@ -3,7 +3,15 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
-### 🆕 Latest additions (2026-11-12 cron sync, 12:00 EST) — the fix landed, and the thing next to it did not move
+### 🆕 Latest additions (2026-11-12 late cron sync, 13:00 EST) — a tool shipped today that no document named
+
+- **`tiny-trace-ctx` 0.1.0 (`aed827d`) — a repo created today and missing from every index.** W3C `traceparent`/`tracestate` round-trip across HTTP/AMQP/gRPC without the OpenTelemetry runtime: ~140 LOC, zero deps, `secrets.token_hex` ids, frozen dataclass, vendor `tracestate` order preserved, case-insensitive header extraction. CI **success** on `main`. The 17:00 UTC sync passed over it because it searched for today's *commits*, and this repo's only commit is its initial one.
+- **The bug it shipped with is the prompt worth keeping.** `traceparent` carried inline `tracestate` (`00-<trace>-<span>-01,vendor=value`) **and** a separate `tracestate` header, and `extract()` read both — so every vendor came back twice, and the duplication **compounded on each hop** of a cross-service chain. `parse_traceparent()` now accepts exactly four W3C fields, and `extract()` reads vendor state from the `tracestate` header only. Found and fixed before the first tag.
+- **PyPI is 404 for `tiny-trace-ctx`.** Its README still says `pip install tiny-trace-ctx`, which installs nothing. Recorded, not assumed away — same class as the 2026-11-10 install-line census, and the same blocker (no publish token in this environment).
+- **Stats table corrected.** The 17:00 UTC commit added three prompts, a skill and a tool guide and left the table at the 2026-11-11 values — the exact table-versus-prose drift the 2026-11-06 note was written about. Rows now measured against the tree: Prompts **110**, Tool Guides **143**, Daily Updates **137**, Skills **48 dirs / 43 loadable**, tiny-* **137**, other **38**.
+- Last verified 2026-11-12 (18:00 UTC; `ls skills/*/SKILL.md | wc -l` → 43, `scripts/check_structure.py` → `43 total, 43 loadable, 0 pending`, suite **56 passed**).
+
+### 🆕 Previous additions (2026-11-12 cron sync, 12:00 EST) — the fix landed, and the thing next to it did not move
 
 - **A fix in one sibling is a bug report about the other.** `tiny-router` 0.9.2 (`c177510`): the **path** redaction sidecar still had `if mask is None: return nxt(req)` — the exact defect the **header** sidecar was fixed for on 2026-10-26, forty lines away, same template, **17 days**, green suite. Reproduced with `tiny_secret_mask` off `sys.path`: `/u/550e8400-…` → **LEAKED**. Now raises `RedactionUnavailable`, with `redact_path_middleware_passthrough()` as the greppable opt-out. 7 tests, **6 fail pre-fix**, CI green 7/7. New: `prompts/a-fix-in-one-sibling-is-a-bug-report-about-the-other.md`.
 - **An exporter must be checked by a third party, not by its own roundtrip.** `tiny-validator` 0.7.1 (`73d4d08`): `to_json_schema()` put defaulted fields in `required`, so every OpenAPI 3.1 body and MCP tool definition built from the export rejected input the library accepts. The roundtrip (`to_json_schema` → `from_json_schema` → `validate`) passed because both halves share the wrong assumption and cancel. Fixed to `field.required and field.default is ...`; parametrised cross-check against **jsonschema 4.26** (test-only, `importorskip`). CI green 5/5. New: `prompts/an-exporter-must-be-checked-by-a-third-party.md`.
@@ -698,34 +706,39 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 47 dirs / 42 loadable | 2026-11-11 |
-| Prompts | 107 | 2026-11-11 |
+| Skills | 48 dirs / 43 loadable | 2026-11-12 |
+| Prompts | 110 | 2026-11-12 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 142 | 2026-11-11 |
+| Tool Guides | 143 | 2026-11-12 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 136 | 2026-11-11 |
+| Daily Updates | 137 | 2026-11-12 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 136 | 2026-11-10 |
-| Additional hussain-alsaibai Repos | 37 | 2026-11-10 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-12 |
+| Additional hussain-alsaibai Repos | 38 | 2026-11-12 |
 
-**All 42 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in a fresh clone: `42 total, 42 loadable, 0 pending frontmatter`.
+**All 43 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in a fresh clone: `43 total, 43 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-11**, not carried forward. This run corrected four rows that had been frozen at 2026-11-06 (`Prompts 87`, `Tool Guides 139`, `Daily Updates 132`, `Scripts 5`) while the additions block above them already claimed 94 / 140 / 134 / 6 — the table and the prose disagreed for four days because nothing compared them.
+**Every count above was measured against the tree on 2026-11-12**, not carried forward. The 2026-11-12 17:00 UTC run added three prompts, a skill and a tool guide and left this table at the 2026-11-11 values — the same table-versus-prose drift this section was created to catch on 2026-11-06. Corrected in the 18:00 UTC pass.
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
 >
 > | Measure | Count |
 > |---|---|
-> | `skills/` directories | **47** on disk, 42 holding a `SKILL.md` |
-> | directories holding a `SKILL.md` | **42** |
-> | `scripts/check_structure.py` loadable | **42**, 0 pending frontmatter |
+> | `skills/` directories | **48** on disk, 43 holding a `SKILL.md` |
+> | directories holding a `SKILL.md` | **43** |
+> | `scripts/check_structure.py` loadable | **43**, 0 pending frontmatter |
 >
 > The five directories with no `SKILL.md` (`accountability`, `cost-tracker`,
 > `repo-monitor`, `research`, `self-reflection` — the last holds a
 > `REFLECTION.md`) are legacy material and are not loadable as AgentSkills.
+> Recount the pair with `ls -d skills/*/ | wc -l` against
+> `ls skills/*/SKILL.md | wc -l` rather than trusting this list: 48 − 43 = 5,
+> and `ls skills/ | wc -l` reports **49** because `skills/AGENTSKILLS_PENDING.md`
+> is a file sitting in the directory. Counting entries and counting directories
+> are different measurements and the first draft used the wrong one.
 
 > **The `Tools | 98` row was removed on 2026-11-02.** It had been frozen since
 > 2026-09-17 and counted a category that no longer exists: `tools/` has only
