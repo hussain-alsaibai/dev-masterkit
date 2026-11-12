@@ -3,7 +3,18 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
-### 🆕 Latest additions (2026-11-11 late cron sync, 13:00 EST) — the proof a fix works is the failure it produces on the old version
+### 🆕 Latest additions (2026-11-12 cron sync, 12:00 EST) — the fix landed, and the thing next to it did not move
+
+- **A fix in one sibling is a bug report about the other.** `tiny-router` 0.9.2 (`c177510`): the **path** redaction sidecar still had `if mask is None: return nxt(req)` — the exact defect the **header** sidecar was fixed for on 2026-10-26, forty lines away, same template, **17 days**, green suite. Reproduced with `tiny_secret_mask` off `sys.path`: `/u/550e8400-…` → **LEAKED**. Now raises `RedactionUnavailable`, with `redact_path_middleware_passthrough()` as the greppable opt-out. 7 tests, **6 fail pre-fix**, CI green 7/7. New: `prompts/a-fix-in-one-sibling-is-a-bug-report-about-the-other.md`.
+- **An exporter must be checked by a third party, not by its own roundtrip.** `tiny-validator` 0.7.1 (`73d4d08`): `to_json_schema()` put defaulted fields in `required`, so every OpenAPI 3.1 body and MCP tool definition built from the export rejected input the library accepts. The roundtrip (`to_json_schema` → `from_json_schema` → `validate`) passed because both halves share the wrong assumption and cancel. Fixed to `field.required and field.default is ...`; parametrised cross-check against **jsonschema 4.26** (test-only, `importorskip`). CI green 5/5. New: `prompts/an-exporter-must-be-checked-by-a-third-party.md`.
+- **No system compiler is not a dead end.** A fork PR with workflows in `action_required` has no evidence behind its claims. Built `gortex` with `zig cc` — no gcc, no root, no apt. Three costumes for three failures: cgo probes the compiler **on stdin** (every package reports *"build constraints exclude all Go files"*, which reads as a broken module tree); zig 0.13 dies silently above ~50 MB, and the two failing grammars of ~180 were exactly the two largest files; the Go **linker needs `TMPDIR`**, not just `GOTMPDIR`, so a 512 MB tmpfs `ENOSPC`s *after* every grammar compiled. Result: 318.6 MB binary, PR claim executed → **ok** (2.063 s), stub restored, `git diff` empty. New: `prompts/a-compiler-you-cannot-install-is-still-a-compiler-you-can-verify-with.md` and `tools/go-cgo-zig-toolchain-guide.md`.
+- **New skill `skills/sibling-pattern-sweep/`** — write down the defect's *shape* (then the grep finds it), sweep the repo not the directory, prove each hit with a dependency-absent negative control, require the new tests to fail on the old tree, leave a greppable opt-out, turn the sweep into a repo check.
+- **Report:** `dev-tooling-trends-2026 daily-updates/2026-11-12.md` — `shanselman/sandbox-mcp` (disposable Win11 VM per run, CLI-first); `qybaihe/bla` 5,407★ vs `pktq/lasik` 112★ two-day binary-RE race; `IES-BoilerRoom/ed25519-ct-limb-verifier` "$600 USDC escrowed" is a trap (6-day-old org, 0 followers, three incompatible escrow rails, and the "radix-51 carry chain" is a UTF-8 SSE parser).
+- **Housekeeping:** disk 97% → 92% (3.1 GB reclaimed from `/home/node/.cache/uv`, `uv-gaia`, `puccinialin`). **`xz` is not installed** — `.tar.xz` needs `python3 -c "import lzma,tarfile"`.
+- **Stats:** Prompts **107 → 110**. Skills **42 → 43 loadable**. Tool Guides **142 → 143**. Daily Updates **136 → 137**. Reports 33. `scripts/check_structure.py` → `43 total, 43 loadable, 0 pending frontmatter`. Suite **56 passed** (`--basetemp=/home/node/ptbase`).
+- Last verified 2026-11-12 (17:00 UTC; both repos cloned fresh from `main`, fixes re-read at source).
+
+### 🆕 Previous additions (2026-11-11 late cron sync, 13:00 EST) — the proof a fix works is the failure it produces on the old version
 
 - **"Fixed" is a claim about two versions.** `tiny-audit` 0.2.0 (`242b86b`) shipped 9 tamper tests; run against 0.1.0 in the same session they are **9 failed**, against 0.2.0 **9 passed**. The pass count alone reads as progress; the fail count is what makes it evidence. New: `prompts/the-count-that-proves-it-works-is-the-count-that-fails.md`. **Trap recorded in it:** two of the nine first failed on the *fixed* tree with `ImportError` for a field that only exists in the new version — a test that fails on the old version because a name is missing has not reached the property.
 - **A test helper pytest can collect is a broken test.** `snapdb` 0.18.0 defined module-level `def test(name, ok, detail="")`; pytest treats parameters as **fixtures** and errored the module on every run — `fixture 'name' not found`, 39 call sites. It survived because `python tests/test_delta_encoding.py` works: pytest claims the `test*` namespace by prefix. Renamed to `check()`, not hidden behind `__test__ = False`. New: `prompts/a-test-helper-that-pytest-can-collect-is-a-broken-test.md`.
@@ -785,6 +796,9 @@ dev-masterkit/
 │   ├── the-count-that-proves-it-works-is-the-count-that-fails.md # Prove the test fails on the old version [NEW 2026-11-11]
 │   ├── a-test-helper-that-pytest-can-collect-is-a-broken-test.md # def test(...) is collected, not called [NEW 2026-11-11]
 │   ├── a-push-you-can-make-is-not-a-push-you-can-keep.md # Verify the ref and the blob [NEW 2026-11-11]
+│   ├── a-fix-in-one-sibling-is-a-bug-report-about-the-other.md # Grep the family with your own fix commit [NEW 2026-11-12]
+│   ├── an-exporter-must-be-checked-by-a-third-party.md # A roundtrip tests consistency, not correctness [NEW 2026-11-12]
+│   ├── a-compiler-you-cannot-install-is-still-a-compiler-you-can-verify-with.md # zig cc without root [NEW 2026-11-12]
 │   ├── a-so-that-cannot-map-is-not-a-broken-wheel.md # ENOMEM read as a corrupt wheel [NEW 2026-11-10]
 │   ├── check-whether-the-fix-already-landed.md # Re-probe a shared PR head before salvaging [NEW 2026-11-10]
 │   ├── a-delta-against-a-stale-baseline-is-zero-by-construction.md # Four hours labelled as 24 [NEW 2026-11-10]
@@ -812,6 +826,7 @@ dev-masterkit/
 │   ├── rule-reachability/     # Prove every rule in a catalogue can actually fire [NEW 2026-11-02]
 │   ├── external-pr-rebase-and-maintenance/ # Resolve a CONFLICTING PR without losing anyone's work [NEW 2026-11-10]
 │   ├── self-auditing-repo/     # Artifact suite, collected count, attack the property, prove vs old [NEW 2026-11-11]
+│   ├── sibling-pattern-sweep/  # Fix the family, not the instance — grep every sibling module [NEW 2026-11-12]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -1090,6 +1105,9 @@ dev-masterkit/
 | `a-lint-rule-must-be-proven-to-reject` | Reject, dogfood, and a negative control — three proofs, not one | E019 shipped green while failing the repo's own example, then accepted `name: "--"` with exit 0 [NEW 2026-11-09] |
 | `a-rule-must-pass-on-the-repos-own-fixture` | A new lint rule must pass on the repo's bundled example | E019 rejected `examples/SKILL.md` while unit tests + mutation were green [NEW 2026-11-09] |
 | `a-test-that-only-runs-in-a-checkout-is-a-test-that-never-ran` | The suite must runnable from the published sdist | Packaging touched, "green in the checkout" | [NEW 2026-11-11] |
+| `a-fix-in-one-sibling-is-a-bug-report-about-the-other` | Grep every sibling module for the pattern you just fixed | Parallel sidecars, sanitizers, exporters, cache layers [NEW 2026-11-12] |
+| `an-exporter-must-be-checked-by-a-third-party` | Validate generated output with a consumer you did not write | Schema/OpenAPI/MCP emitters, serializers [NEW 2026-11-12] |
+| `a-compiler-you-cannot-install-is-still-a-compiler-you-can-verify-with` | A missing compiler is a toolchain problem, not a dead end | cgo builds without root/apt, fork PRs with no CI [NEW 2026-11-12] |
 | `ci-that-is-not-auto-triggered-is-ci-that-ran-once` | A file CI never collected is a draft | Named-file CI runs, per-file matrices | [NEW 2026-11-11] |
 | `a-witness-the-writer-can-repair-is-not-a-witness` | Tamper detection needs an external high-water mark | `verify()`/checksum/hash-chain designs | [NEW 2026-11-11] |
 | `a-vendored-directory-is-an-undeclared-build-step` | Untracking a vendored tree removes the install | `node_modules`/`vendor/` tracked in git | [NEW 2026-11-11] |
@@ -1421,6 +1439,7 @@ Production-tested tools and libraries built by this team:
 |------|-------------|---------------|
 | [Cost Tracker](tools/cost-tracker.md) | API cost monitoring | 2026-07-02 |
 | [wheel-inspection Guide](tools/wheel-inspection-guide.md) | What a wheel actually contains — module files, `.so` presence, empty-wheel guard | 2026-11-10 |
+| [go-cgo-zig Toolchain Guide](tools/go-cgo-zig-toolchain-guide.md) | Build Go with cgo where there is no gcc: zig install without root, the stdin wrapper, both temp vars, the size ceiling | 2026-11-12 |
 | [artifact-testing Guide](tools/artifact-testing-guide.md) | Run the suite from an unpacked sdist; read `PKG-INFO`; empty-wheel guard; `noexec` tmpdir trap | 2026-11-11 |
 | [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-02 |
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
