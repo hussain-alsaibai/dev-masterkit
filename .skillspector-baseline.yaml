@@ -1,531 +1,512 @@
+# 2026-11-13: regenerated at 2.13.4, pinned scanner 2.13.2 -> 2.13.4.
+# The upgrade re-issues every fingerprint hash even though the set of
+# (rule_id, file) pairs is unchanged: all 125 accepted findings are the
+# same findings, re-hashed. That is why the hash changed and the review
+# did not. Never bump PINNED_SCANNER without regenerating this file in
+# the same commit.
 # SkillSpector baseline — findings listed here are suppressed on future scans.
 # Edit 'reason' fields and add glob 'rules' as needed. See docs/SUPPRESSION.md.
 version: 2
-scanner_version: 2.13.2
+scanner_version: 2.13.4
 rules: []
 fingerprints:
-- hash: sha256:d9141cadf60c35c4dcf5d0fdf2cb1a9e2d58795f0c33d84ae137ec726898d892
+- hash: sha256:a85c203631dbda7c8b473fa1f9b5620480f86b192064590fb904f201484a8e38
   rule_id: AST4
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: pending
-- hash: sha256:907902d1c550c5c8cd0d6b19699ca82dc286696562ddaed87d6e771ee5469745
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:374fdb75ce88d5e93d2e7ab73648a5514867ed8bac1975a8b5f1ba2fe9580d9f
   rule_id: AST4
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: pending
-- hash: sha256:46f091e7079f727fd5eb341def68ebcec68fb2e6837fea891c6b70738657bc2e
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:16407d525a74e90bd10fb60ddc5c09e5ac070ecdfc063627632b703acfd49e4e
   rule_id: AST4
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: pending
-- hash: sha256:1cab571dd9554be3efce41a565d18551fcb4799f6cea5b5509808f4378dd77df
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ec8499127d9da594ef7f95ed8b90e3b0f9250e908347c6c16defcf39085aa746
   rule_id: TT3
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: pending
-- hash: sha256:3f2f9baab76548cdadf3844c20d309b00ae53c901a1d96d3a9d0a3003f2d882d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b468397023652cb051951c6d63b2dfb6f4c096a63875b3339e2280290e548a19
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:9b9d8ed3d6eec2570cf63fa2e52e8bd9a4c0a647616de0b4bf41e5a80d3dbe2c
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:0a1d5f168466729da8101b210fdb0abfce1ddbf8189de5f975321d8b031aa2f6
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:0d0139ea1031ecee1111757b313618c2a56a74ef4b345dab37507af76bfb2b0e
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:7d13d576307ce7f9436a7486cd47f408808dab39da72c31fbf7cba2871882f7f
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:bc3ea0f51ca7079eca886896f1c231df8a92d4ed49380fa0bc76e3ab384c15b6
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f06a266ab93f2be0c79777453744738a462daef57d27a9e0bc982ed3e07147e2
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:5e254c52bdbebe86087f695beeb0eb4595b8afbda6f040487c9c6458d1f0936f
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:583670a2dc3b6a6c71785c46d2b48839b2eb408553806db6b08185243d8e493c
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:4a81af015addfa74b02d361f742e2bfd34ca9c9633224a1623e158a5998bcae7
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f8f945887d8936e1850be917493b1d00cafaf87cf8a0502f6d85da69053a4975
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:a3f31dc52864b630305ed373d05f95ba1c079e503f34767a51dd1cd80b739715
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:c86e7db715da34b18b7cdaf50d542bdfb63bb56c82c5887e5c637a143781d1c5
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:da8c78953492ac20fc180acb3d40bd1b6f71c536a90e153cb44c1fe472e06f0d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b7aa2b987a6700a8e535078b674ea3d29ee4e0d4a9f09c79b017948166210e4a
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:7cddb0ccd259006c8555033e921ec76fa807f9410f7dedc00cba77f1dc488e18
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:cc3a78e6a4fec1fdf34cda41c0d70984cd50188dca0c9d9ac738871790c654c6
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:5b05cfb08c6c02c89fb60e4d0e0f017a001803331c3afb423537c77a700e8f98
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:c54d7a81e7cfbc3d63ecfe486e7e3995e1801a9f7ec2c28f72fd63dbeb8a14b0
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:d6a4769e9d371e02f31d1e382f7f71f018e867dfcce5e0fb658b6bd06ebc80bf
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ff60f9d6b6822111e9a7f1d8e5f518bcaaf03f73a9707f8b33cf35396dd6443a
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:c254b46983c209510a15b15735bc296de1206e824c96495121e29bdc5cc92d96
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e87785b6b92cde13638d379a3be84cce748cfadba51d5c117260360765220467
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: pending
-- hash: sha256:a93af9e01ef5dc9d1a2e6d2b6f1de73cc066a8f3a0e8b2f444062b7b85324adb
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:9ca43ed6491d92770888ad04822bc35b98fe05072d47d1258296f7c3e49d36a5
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: pending
-- hash: sha256:279308a1a9f0ed492cd0e2cb37289a3adad4cc8b0c08b3a96a57215ad64fb87d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ad303b730246150e4457569fe34b2e674cc1d545871f5ce10c76ab8aa4300239
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: pending
-- hash: sha256:7028e6cc17f17cf41fa0ce159f03a17e4e0d04ccf81855df9d057280d92f443c
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:22647c0a6fd93bd507590f893f6ac169d3abcab93da75c09b3af7483908db091
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: pending
-- hash: sha256:e5f6b29701d7150f2c2938d43a41b632e6ea20bf73239e915169c163ee32fd5b
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:fecb7c023229e44d9da6d6a43e697eb2c3b0a1c31bae4fc0d4b5e4ac6ac3922e
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: pending
-- hash: sha256:873b961aa90ad54a76e52363facf0d3b296ba9268e441daf9787885444b4e4aa
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e67e5e1b5a90aacd6bc123ed236d78fd5aa79f53d0758e97b56daead696a6a15
   rule_id: AS3
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:787ce13e8e2b329aa37c854c7d79efb96eff9fbcd8361acd60d6c486f4724fe9
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ce75311567e3dd3433bc4fa38689a5afa3f31ddbd2067a5f3f3650df7cb9720c
   rule_id: AS3
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:ed5cfe1893b9f3c7aaef9e997084d65db9c65a24304c85172c46a04975aec495
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f6deee3ea90ff189d08f26bdda263585acaa6b0f360e1a7f64cb8284241fc410
   rule_id: AS3
   file: ci-census/SKILL.md
-  reason: pending
-- hash: sha256:5fb24ee337b3028ba916321b878aeb8f8acd87ac54c10d73c71c6e47bfccf9e9
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:41a1be398d7bdbeadfcfa649ed0b21ea39dfb379700a2922102d5144b2be3bdc
   rule_id: AS3
   file: ci-census/SKILL.md
-  reason: pending
-- hash: sha256:e5fa70c68452f1a80960339b8b64e61764a3e0fa1303d3cb597d50a534fdb7df
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b1905fe36598c5d590227f35b3231f7fc577e5128984eb7a482466b8df09820f
   rule_id: AS3
   file: data-analyst/SKILL.md
-  reason: pending
-- hash: sha256:3412c63a7680ba08b4ca5005b180f0acca5a6d7afb1fa3ad8d52da1229968759
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:3106e98a3f3fe9c374e027b713807b10e3970c6097ab315257e31d7e2fe608d2
   rule_id: AS3
   file: data-analyst/SKILL.md
-  reason: pending
-- hash: sha256:d8dc735391d1b741e8de8fd7a2fc8013298ba0d8f05144df73f73533561ec802
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ff832fe7beee37c2106193aa00e17a5f03760cde7fed43b1d3f72481c2bdfaa2
   rule_id: AS3
   file: data-analyst/SKILL.md
-  reason: pending
-- hash: sha256:a16148a8e79a4825be005bcd57a51c73e72cdffa470f726908177d20c8a380c9
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:5e9e8cfc236b897d4cfa694d1e9ed32c58bca24afed800cac9d1f6b7e7339bbb
+  rule_id: AS3
+  file: runtime-reliability/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:7a9e75c840549f9eff90150717ce0ec9dc4618328a29ec0c4ce75509792ab26a
+  rule_id: AS3
+  file: runtime-reliability/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:4d55f02d42db78c7e43ff8396d687f185ac502e61e5fef50a3cbe38bee157054
+  rule_id: AS3
+  file: runtime-reliability/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:720fb06d11ad92054282ae566a33f0e97479bf76ef7076401bfa0f4e19986b43
   rule_id: AS3
   file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:849b4aaa52c182db46577a871252448a5c182c09378203d6e01d256f3b3c2aee
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:213f8c82032f28c128cf41558bdcc7fe1508237759154545ac469f77129ede35
   rule_id: AR3
   file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:040bd70841ece6906a147bdf2ace8878b8c74cbe6aa8926e80494183b32c5753
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f1200b81a252bfb77a4480e72a850833b07f20bbf83ea316cca679eac1ffb6c1
   rule_id: AR3
   file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:b3367132995a6a30ee60f30e04bb09b398be4f0793fc61e19727641424a81d35
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:1a0648c6ad7327b8f07a86db284bb395bb7a83f953a7df3a81897dcdb622909d
   rule_id: E1
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:f4b6994e805a1fab8ca52b6ea9c4412d6fae405474d94fd3c9c2431d4feffdcb
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:64abe99182c4cacf58fae4bd95693365ff48fee0d2ec039bef80927a55a7c361
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:c117ae7e6dec51f2d599e2be951b3ec3e1ac4621e4d3b78e9a562893a9f179bc
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:404cc887b50bfd12fd77de699e7ab21bea894244d366977b8170856006e6a1ab
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:f5c50f52b541458bac75c2f173c7f56ca94d6cd11f0b72d4cd9e416a3c700ee1
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:66520068882f7a907eb0c55ac1ce025994aa5020c56ce4d7a1dda10969bc9c55
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:aabd1a7250c09cc556ed0bdc681c182f194e570a3930684c6ebd6f867e4fc29a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:8b83fe98bba02521cb6b19c589338b3a433eb87d6e5db7122c6e2590eb09bb4b
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:ab909f27563a9cc80fd088531d477840bd6581ea8dda5ae87d3550f3850eb21a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:4a8bad0b43805fbe875b41732420d7f468a4b7b7f231bce33267d46dab3bee0b
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:f3d4c040f023fdeaf74f1b79c1cb52a7b1198005b4fb14c6057ed5231fedad05
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:a8e9c40acac36fd00673d1f7d7e2ee9e001068344ec0afedb1d8d9b5811ba8bd
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:1ee6b7e32a2dbd26e37cc94d93363caf6ac346b0a6226c09eef3a5197e5e1b10
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:5c17d712fedc57fcb0eccd2c34ffc0d3d20fabaad17136966a91c246f610a985
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:e869906febbc22c8d8067b2adf4493193787922914763a39fbaa202db4e395db
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:051b3b17590efc0cd7ada05ce2d392008dd92e7cbbb1cf15c1d34475464416c8
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: pending
-- hash: sha256:67dfc68eff94424f61fe2f3fd900f9e655220a34166a728211a5deecb51e6572
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:592a8c6cd8eec2fcdd7c3414d5d147893f56c24edb1a5c4fca77b6d2b3687ca3
   rule_id: E1
   file: api-retry/SKILL.md
-  reason: pending
-- hash: sha256:228362a323390265a5b064510eee74443f7523d047b86f18333940caadef95e2
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:6805cf465685e49c1444c20a3e156062758e6204cb7f0c35e0af480afbb4cec3
   rule_id: E1
   file: api-retry/SKILL.md
-  reason: pending
-- hash: sha256:be9dc9089fdbb4bbe21b77ef83459d59b180f682618e544a5f14001a39085940
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b4a13f81b623443f8c47b892b31db21e5f5da0613e5ca3f6b923995514981954
   rule_id: E1
   file: api-validation/SKILL.md
-  reason: pending
-- hash: sha256:69700ef0d56804e710f79f2dcb1c28c20c885e8a131c34f657322d5627f1b50d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:c30ec88f0408b492016e64264c26bda24fed91326943fa898ba14d6e13430c38
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:9ecc980241591f1082e74913dfba5b30e4f783a644c8715c5cfc7153124d5b04
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:790608e10f5baa0f6551b0857fec52ee7714132ecc0c29558d01db5b12355cae
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:d62ac54fd75f84941fd9f1c15b947bdc5d412a64b61fd057757aaf6894188125
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:6bb884b7869bc1351a47028b65ef02f9daa6ffe00fa0088914bc415f7c9198e9
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:f4e85f1b2fd79acc7bb032abae2e7ec8c065c7f2a4b89c488ec6d2c1121fa45e
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:eb1427c2b40b460f8deafc4cd682bfb316af8434dd303aae72d03a520e345aec
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:f33c9da2c572caade906050712f4bf200e6f1172a4ddfef636d4ea90dd63e301
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:1169f6e2538ae651b353108c5f879b5600c77f005acb9b149c2a5455928af679
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:6c433491f61a9b28578b5b5d77cde5f9e76c31916deb0d93b6d1f86667bd8c3d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:d5681c82986b7d62765e3587e92f5a3a999123a43076b56f8da8d8889534c3d2
   rule_id: E3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:15870e6f91c8944ee9232fcb80fd27917fd4b4c655824065a2a8c543d1b39e09
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:2b69fc97561da968c09e26535ef4d08ec160ec1ffad9a2d75a1c83b27a990ba0
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:f217833781715ede19349ea5b6aa680fbea560f89e95fec20a90a416a14cb7cb
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:7af18d9796b728ad3d0e7f6df2abb87fc5aa8cd7b4ca5d2b511f7943c0483e3b
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:4ff37f7407b171d7a390a9d77846e4c8036d3d01916ef8854624996873df6498
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:a5fa23daade67126f6bb73785d8eb8f96c0d568fb4b9f46eae05926e6c8b8d2f
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:5f94eb159d52ae87d586890b4dd7122368884656dcbb8ace12e1f42bf40136cf
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:3b5919f9da96cfa7f2a2ad30881ceed06adec5cfadb69739f46f7a28253c0063
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:36e072e780923907a238a40bb6188b2548194d85b6ad3b3bf5eb7c8d46191659
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:a4356f9acdf8bc3e5323dc9ab0a68025fdb84791a80791ed192fd1d2ef672f2a
   rule_id: E1
-  file: repo-monitor/repo-monitor.js
-  reason: pending
-- hash: sha256:778e382b9313c6a07ce97b3b05b79fd3486661a467e8a19899d19a68b12d25a0
-  rule_id: E1
-  file: repo-monitor/repo-monitor.js
-  reason: pending
-- hash: sha256:cbde6a02aed7e927ab09695115b8c2fb660628dabcee30a72afebf8d512013ef
+  file: runtime-reliability/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:8bd90fbf35cc38d44b121cb7a3df1665416c827e0669b32f4cbc240409e38ffd
   rule_id: E1
   file: youtube-api-skill/SKILL.md
-  reason: pending
-- hash: sha256:cadccd93d6dd8f8306bee25327815a27c1d150ce6bd4fb4d69c2974b380538d4
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:50e2813f42ac5f0b082b8f1c435def1f204215285428fb9d76237a2e51f54bc1
   rule_id: E1
   file: youtube-api-skill/SKILL.md
-  reason: pending
-- hash: sha256:6667905def893accbc09f175a1c9ce53358b50bf74ae9104cbb86b97bd8a2588
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:2f7198f3e6652e61a79068483af341c1c6c52ceac589308096ca39f29ebf1c11
   rule_id: E1
   file: youtube-api-skill/SKILL.md
-  reason: pending
-- hash: sha256:1325dac6e263e0859d8fec56a9a502f9c0006561196fc9f98014e71f6d110048
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:bb37a1d2b7a96c2ae026af8d76837d8367ad860dac7bedf966f08103138aa819
   rule_id: EA2
   file: code-verify/SKILL.md
-  reason: pending
-- hash: sha256:74568fc95113cf0e5945f840b62351c201c08f8f2670480d624643e27a4f975a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:fce970b2ff22b504f89405d06597294131a75b3d4445f83cf54315aeb871ed97
   rule_id: MP3
   file: codebuddy-code/SKILL.md
-  reason: pending
-- hash: sha256:56a468270967a5a92626b4d0085ea22514ae59740f15b9e3ce24131febf8d84c
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:a545d210c960f657bc2862cf0da86b0442f969b8eb7a06cc1ef1879057097fa8
   rule_id: MP3
   file: working-memory/SKILL.md
-  reason: pending
-- hash: sha256:4239ad60c65879e690feec2b2b8736a0ad3c6638a055ac06987ac1e219fb929b
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f0b31a7e374c5aa6c81084fec9b30e9169afef340602caeebc19e8741289c4e1
   rule_id: OH3
   file: cron-orchestrator/SKILL.md
-  reason: pending
-- hash: sha256:dfbd12d4d610c07d89a2062de223c260011853a8c99c46c759adf477260be5fd
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:7322757c1513229ced7f6e876fc577dba852b94d6014c5e436eb1724ce60028c
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:d6b46dd867a8acff387696753bd79213820d1b5ec52f577b75213ac57ac3a40a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e904c296afcce2db49148552a0cdc895a66b763dfd7e81f6d6aa475689b84242
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:06eb498bd1ff3a57e4067ae2ef480b0ad661fba4ed9d2596c79d8f4933cedfe7
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:4b1e3e125d567a51c5e50ff7d420bdc8054b3ee989407c2ff8c2f19275ec204b
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:67d7410fd5aee167210ff2c18e7139151cf1e12bfcbe3dbcaf461bfd0bae4b32
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:12a2b8ec945d3b99270320ce95741bf4efb7aad2d5d2ef63075482bb2bebc097
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:120d2d5854580c00dab82b6b4b55ad585bcae48546be8d79eeb8bb0ece21b1fa
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:66fe2530df87f1efcb83b2e498b0f8cb9187a87a43ae9595c76a41f08a73a0c6
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:80263de7a530c9150820a6f37dde7dd6d9b8d0375a490afea53ca544634a4181
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e679375fa09627ef742ae04694bc2272c44171137492722217b96237b478465b
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: pending
-- hash: sha256:430a917253a4142b161953c3c241baed10c24e4f0f197ed5af9568b576d37df4
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b890683d81040b4bfdfae72f9adc231054235865abe18be2dfbb82bb37e87e19
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: pending
-- hash: sha256:bdcc81f2139402fc2672f5bf3e6b9653f91de608a9b963d44fce42327bb6464f
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e7f770d2f92cebb601a3d95ca3745b330e1c5a82d000a60c1280711e4a5c1363
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: pending
-- hash: sha256:9c6311c08af880c0ec6b9cfecce306869a1efe14743bed2a1e961a8874df03f2
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:392a6d20b88f429fa8f2a62df47d9541821c0f8f7d4cb88179f17162ab386eb4
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: pending
-- hash: sha256:c5e1cd2635399feb0df682e2688a85779d2a4a446bdab63f33c5a2bc05181c1f
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:3385a6a82e2da0fbc0e015ec4e9d9fdb2a072b9cfee09bdb693c546641f6f96d
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: pending
-- hash: sha256:f6a358f0f265e366d78e770baf6f7d9b8392b06c082ab6e3e1ce37ad5537798e
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:83ce44e7157009e60fa48615bb22d5923d0e6631c22d4d736010c5b4a6dd1323
   rule_id: PE3
   file: bounty-verifier/SKILL.md
-  reason: pending
-- hash: sha256:6d6ff74e668f4f268a22b65cbc66d9624e5364680b34756890774063c097d435
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:68853200651191ef97241aa8a8d2ada2e9a6ea637ed1e09f0428021e78c1effa
   rule_id: PE2
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:66bc9472578ea604986b5efdc943b29cfaeee7cedd4dc67fef0cdca1d09781fe
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:20669e1e1db99a6fe3be8ae76aa38e3bf4f94e680a43c370c1176e704fab2e0b
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:3c11544318f7578c4766c2980bf210192bb8b9a175dab3b59c6132bf34afd63b
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:26bebe1b2681630f579b3a66bac7c8d957b70b0fb9cef46d6ede8fff94119a1b
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:f86752d965eef32920cd87a894644ad659148de3f2f49964e83d1d89b23d5d62
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:c420f9c412e934d605f301c7519d593abd9b5b222fb344c9bcd57c9a24f5b0b6
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:ee4a1093cadd4ffdefe41f7899797463a3fe5515ee3c67f9543eabe0969153a0
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b3ad6780508ec4510cf604fa2b267fdc03debbd1ff78455d1d8facb9c44f5404
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:bd232256c0cffbbb00356306e4d9b7c43319926f6ca894d09f2312404287a9a7
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b4dc171cd17b53f065a34803da23718b712391a48f4a6b4e45fe4d8758e360ff
   rule_id: PE1
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:00dcb6a9200d997300a522a656bcc9ad2c2464be843630574a5d13cedf3d47bd
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:fa084937a5df46cadf674ebe7a6c11790b6c4ac2acd96b01687388ec4c954add
   rule_id: PE2
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:cef3492eef1b30bb221aaa20b45a93542c01c667529bfc49ea3a5dc4b04f7b5a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:c889832276c60be91120ca8cb69f18d8a39a21c24033226d0b4c50191091e34e
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:df5c34db55a0738d9910a6a4e6e05fb29d94120ec4340cde05a00f986df90392
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:63abf4af0f53e20cc78e88c97d52046f3dbb987ed660a960f99d1cfd1c624e5d
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:077024eda6459ee940c03a35b7798e98fc9252901921071118bb24cbd8647487
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:d0b4f8c3adb4c93b0f195613c8fdce96e859fd858e3a592dddbba5e4bc9fbae2
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:d123cd2200036dc56c1e9d49c875e070dc0fad1ec38da1c63f7f18db2dc0a7a8
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:60ed47d98646cc3715420275619cb2bb03d2f9be7a8f6ae690b1129abeba77bc
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:17354e81994e4f371cbd2aba793bdd17fe2648727af4fb528c42a4722f3ca116
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:3688889f129248b8dcbd4429865f0b5cadaa2856377826d4ed7cca73171590d2
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:222b5e4ef12aa34545798be8f9c14cee3cf63c2a7120fd230cc8135f396982db
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e022f7177e56b2e77335679b6bd7279725968eda1492e735bb01c4ba2e79a39f
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:a4ff0053ee4e491567d0723c73f6ecd874788bafecc663573d7dde38e48e8ef7
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:836f96395a4fc3767b7b649012dd3b2f208615ecd816098daaf588629111880b
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: pending
-- hash: sha256:b6fcbaedd122db391f79e1937187c4d6171746d42861c4aac035ed792f8cfb83
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:37ea3457a3aa8053dd9441c40387fe833910d01867340b3ba31a0655b1304598
   rule_id: PE3
   file: pr-monitor/SKILL.md
-  reason: pending
-- hash: sha256:6cd7f050bf3e5e17a7c8404d5032cdc9717541583133956b20bd5d9c4ccb6584
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:1570b7e118b0d06062732d25f5ccb0a0f7d6a0ca36cb8b34405089b7bd0ef600
   rule_id: PE2
   file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:f349fe88c00aa7bccfc53d9b8e73d779e531c740f63543473a9a44e590676e90
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b0f3d8eae4454552de7f231b9b327e7226d31249c50ebd1ad0e30d603d1772e4
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:5168923ad2c1c57b3d9f6002f8f0685cd59391365b83bd1fc7edc2c56622ca4d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f9aeaf2c4063cf7274578440e7ce4e4fb3c27a874ea89fd854fe74adeb1b8b0c
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:da600df3d1701dfd5b28faea3372feb5e1499f059ab4c96cbcc414709620960a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:9af80b1dde86a16cf49df5c22533fa06063a733ad58b80f2bebdce4ff5832790
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:6ddd42a1e1bb2d44eca7fd3e072bbce4520bbfaa07c9f1c55cb9de811c5423a8
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ce27c9eb7c67cfffd26356de7354e980817ebe86eae68ad74db7afe3b5f70438
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:d91268143c9f8850197e04c34fafd20559b318f8f26aeb485c9ef16fb8163788
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:e3976921d90aaa6cb4d39af8c7f19d5ac0a8f09dc82e83ef0cba5f7591e26c65
   rule_id: PE3
   file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:abe8946136e787a0c1f26a5b83954cb87a91c516956fbad30e87062ecd215dc7
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:cba8ddf629a28589c8e0d75124222ffd0526a1aace982a4652acaf4f671239c9
   rule_id: PE3
   file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:148649a2cb8494442bb0ea98ad2371df7765bbc9b9f77a2e4729454d77b1e632
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:b463c25aec960ab8b818c9070f05a4ce2df1aacb1f69035abd6be310d1251418
   rule_id: PE3
   file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:9239155661e689461d2f553ffbd9858d276ece656ff7e47ea494e263188fb6df
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:76d9610586b47287d4e593a599ff27bd30c86c0425b1fbc3c33314b24b50d450
   rule_id: PE3
   file: youtube-analyzer/SKILL.md
-  reason: pending
-- hash: sha256:3be187f9f104a300f9cd9e5b6facb44b52682f59070bd0b354bfc2c82194dd4b
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:35f25cb9239c589bc730a9fde91a6bbcc36c446a3895e2ffcb68c7882129abfb
   rule_id: PE3
   file: youtube-analyzer/SKILL.md
-  reason: pending
-- hash: sha256:c01dbdb10746b4d8af8acfb71b2c5c2e306237194cb76abb9cd513bcde6d1ce5
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:2036a4a97a974d211388267230c3fdce79542a7a38a6835c6c70f3ef0d08922e
   rule_id: RA2
   file: codebuddy-code/SKILL.md
-  reason: pending
-- hash: sha256:5a0c7a288b237961d9593fb8a0edec78f49344cba416f3129fe28f56319731e2
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:86b45c4ef412aebdcceae04198eac8073aa90770dd986c43ae990c6476900df5
   rule_id: RA2
   file: working-memory/SKILL.md
-  reason: pending
-- hash: sha256:4aba33945ad663e7419c4b06e86393b5705086b8d2c2f9e290ab4487e087286b
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:417693b9450a2cd6b99047fd4939666717e9ec4499e899c90781edaeffa806ff
   rule_id: SC2
   file: credential-recovery/SKILL.md
-  reason: pending
-- hash: sha256:d6690c5aa142399d91f4a2fc99d71fa3227138535dfdf4ec9a444949eef4f0a5
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:0433be17b4050abb6f26fb0fe94e341bc399786b1b9f0bb09a77710da78c2836
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:2b860bbc1b5128f8b0f0c48190e9e9dc9bb17b9f282c8b2072ac6df5355f9d6a
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:5a74e6647f53c90a037c452cbc3260e39d80e396ea7dddb3d7bb194904d378c5
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:774439f163bead2991d62c730119125e3ebcfd145da1254b0566a69c9de9a400
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:67c0e7c37a28a2da04fd0e155570a002fb8def9e36632df519ddd9ce28d15852
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:693f371ca4d3533348958a5d04c14c9240a3afca0ddef03bf737a1dd093b3992
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:d6d37de0c65318eca9afe9ccbe56898725f319c882ce3179a926a56b9f512f13
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: pending
-- hash: sha256:300df1a71cc0e6aac521857c52b4c3f59f1c856d14b46d17c166edd44eb2b02e
-  rule_id: SC2
-  file: repo-monitor/repo-monitor.js
-  reason: pending
-- hash: sha256:0dc5ffe40e47393505d27f46dfc456501617fe2485e0039ee5180e4556571d13
-  rule_id: SC2
-  file: repo-monitor/repo-monitor.js
-  reason: pending
-- hash: sha256:389c1d8260bfa5746405090760ba51da8d8e177913dc7300a3534cf4685cb74b
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:88754928b56c64049395bf6d41b000f1bf060676f827d3819d3f95fd4a250322
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: pending
-- hash: sha256:59d823b92f58c224522c7538a88402542fee530b16771c95383ff5fc7a6d4b7d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:c24098d151d279e82906081afd252fd75a1964b923e8bdc343de1ec3b2a4aee1
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: pending
-- hash: sha256:724850de6836fd94570454f39c9bcc7b6a76a6b519e94c6d51d3f8256d01dfbd
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:23d933a1f2bcad8433b889925da1814cf5b1698abb9eb1dfe2ca5d7e621650db
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: pending
-- hash: sha256:311c752fa78ac79b7d3057b315c5af7c2a6ec6ec4c391a875cca91e86acac39d
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:4d68d568d74ffd220c4da2cd87c6ce4c091985c8ba0d919e16e4c3a4f6477366
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: pending
-- hash: sha256:67cbb466cc3c43878054ac39da75d7d0553598d55f3fd1929bd4bbbe88027403
-  rule_id: TM1
-  file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:da817022fe20502fc6c0d66accc8d09f24df1af955e087165dd3a8d1a88fe76a
-  rule_id: TM1
-  file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:e3f24e452d52c25f0803b01b3ca023cb2bc41a9b11a58fe8449d21018b615755
-  rule_id: TM3
-  file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:f6778662b88ddc3f8a8a108eb6386bd3a97e7364d9cb5d9492bc98e55299054a
-  rule_id: TM3
-  file: security-audit/SKILL.md
-  reason: pending
-- hash: sha256:cbd4ef6fb79f84f96d3ef5e3088a53a74b66713e70340abcb5232320b98e3491
-  rule_id: TM3
-  file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:a4ae6ecdc6615543387e2a35c90feb9ec157c1f5618320f71747adc50501f3d4
-  rule_id: TM3
-  file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:4a1686f6b335ac04038ed0b7a442f854df241a24f738c7d31aefe037f5bab9b6
-  rule_id: TM3
-  file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:3be134982b162cdfe6ed7f69ce774de2abf9eea7e1545d0cf79cd7ecd45cbc02
-  rule_id: TM3
-  file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:b17c8f7c8086c0e0704845d15e23087a147e1b9327d509c65cc18ac215d737b1
-  rule_id: TM3
-  file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:a8e208d5b376229922a1f6b17418a8765b178ce392e3685433dc2851295777f6
-  rule_id: TM3
-  file: security-sentinel/SKILL.md
-  reason: pending
-- hash: sha256:a9955abe177651d191773c64cee44328aef63ba3d45c1ac0c8bc170872b50955
-  rule_id: TM1
-  file: youtube-api-skill/SKILL.md
-  reason: pending
-- hash: sha256:582e6247fe907f9f43b5540a6ce7d200230fbe0d113da969a6579289b7fef401
-  rule_id: TM1
-  file: youtube-api-skill/SKILL.md
-  reason: pending
-- hash: sha256:2f6a34ae48af8d98dd751ec43fddb8fa651bdd1e4bffebce91b6c05982d3771e
-  rule_id: TM1
-  file: youtube-api-skill/SKILL.md
-  reason: pending
-- hash: sha256:3332259310e678b056cfcef31a98d3c49455ae5c33f47a5bc4668431dd90c4a1
-  rule_id: TM1
-  file: youtube-api-skill/SKILL.md
-  reason: pending
-
-# --- Added 2026-11-02 (skills/runtime-reliability) -------------------------------
-# Reviewed by hand on 2026-11-02 against live SkillSpector v2.13.2 output.
-# Four findings on one new skill: three documentation cross-references and one
-# documented probe command. None of them is code that executes on install.
-#
-# Hashes regenerated 2026-11-02 after the hand-written entries turned out to be
-# computed against a pre-copy-edit revision and matched nothing. The findings are
-# the same four that were reviewed; only the content hashes were stale.
-- hash: sha256:2c2ecbe2cab44b697e5c5f09f898200163259c757993cda790f76724260e3851
-  rule_id: AS3
-  file: runtime-reliability/SKILL.md
-  reason: Cross-reference to skills/dev-env-defects/SKILL.md in a Related list. A markdown link inside this same repository, not a read of another installed skill at runtime. Reviewed 2026-11-02.
-- hash: sha256:dba063410c98ff331fcd2dcf094f7fdf29a0c8b1666e3891e251976ba56267aa
-  rule_id: AS3
-  file: runtime-reliability/SKILL.md
-  reason: Cross-reference to skills/cron-orchestrator/SKILL.md in a Related list. A markdown link inside this same repository, not a runtime read of another skill's instructions. Reviewed 2026-11-02.
-- hash: sha256:ce3ac5735e0719c0eb1a507c23ec1866a3459a609c28cbcbd5bf6bacb7245f52
-  rule_id: AS3
-  file: runtime-reliability/SKILL.md
-  reason: Cross-reference to skills/dev-env-defects/SKILL.md in the closing Related list. Same repository markdown link as the first entry, matched separately by the scanner because it appears on a different line. Reviewed 2026-11-02.
-- hash: sha256:db355e8730f8c6fc652973e07d268948473cc1cab6f4cab65463afc51a7f35cb
-  rule_id: E1
-  file: runtime-reliability/SKILL.md
-  reason: The documented curl command is the live-probe recipe for verifying a model fallback entry. It sends a model id and a fixed reply string to the provider endpoint the operator already configured, using that provider's own credential from its env. No skill data, credential, or file content is transmitted. Reviewed 2026-11-02.
-- hash: sha256:e206a699080eb892410308b84e36fe8a2c35d359fe315b759c31d5bb47fd43ca
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:cd4cd57476e6d609fc8a73784a530ac4ad24a5a816183546fbd7acdbef39d578
   rule_id: TM1
   file: external-pr-rebase-and-maintenance/SKILL.md
-  reason: "git push --force-with-lease=<sha> without a leading dash. It is the safe form, pinned to the exact SHA the branch was rebased from so it fails instead of clobbering a concurrent push. The skill's point is to contrast it with a bare --force, which it names as forbidden in prose and in the do-not list. Hash regenerated 2026-11-11 because a scan report and a baseline generation of the same file disagree on the digest: the committed baseline entry no longer matched after 7c4cd7e edited this section, and the finding itself is unchanged and reviewed."
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:52692c8215a6aacea6d1376117291545f147be778e322fb1af6dd94325db7c88
+  rule_id: TM1
+  file: security-audit/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:f56752b03898cfe019b8fc0ea09ad02dd583183f8a902e8fc7bcd3dae6fea8ad
+  rule_id: TM1
+  file: security-audit/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:deaaafc6341147085d5dff17d890caf7ada222b5bad3382629cb4bfd588c989a
+  rule_id: TM3
+  file: security-audit/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ba3f7a8ce21f88b8e3cefe58bc7bf8197855f41af9fa34a1b69bf7fede42877e
+  rule_id: TM3
+  file: security-audit/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:461543937f2fcd26193ac89a558494540bcb06c20e445723b24a1bfe8a7aa669
+  rule_id: TM3
+  file: security-sentinel/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:645c6e3895107caf9a5c36d798d28b4fd20e759d843013b3c0985c049fd5920c
+  rule_id: TM3
+  file: security-sentinel/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:413f01f02cb35f3cf7cb2c9086f9a48de7621b1b3c4d67d470806b121a293acd
+  rule_id: TM3
+  file: security-sentinel/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:7c401eeb1cd25a0c6cd82ac69b3f71276f49ddc312569cc9c6e6c6ddf7452f72
+  rule_id: TM3
+  file: security-sentinel/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:ac77af81d4fce78eabc7df103af536507fcfa46ddea46d2be21cdc4fa7a08797
+  rule_id: TM3
+  file: security-sentinel/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:1b1ce217d4646d47f6c078edcb466eff7efee75e447044e5fc95259045ff6de2
+  rule_id: TM3
+  file: security-sentinel/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:06d50ef7ec5128bc27b1fc6d95419fe54123969ba31fb42ee5fce42aff6211f8
+  rule_id: TM1
+  file: youtube-api-skill/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:fc506081530c502ee5f5ac4e05cb2688dc1c9ccf1c36699c7bf0eeb5be993b85
+  rule_id: TM1
+  file: youtube-api-skill/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:5641747a9ebbacd4a8940418b02757f2f10020ce804e004011eebd04026826db
+  rule_id: TM1
+  file: youtube-api-skill/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+- hash: sha256:59453571315f30aeb051a260bb3d8d4303789fe70f2837ccd5c5ff181d21a7e7
+  rule_id: TM1
+  file: youtube-api-skill/SKILL.md
+  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4

@@ -37,7 +37,7 @@ jobs:
       # finding looks new) or if any finding is not covered by a reviewed
       # baseline entry.
       - name: Install SkillSpector
-        run: pip install 'git+https://github.com/NVIDIA/SkillSpector@v2.13.2'
+        run: pip install 'git+https://github.com/NVIDIA/SkillSpector@v2.13.4'
 
       - name: Scan skills
         run: python3 scripts/scan_skills.py

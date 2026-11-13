@@ -38,7 +38,10 @@ REPORT = os.path.join(ROOT, ".skillspector-report.json")
 
 # The scanner version this baseline was generated with. Bump it in the same
 # commit that regenerates the baseline, never on its own.
-PINNED_SCANNER = "2.13.2"
+# 2.13.3 and 2.13.4 changed analyzer behaviour (new SQP/static checks), so the
+# 2.13.2 baseline fingerprints no longer describe what those versions emit.
+# Re-generate and re-review the baseline in the same commit as a bump here.
+PINNED_SCANNER = "2.13.4"
 
 
 def fail(msg):
@@ -182,6 +185,21 @@ def main():
     issues = report.get("issues", [])
     suppressed = report.get("suppressed_count", 0)
     assessment = report.get("risk_assessment", {})
+
+    # The scanner that produced this report is not necessarily the one
+    # `scanner --version` named: a wrapper on PATH can resolve to a different
+    # binary (a uv tool install, a venv shim). If the report's own version
+    # disagrees with the baseline, the suppression step silently no-ops and
+    # the finding count reads clean because nothing was evaluated at all.
+    reported = (report.get("metadata") or {}).get("skillspector_version")
+    if reported and reported != pinned:
+        fail(
+            "the scanner that produced this report is %s, but the baseline "
+            "was generated with %s. Suppression is version-bound, so this "
+            "report proves nothing. Install the pinned version:\n"
+            "  pip install 'git+https://github.com/NVIDIA/SkillSpector@%s'"
+            % (reported, pinned, pinned)
+        )
 
     print(
         "findings: %d unsuppressed, %d suppressed, risk score %s (%s)"

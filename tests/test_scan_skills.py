@@ -51,6 +51,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import re
 import sys
 
 import pytest
@@ -59,7 +60,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 SCRIPT = os.path.join(ROOT, "scripts", "scan_skills.py")
 
-BASELINE_2132 = "version: 2\nscanner_version: 2.13.2\nrules: []\nfingerprints: []\n"
+# Read from the script so a version bump is a one-line change, not six edits.
+PINNED = re.search(
+    r'^PINNED_SCANNER = "([^"]+)"',
+    open(SCRIPT, encoding="utf-8").read(),
+    re.MULTILINE,
+).group(1)
+BASELINE_2132 = "version: 2\nscanner_version: %s\nrules: []\nfingerprints: []\n" % PINNED
 
 
 def load_script():
@@ -95,13 +102,14 @@ sys.exit({scan_exit})
 
 def make_scanner(
     directory,
-    version="2.13.2",
+    version=PINNED,
     issues=0,
     version_stream="stdout",
     version_exit=0,
     version_line=None,
     scan_exit=0,
     name="skillspector",
+    report_version=None,
 ):
     """Write an executable stand-in for the skillspector binary."""
     os.makedirs(directory, exist_ok=True)
@@ -121,6 +129,10 @@ def make_scanner(
         "suppressed_count": 10,
         "risk_assessment": {"score": 0, "severity": "LOW"},
     }
+    if report_version is not None:
+        # The scanner that actually produced the report, which can differ from
+        # whatever `--version` printed when PATH resolves to another install.
+        payload["metadata"] = {"skillspector_version": report_version}
 
     source = FAKE_SCANNER.format(
         python=sys.executable,
@@ -153,7 +165,7 @@ def prepare(tmp_path, monkeypatch, scanner, baseline_text=BASELINE_2132):
 
 
 def test_version_drift_stops_the_scan(tmp_path, monkeypatch, capsys):
-    scanner = make_scanner(str(tmp_path), version="2.13.1")
+    scanner = make_scanner(str(tmp_path), version="2.13.3")  # any version != PINNED
     mod = prepare(tmp_path, monkeypatch, scanner)
 
     with pytest.raises(SystemExit) as exc:
@@ -162,14 +174,14 @@ def test_version_drift_stops_the_scan(tmp_path, monkeypatch, capsys):
     assert exc.value.code == 1
     out = capsys.readouterr().out
     assert "does not match the baseline" in out
-    assert "2.13.1" in out
+    assert "2.13.3" in out
     # The scan must not have run: if it had, the failure would be the
     # "not covered by the baseline" path and the drift would go unnoticed.
     assert "not covered by the baseline" not in out
 
 
 def test_uncovered_finding_fails_the_scan(tmp_path, monkeypatch, capsys):
-    scanner = make_scanner(str(tmp_path), version="2.13.2", issues=1)
+    scanner = make_scanner(str(tmp_path), version=PINNED, issues=1)
     mod = prepare(tmp_path, monkeypatch, scanner)
 
     with pytest.raises(SystemExit) as exc:
@@ -181,7 +193,7 @@ def test_uncovered_finding_fails_the_scan(tmp_path, monkeypatch, capsys):
 
 
 def test_missing_baseline_fails_loudly(tmp_path, monkeypatch, capsys):
-    scanner = make_scanner(str(tmp_path), version="2.13.2")
+    scanner = make_scanner(str(tmp_path), version=PINNED)
     mod = prepare(tmp_path, monkeypatch, scanner, baseline_text=None)
 
     with pytest.raises(SystemExit) as exc:
@@ -193,7 +205,7 @@ def test_missing_baseline_fails_loudly(tmp_path, monkeypatch, capsys):
 
 
 def test_baseline_without_scanner_version_fails(tmp_path, monkeypatch, capsys):
-    scanner = make_scanner(str(tmp_path), version="2.13.2")
+    scanner = make_scanner(str(tmp_path), version=PINNED)
     mod = prepare(
         tmp_path, monkeypatch, scanner, baseline_text="version: 2\nrules: []\n"
     )
@@ -207,10 +219,10 @@ def test_baseline_without_scanner_version_fails(tmp_path, monkeypatch, capsys):
 
 
 def test_scanner_version_is_read_from_stderr(tmp_path, monkeypatch):
-    scanner = make_scanner(str(tmp_path), version="2.13.2", version_stream="stderr")
+    scanner = make_scanner(str(tmp_path), version=PINNED, version_stream="stderr")
     mod = prepare(tmp_path, monkeypatch, scanner)
 
-    assert mod.scanner_version(scanner) == "2.13.2"
+    assert mod.scanner_version(scanner) == PINNED
 
 
 def test_unrunnable_scanner_blames_the_python(tmp_path, monkeypatch, capsys):
@@ -234,7 +246,7 @@ def test_unrunnable_scanner_blames_the_python(tmp_path, monkeypatch, capsys):
 def test_explicit_bin_beats_path(tmp_path, monkeypatch):
     bindir = os.path.join(str(tmp_path), "bin")
     make_scanner(bindir, version="9.9.9")
-    override = make_scanner(str(tmp_path), version="2.13.2", name="other-scanner")
+    override = make_scanner(str(tmp_path), version=PINNED, name="other-scanner")
 
     monkeypatch.setenv("PATH", bindir)
     monkeypatch.setenv("SKILLSPECTOR_BIN", override)
@@ -248,7 +260,7 @@ def test_local_venv_beats_path(tmp_path, monkeypatch):
     bindir = os.path.join(str(tmp_path), "bin")
     make_scanner(bindir, version="9.9.9")
     venv_bin = os.path.join(str(tmp_path), ".venv", "bin")
-    local = make_scanner(venv_bin, version="2.13.2")
+    local = make_scanner(venv_bin, version=PINNED)
 
     monkeypatch.setenv("PATH", bindir)
     monkeypatch.delenv("SKILLSPECTOR_BIN", raising=False)
@@ -256,3 +268,23 @@ def test_local_venv_beats_path(tmp_path, monkeypatch):
     monkeypatch.setattr(mod, "ROOT", str(tmp_path))
 
     assert mod.resolve_scanner() == local
+
+
+def test_report_from_a_different_scanner_fails(tmp_path, monkeypatch, capsys):
+    """`--version` can name one binary while another produced the report.
+
+    A wrapper earlier on PATH (a uv tool install, a venv shim) answers
+    `--version` with the pinned string but the scan runs elsewhere. The
+    finding list then reads clean because suppression never happened, and
+    the only evidence is the version stamped inside the report itself.
+    """
+    scanner = make_scanner(str(tmp_path), version=PINNED, report_version="2.13.1")
+    mod = prepare(tmp_path, monkeypatch, scanner)
+
+    with pytest.raises(SystemExit) as exc:
+        mod.main()
+
+    assert exc.value.code == 1
+    out = capsys.readouterr().out
+    assert "produced this report is 2.13.1" in out
+    assert "proves nothing" in out
