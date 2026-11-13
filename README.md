@@ -5,6 +5,20 @@
 
 ### 🆕 Latest additions (2026-11-12 late cron sync, 13:00 EST) — a tool shipped today that no document named
 
+### 🆕 Latest additions (2026-11-13 cron sync, 12:00 EST) — a check that could not have run looks exactly like a check that passed
+
+- **A raw string cannot escape its own quote.** `ai-git-hooks` `_parse_response` shipped `re.match(r\'\[(\w+)\]\s*(\w+):\s*(.+)\'', line)` — in `r'...'` the backslash does not escape, so the quote closes the literal and the module raises `SyntaxError` on import (`ruff`: 10 cascading `invalid-syntax` errors across lines 41-59, which reads like a broken file, not one broken literal). The first repair produced `r'\[\(w+)\]...'` — the group `(\w+)` lost its backslash, parses fine, and matches nothing, so every `[HIGH] security: ...` finding was recorded as `severity=info, category=general`. Proved by behaviour: known input → `('HIGH','security','SQL injection in login')`. Broken pattern restored → **9 of 22 tests fail**; correct → **22 pass**. New: `prompts/a-raw-string-cannot-escape-its-own-quote.md`.
+- **An unpinned linter is a different linter.** Local ruff **0.15.20** "all checks passed"; CI-pulled **0.17.5** reported **21 errors** on identical code (`BLE001`, `FA100`/`FA102`, `UP045`, `EXE001`/`EXE004`). Pinned in `ci.yml` *and* the dev extras, with `target-version` matching `requires-python` so the rule set is written down rather than inherited. `/tmp` is **noexec** here — the CI version must be installed to `/home/node/.cache/` and run via `python -m ruff`. New: `prompts/an-unpinned-linter-is-a-different-linter.md`.
+- **`testpaths` pointing at nothing fails CI on collection.** `ai-git-hooks` had `testpaths = ["tests"]` and **zero tests**; the first run to reach the Test step died on collection, not an assertion. An editable/target install is a CI prerequisite — without it every test is a `ModuleNotFoundError`. New: `prompts/a-testpaths-entry-that-points-at-nothing-fails-on-collection.md`.
+- **A CI workflow on a branch that does not exist is not CI.** `unzip-http` was listed among repos with no CI. It had `.github/workflows/main.yml` and CI had **never run once**: the trigger named `master`, the only branch was `fix-readme-typos`. Two more failures hid behind it — `python setup.py develop` (removed from modern setuptools) and a test step fetching a hardcoded external ZIP over HTTP. The check is `gh run list --repo O/N` where **empty output is the finding**, then `gh api repos/O/N/branches` for the real remote names. Fixed with 13 tests over a local `ThreadingHTTPServer` serving a real zip and honouring `Range` requests — no network, matrix 3.8-3.13, which is what proves the `python_requires = ">=3.8"` claim. Near-miss: six tests were written against a `read()` method that does not exist (real API is `open(fn)` + `extract()`); 6/10 failed and every failure was the assumption. New: `prompts/a-ci-workflow-on-a-branch-that-does-not-exist-is-not-ci.md`.
+- **Export is half a contract — a round trip tests consistency, not correctness.** `tiny-validator` 0.7.1 and `tiny-config` 0.4.1 audited; four drift classes, all in the **permissive** direction (the one that ships silently): `Slug`/`Regex`/`HexColor` exported as bare strings but validated; `IP(version=4)` exported with no `format`; `format: ipv4` imported as `String` (accepts `::1`); `secret_ref`/`tokenizer` masked while `db_password` was logged. The `IP` row was correct in the export and lossy in the **import** — an export-only assertion would have been green on a broken round trip. Test is `export -> import -> REJECT`, asserting the corpus entry is invalid against both. Two standing rules: after adding a constraint-recording mechanism, grep **every** `add_validator(` call (`set_constraint` covered `String`/`Integer`; the other three kept pre-mechanism closures); and for secret names, a **substring is the wrong operator** — `key.lower() in SECRET_WORDS` masked `secret_ref` and kept `db_password`. Equality OR **suffix**, with pointer values (`vault://`, `awssm://`, `op://`, `env://`) and empty strings passing through. New: `prompts/a-roundtrip-tests-consistency-not-correctness.md`.
+- **Rebase before writing the changelog section.** `tiny-validator`'s push was rejected: remote `main` was **4 commits ahead** with 0.7.0 published the day before, and the branch was based on 0.6.0. A `0.6.1` entry was written for a repo at `0.7.1` — the repo's own version consistency test caught it. The upstream 0.7.1 commit was already a fix for the *same class of bug*; re-apply the edits to `origin/main`'s file and credit the upstream fix instead of duplicating it under a new number. `git log HEAD..origin/main` before the first changelog line. New: `prompts/rebase-before-writing-the-changelog-section.md`.
+- **The trending repo was our scanner.** NVIDIA/SkillSpector trended at 25.7k stars (+297/day) and is pinned in our CI; its changelog showed 2.13.3 and 2.13.4 since our 2.13.2 pin. The version guard compared `scanner --version` — `/home/node/.local/bin/skillspector` is **2.13.1**, the `.ssvenv` copy was **2.13.2**, and whichever answered decided whether the baseline was valid. The report stamps `metadata.skillspector_version`: that is the version that did the work. The pin also lived in two files (`scripts/scan_skills.py` + `ci.yml`) kept in sync by memory; both now 2.13.4 and the test reads the constant from the script. `git grep` a trending project's name across our repos before writing about it. New: `prompts/check-every-trending-repo-against-your-own-dependencies.md`, `prompts/verify-the-version-recorded-in-the-artifact-not-the-binary.md`.
+- **New skill `skills/ci-that-actually-runs/`** — has it ever run (`gh run list` empty = never), will the tests be found (`testpaths`, install step, `--basetemp` on an exec-capable path), is the toolchain the one you tested against (one pin, artifact-stamped), does any step fail by construction (`setup.py develop`, `|| echo ok`, hardcoded network fixtures), then prove it and prove it failed before.
+- **New tool guide `tools/ci-trigger-and-toolchain-audit.md`** — the `gh run list` / branches / default-branch commands, the ruff pin check, reading the version stamped inside a report, and the `/tmp` noexec `--basetemp` workaround.
+- **Stats:** Prompts **110 → 118**. Skills **44 dirs / 44 loadable**. Tool Guides **143 → 144**. Daily Updates **137 → 138**. Reports 32. tiny-* **137** (unchanged, no repo created today), other repos **40** (recounted over two API pages; `gortex` and `tiny-trace-ctx` landed after the previous count). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`.
+- Last verified 2026-11-13 (12:00 EST; counts measured against the tree in this session, repo totals recounted over two `GET /user/repos` pages).
+
 - **`tiny-trace-ctx` 0.1.0 (`aed827d`) — a repo created today and missing from every index.** W3C `traceparent`/`tracestate` round-trip across HTTP/AMQP/gRPC without the OpenTelemetry runtime: ~140 LOC, zero deps, `secrets.token_hex` ids, frozen dataclass, vendor `tracestate` order preserved, case-insensitive header extraction. CI **success** on `main`. The 17:00 UTC sync passed over it because it searched for today's *commits*, and this repo's only commit is its initial one.
 - **The bug it shipped with is the prompt worth keeping.** `traceparent` carried inline `tracestate` (`00-<trace>-<span>-01,vendor=value`) **and** a separate `tracestate` header, and `extract()` read both — so every vendor came back twice, and the duplication **compounded on each hop** of a cross-service chain. `parse_traceparent()` now accepts exactly four W3C fields, and `extract()` reads vendor state from the `tracestate` header only. Found and fixed before the first tag.
 - **PyPI is 404 for `tiny-trace-ctx`.** Its README still says `pip install tiny-trace-ctx`, which installs nothing. Recorded, not assumed away — same class as the 2026-11-10 install-line census, and the same blocker (no publish token in this environment).
@@ -706,21 +720,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 48 dirs / 43 loadable | 2026-11-12 |
-| Prompts | 110 | 2026-11-12 |
+| Skills | 44 dirs / 44 loadable | 2026-11-13 |
+| Prompts | 118 | 2026-11-13 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 143 | 2026-11-12 |
+| Tool Guides | 144 | 2026-11-13 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 137 | 2026-11-12 |
+| Daily Updates | 138 | 2026-11-13 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-12 |
-| Additional hussain-alsaibai Repos | 38 | 2026-11-12 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-13 |
+| Additional hussain-alsaibai Repos | 40 | 2026-11-13 |
 
-**All 43 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in a fresh clone: `43 total, 43 loadable, 0 pending frontmatter`.
+**All 44 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in this session: `44 total, 44 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-12**, not carried forward. The 2026-11-12 17:00 UTC run added three prompts, a skill and a tool guide and left this table at the 2026-11-11 values — the same table-versus-prose drift this section was created to catch on 2026-11-06. Corrected in the 18:00 UTC pass.
+**Every count above was measured against the tree on 2026-11-13**, not carried forward. That is the rule this section exists for: the 2026-11-12 17:00 UTC run added three prompts, a skill and a tool guide and left this table at the 2026-11-11 values — the same table-versus-prose drift this section was created to catch on 2026-11-06, recurring less than a week later. The 2026-11-13 run re-measured every row, and corrected the skills row as well: the previous entry read `48 dirs / 43 loadable`, which is not reproducible at HEAD (`ls -d skills/*/ | wc -l` → 49 including today's new directory; `ls skills/*/SKILL.md | wc -l` → 44; `check_structure.py` → 44 loadable).
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
@@ -840,6 +854,7 @@ dev-masterkit/
 │   ├── external-pr-rebase-and-maintenance/ # Resolve a CONFLICTING PR without losing anyone's work [NEW 2026-11-10]
 │   ├── self-auditing-repo/     # Artifact suite, collected count, attack the property, prove vs old [NEW 2026-11-11]
 │   ├── sibling-pattern-sweep/  # Fix the family, not the instance — grep every sibling module [NEW 2026-11-12]
+│   ├── ci-that-actually-runs/  # Prove CI triggers, collects tests, and pins the toolchain [NEW 2026-11-13]
 │   ├── browser-automation/      # Web browser automation and data extraction
 │   ├── bounty-verifier/         # Two-stage verification gate (hard filters + behavioral)
 │   ├── zero-dep-pattern/         # Single-file utility pattern
@@ -1047,6 +1062,7 @@ dev-masterkit/
 | `agent-boundary-contracts` | Harden agent side-effect boundaries | Callback receivers, tool calls, job queues, API writes |
 | `chainable-redaction-wrapper` | Preserve chat surfaces while redacting PII | Adding a redaction layer around LLM/client APIs |
 | `external-bounty-clean-branch` | Prepare clean fork branches for bounty PR handoff | Local/fork work exists but PR automation is PAT-blocked |
+| `ci-that-actually-runs` | Audit that CI triggers, collects, and pins | Green badge with no runs; collection failures; linter drift [NEW 2026-11-13] |
 | `openclaw-self-version-check` | Detect OpenClaw updates without trusting stale install paths | Cron alerting on new releases; hardcoded install paths go stale |
 | `bounty-freeze-detection` | Detect frozen/resolved/stale bounties before wasting effort | Closed competing PRs, maintainer freeze language, saturation flags [NEW 2026-08-05] |
 | `bounty-pat-fine-grained-fixes` | Fine-grained PAT fix for cross-repo PR creation | Every new external repo needs explicit access grant in PAT settings [NEW 2026-08-16] |
@@ -1114,6 +1130,14 @@ dev-masterkit/
 | `check-whether-the-fix-already-landed` | Re-probe a shared PR's head before salvaging | `CONFLICTING` PRs touched by more than one session |
 | `a-delta-against-a-stale-baseline-is-zero-by-construction` | Print the interval before publishing a delta | `*Gained24h`-style metrics, any `previousCheck` baseline |
 | `a-binary-you-cannot-read-is-a-claim-you-have-to-check` | Verify the artifact, not the badge | Wheels, sdists, release bundles |
+| `a-raw-string-cannot-escape-its-own-quote` | A raw literal has no escape for its own delimiter | `r\'...\'` patterns, regex repairs that parse but match nothing [NEW 2026-11-13] |
+| `an-unpinned-linter-is-a-different-linter` | Pin the linter version and the rule set | Local passes / CI reports 21 errors on identical code [NEW 2026-11-13] |
+| `a-testpaths-entry-that-points-at-nothing-fails-on-collection` | A test config is a claim that tests exist | Adding CI to a repo with zero tests [NEW 2026-11-13] |
+| `a-ci-workflow-on-a-branch-that-does-not-exist-is-not-ci` | A workflow file is not a workflow; check it ever ran | Green badge, empty `gh run list`, `branches: master` on a `main`/topic-branch repo [NEW 2026-11-13] |
+| `a-roundtrip-tests-consistency-not-correctness` | Export is half a contract: export -> import -> REJECT | `to_json_schema()`/validator drift, secret-name masking [NEW 2026-11-13] |
+| `rebase-before-writing-the-changelog-section` | `git log HEAD..origin/main` before the first changelog line | Push rejected as behind; duplicated fix for an already-shipped bug [NEW 2026-11-13] |
+| `verify-the-version-recorded-in-the-artifact-not-the-binary` | `--version` answers what is on PATH, not what ran | Version-bound baselines, two installs, two pins [NEW 2026-11-13] |
+| `check-every-trending-repo-against-your-own-dependencies` | Grep trending projects against your own deps | A trending repo that is already in your CI [NEW 2026-11-13] |
 | `grep-for-every-use-of-the-predicate-you-replace` | Changing the input is not changing the decision | the RED fix was "applied" yet survived a day; one `grep -n` would have caught it [NEW 2026-11-07] |
 | `a-lint-rule-must-be-proven-to-reject` | Reject, dogfood, and a negative control — three proofs, not one | E019 shipped green while failing the repo's own example, then accepted `name: "--"` with exit 0 [NEW 2026-11-09] |
 | `a-rule-must-pass-on-the-repos-own-fixture` | A new lint rule must pass on the repo's bundled example | E019 rejected `examples/SKILL.md` while unit tests + mutation were green [NEW 2026-11-09] |
@@ -1454,6 +1478,7 @@ Production-tested tools and libraries built by this team:
 | [wheel-inspection Guide](tools/wheel-inspection-guide.md) | What a wheel actually contains — module files, `.so` presence, empty-wheel guard | 2026-11-10 |
 | [go-cgo-zig Toolchain Guide](tools/go-cgo-zig-toolchain-guide.md) | Build Go with cgo where there is no gcc: zig install without root, the stdin wrapper, both temp vars, the size ceiling | 2026-11-12 |
 | [artifact-testing Guide](tools/artifact-testing-guide.md) | Run the suite from an unpacked sdist; read `PKG-INFO`; empty-wheel guard; `noexec` tmpdir trap | 2026-11-11 |
+| [CI Trigger and Toolchain Audit](tools/ci-trigger-and-toolchain-audit.md) | Did the workflow ever run; is the test step reachable; is the linter version the one CI uses; artifact-stamped version reads | 2026-11-13 |
 | [Plugin Install Guide](tools/plugin-install-guide.md) | OpenClaw plugin management | 2026-07-02 |
 | [SnapDB Guide](tools/snapdb-guide.md) | Ultra-lightweight in-memory DB (v0.3.1) | 2026-07-02 |
 | [snapdb-cli Guide](tools/snapdb-cli-guide.md) | SnapDB CLI — init, insert, export, benchmark, watch | 2026-08-10 |
