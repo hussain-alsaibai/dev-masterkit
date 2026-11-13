@@ -13,10 +13,11 @@
 - **A CI workflow on a branch that does not exist is not CI.** `unzip-http` was listed among repos with no CI. It had `.github/workflows/main.yml` and CI had **never run once**: the trigger named `master`, the only branch was `fix-readme-typos`. Two more failures hid behind it — `python setup.py develop` (removed from modern setuptools) and a test step fetching a hardcoded external ZIP over HTTP. The check is `gh run list --repo O/N` where **empty output is the finding**, then `gh api repos/O/N/branches` for the real remote names. Fixed with 13 tests over a local `ThreadingHTTPServer` serving a real zip and honouring `Range` requests — no network, matrix 3.8-3.13, which is what proves the `python_requires = ">=3.8"` claim. Near-miss: six tests were written against a `read()` method that does not exist (real API is `open(fn)` + `extract()`); 6/10 failed and every failure was the assumption. New: `prompts/a-ci-workflow-on-a-branch-that-does-not-exist-is-not-ci.md`.
 - **Export is half a contract — a round trip tests consistency, not correctness.** `tiny-validator` 0.7.1 and `tiny-config` 0.4.1 audited; four drift classes, all in the **permissive** direction (the one that ships silently): `Slug`/`Regex`/`HexColor` exported as bare strings but validated; `IP(version=4)` exported with no `format`; `format: ipv4` imported as `String` (accepts `::1`); `secret_ref`/`tokenizer` masked while `db_password` was logged. The `IP` row was correct in the export and lossy in the **import** — an export-only assertion would have been green on a broken round trip. Test is `export -> import -> REJECT`, asserting the corpus entry is invalid against both. Two standing rules: after adding a constraint-recording mechanism, grep **every** `add_validator(` call (`set_constraint` covered `String`/`Integer`; the other three kept pre-mechanism closures); and for secret names, a **substring is the wrong operator** — `key.lower() in SECRET_WORDS` masked `secret_ref` and kept `db_password`. Equality OR **suffix**, with pointer values (`vault://`, `awssm://`, `op://`, `env://`) and empty strings passing through. New: `prompts/a-roundtrip-tests-consistency-not-correctness.md`.
 - **Rebase before writing the changelog section.** `tiny-validator`'s push was rejected: remote `main` was **4 commits ahead** with 0.7.0 published the day before, and the branch was based on 0.6.0. A `0.6.1` entry was written for a repo at `0.7.1` — the repo's own version consistency test caught it. The upstream 0.7.1 commit was already a fix for the *same class of bug*; re-apply the edits to `origin/main`'s file and credit the upstream fix instead of duplicating it under a new number. `git log HEAD..origin/main` before the first changelog line. New: `prompts/rebase-before-writing-the-changelog-section.md`.
+- **Grep every copy of a number before committing the correction.** The 12:00 sync corrected the skills row to 49/44 and wrote the correction into the prose — but the blockquote three lines below still stated 48/43 as a measured table, so the section said "corrected" and then contradicted itself. The diff was reviewed line-by-line, which is exactly how the untouched line gets missed. Rule: grep the *old value* everywhere (every formatting), re-derive the new one from a command, and confirm the arithmetic closes instead of repeating an earlier explanation. Proven: `grep -n "48 / 43" README.md` now matches only dated log entries. New: `prompts/grep-every-copy-of-a-number-before-you-commit-the-correction.md`.
 - **The trending repo was our scanner.** NVIDIA/SkillSpector trended at 25.7k stars (+297/day) and is pinned in our CI; its changelog showed 2.13.3 and 2.13.4 since our 2.13.2 pin. The version guard compared `scanner --version` — `/home/node/.local/bin/skillspector` is **2.13.1**, the `.ssvenv` copy was **2.13.2**, and whichever answered decided whether the baseline was valid. The report stamps `metadata.skillspector_version`: that is the version that did the work. The pin also lived in two files (`scripts/scan_skills.py` + `ci.yml`) kept in sync by memory; both now 2.13.4 and the test reads the constant from the script. `git grep` a trending project's name across our repos before writing about it. New: `prompts/check-every-trending-repo-against-your-own-dependencies.md`, `prompts/verify-the-version-recorded-in-the-artifact-not-the-binary.md`.
 - **New skill `skills/ci-that-actually-runs/`** — has it ever run (`gh run list` empty = never), will the tests be found (`testpaths`, install step, `--basetemp` on an exec-capable path), is the toolchain the one you tested against (one pin, artifact-stamped), does any step fail by construction (`setup.py develop`, `|| echo ok`, hardcoded network fixtures), then prove it and prove it failed before.
 - **New tool guide `tools/ci-trigger-and-toolchain-audit.md`** — the `gh run list` / branches / default-branch commands, the ruff pin check, reading the version stamped inside a report, and the `/tmp` noexec `--basetemp` workaround.
-- **Stats:** Prompts **110 → 118**. Skills **44 dirs / 44 loadable**. Tool Guides **143 → 144**. Daily Updates **137 → 138**. Reports 32. tiny-* **137** (unchanged, no repo created today), other repos **40** (recounted over two API pages; `gortex` and `tiny-trace-ctx` landed after the previous count). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`.
+- **Stats:** Prompts **110 → 119** (118 in the 12:00 run, +1 late sync). Skills **44 dirs / 44 loadable**. Tool Guides **143 → 144**. Daily Updates **137 → 138**. Reports 32. tiny-* **137** (unchanged, no repo created today), other repos **40** (recounted over two API pages; `gortex` and `tiny-trace-ctx` landed after the previous count). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`.
 - Last verified 2026-11-13 (12:00 EST; counts measured against the tree in this session, repo totals recounted over two `GET /user/repos` pages).
 
 - **`tiny-trace-ctx` 0.1.0 (`aed827d`) — a repo created today and missing from every index.** W3C `traceparent`/`tracestate` round-trip across HTTP/AMQP/gRPC without the OpenTelemetry runtime: ~140 LOC, zero deps, `secrets.token_hex` ids, frozen dataclass, vendor `tracestate` order preserved, case-insensitive header extraction. CI **success** on `main`. The 17:00 UTC sync passed over it because it searched for today's *commits*, and this repo's only commit is its initial one.
@@ -721,7 +722,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 44 dirs / 44 loadable | 2026-11-13 |
-| Prompts | 118 | 2026-11-13 |
+| Prompts | 119 | 2026-11-13 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 144 | 2026-11-13 |
 | Agents | 3 | 2026-07-23 |
@@ -741,18 +742,26 @@ open skills/repo-creator/SKILL.md
 >
 > | Measure | Count |
 > |---|---|
-> | `skills/` directories | **48** on disk, 43 holding a `SKILL.md` |
-> | directories holding a `SKILL.md` | **43** |
-> | `scripts/check_structure.py` loadable | **43**, 0 pending frontmatter |
+> | `skills/` directories | **49** on disk, 44 holding a `SKILL.md` |
+> | directories holding a `SKILL.md` | **44** |
+> | `scripts/check_structure.py` loadable | **44**, 0 pending frontmatter |
 >
 > The five directories with no `SKILL.md` (`accountability`, `cost-tracker`,
 > `repo-monitor`, `research`, `self-reflection` — the last holds a
 > `REFLECTION.md`) are legacy material and are not loadable as AgentSkills.
 > Recount the pair with `ls -d skills/*/ | wc -l` against
-> `ls skills/*/SKILL.md | wc -l` rather than trusting this list: 48 − 43 = 5,
-> and `ls skills/ | wc -l` reports **49** because `skills/AGENTSKILLS_PENDING.md`
-> is a file sitting in the directory. Counting entries and counting directories
-> are different measurements and the first draft used the wrong one.
+> `ls skills/*/SKILL.md | wc -l` rather than trusting this list: 49 − 44 = 5.
+> `ls skills/ | wc -l` also reports **49** here only because the five
+> no-`SKILL.md` directories are counted alongside the 44 skill directories;
+> counting entries and counting directories are different measurements and an
+> earlier draft used the wrong one.
+>
+> **Fixed 2026-11-13 13:00 EST:** this block still read `48 / 43 / 43` after
+> the table above it had been corrected in the 12:00 run. The correction was
+> written into the prose paragraph and the blockquote directly beneath it was
+> never swept, so the section contradicted itself within three lines. The
+> numbers here are now the measured `49 / 44 / 44`, and the arithmetic is
+> re-derived rather than carried over.
 
 > **The `Tools | 98` row was removed on 2026-11-02.** It had been frozen since
 > 2026-09-17 and counted a category that no longer exists: `tools/` has only
@@ -1136,6 +1145,7 @@ dev-masterkit/
 | `a-ci-workflow-on-a-branch-that-does-not-exist-is-not-ci` | A workflow file is not a workflow; check it ever ran | Green badge, empty `gh run list`, `branches: master` on a `main`/topic-branch repo [NEW 2026-11-13] |
 | `a-roundtrip-tests-consistency-not-correctness` | Export is half a contract: export -> import -> REJECT | `to_json_schema()`/validator drift, secret-name masking [NEW 2026-11-13] |
 | `rebase-before-writing-the-changelog-section` | `git log HEAD..origin/main` before the first changelog line | Push rejected as behind; duplicated fix for an already-shipped bug [NEW 2026-11-13] |
+| `grep-every-copy-of-a-number-before-you-commit-the-correction` | Grep the old value everywhere before committing a correction | A corrected table row and the stale blockquote three lines below it [NEW 2026-11-13] |
 | `verify-the-version-recorded-in-the-artifact-not-the-binary` | `--version` answers what is on PATH, not what ran | Version-bound baselines, two installs, two pins [NEW 2026-11-13] |
 | `check-every-trending-repo-against-your-own-dependencies` | Grep trending projects against your own deps | A trending repo that is already in your CI [NEW 2026-11-13] |
 | `grep-for-every-use-of-the-predicate-you-replace` | Changing the input is not changing the decision | the RED fix was "applied" yet survived a day; one `grep -n` would have caught it [NEW 2026-11-07] |
