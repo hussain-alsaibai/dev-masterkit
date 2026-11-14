@@ -5,6 +5,17 @@
 
 ### 🆕 Latest additions (2026-11-12 late cron sync, 13:00 EST) — a tool shipped today that no document named
 
+### 🆕 Latest additions (2026-11-14 cron sync, 13:00 EST) — two counts written before they were run
+
+- **A withdrawal, first.** An earlier edit today put "NullMotion 27 tests / 25 pass / 2 fail → 36 / 36 / 0" and "MotionClone 15 fail / 115 pass → 131 passed" into `skills/dev-env-defects/SKILL.md` and `tools/static-toolchain-without-root-guide.md`. Neither is reproducible. Measured here: NullMotion **27/27** under an overlay `TMPDIR` and **25 pass / 2 fail** under `/tmp`; MotionClone **2 failed / 125 passed / 1 skipped** as shipped, **128 passed** after two environment changes. Both wrong numbers are now marked superseded in place. The repo already had the rule — *the count that proves it works is the count that fails* — and it was applied to the fix but not to the total.
+- **A mirror has no CI.** `NullMotion` and `MotionClone` were created today; both are mirrors of `blixvip` projects (LICENSE names `blixvip`, badges link upstream), and both return `[]` from `gh run list --json status,conclusion`. A `ci.yml` triggered `on: pull_request` + `on: push: branches: [main]` fires neither on a mirrored repo. **Never ran** is not **passing**. Upstream does not agree with itself either: `open_issues_count` **37**, the `good first issue` label query **21**, the README **22**. New: `prompts/a-mirror-has-no-ci-and-a-red-suite-may-be-the-host.md`.
+- **Both failures were the host, not the code.** `scene_pipeline.py` launches with `channel='chrome'`, which wants `/opt/google/chrome/chrome` — root-owned, no sudo, no user namespaces. Replaced with `executable_path` → that file **22/22 pass**; `git checkout` → **2 fail** again. `hyperframes` cannot bootstrap itself (*"no zip archiver is available. Install `unzip`"*, wanting `chrome-headless-shell 152`) and its own error text names the fix, `HYPERFRAMES_BROWSER_PATH` → **128 passed**. **A green run under a patched environment is a diagnosis, never a commit.**
+- **A missing `node_modules` makes a suite redder, not greener.** `app/hyperframes.py:38` does `shutil.copy2(RUNTIME/'node_modules/gsap/dist/gsap.min.js', …)`; with `hyperframes/node_modules` absent the test stops there with `FileNotFoundError`, and after `npm ci` it *reaches the renderer and fails there* — the failure count went **2 → 3**. Count install steps before the first number, or the second number describes a different machine.
+- **Two binaries claim to be Chrome.** `chrome-157` → **157.0.8103.78**; `chromium-1208` → **145.0.7632.6**. The version string does not tell you which one a suite launched.
+- **New tool guide `tools/static-toolchain-without-root-guide.md`** — the measured run table, the `TMPDIR` `noexec` + 512 MB distinction, npm 11 silently blocking `esbuild`/`onnxruntime-node`/`protobufjs` postinstalls, and the extraction rule with no `xz` and no `unzip`. Skill `skills/dev-env-defects/` gained four host traps and a second `TMPDIR` failure mode.
+- **Stats:** Prompts **122 → 123**. Skills **49 dirs / 44 loadable** (unchanged count; one file edited). Tool Guides **144 → 145**. Daily Updates **138 → 139**. Reports 32. tiny-* **137**, other repos **43** (three created today — `NullMotion`, `MotionClone`, `revert` — recounted over two `GET /user/repos` pages). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`.
+- Last verified 2026-11-14 (13:00 EST; every count re-derived from the tree, every test number from a run started and finished in this session).
+
 ### 🆕 Latest additions (2026-11-13 cron sync, 12:00 EST) — a check that could not have run looks exactly like a check that passed
 
 - **A raw string cannot escape its own quote.** `ai-git-hooks` `_parse_response` shipped `re.match(r\'\[(\w+)\]\s*(\w+):\s*(.+)\'', line)` — in `r'...'` the backslash does not escape, so the quote closes the literal and the module raises `SyntaxError` on import (`ruff`: 10 cascading `invalid-syntax` errors across lines 41-59, which reads like a broken file, not one broken literal). The first repair produced `r'\[\(w+)\]...'` — the group `(\w+)` lost its backslash, parses fine, and matches nothing, so every `[HIGH] security: ...` finding was recorded as `severity=info, category=general`. Proved by behaviour: known input → `('HIGH','security','SQL injection in login')`. Broken pattern restored → **9 of 22 tests fail**; correct → **22 pass**. New: `prompts/a-raw-string-cannot-escape-its-own-quote.md`.
@@ -721,21 +732,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 44 dirs / 44 loadable | 2026-11-13 |
-| Prompts | 119 | 2026-11-13 |
+| Skills | 44 dirs / 44 loadable | 2026-11-14 |
+| Prompts | 123 | 2026-11-14 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 144 | 2026-11-13 |
+| Tool Guides | 145 | 2026-11-14 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 138 | 2026-11-13 |
+| Daily Updates | 139 | 2026-11-14 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-13 |
-| Additional hussain-alsaibai Repos | 40 | 2026-11-13 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-14 |
+| Additional hussain-alsaibai Repos | 43 | 2026-11-14 |
 
 **All 44 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in this session: `44 total, 44 loadable, 0 pending frontmatter`.
 
-**Every count above was measured against the tree on 2026-11-13**, not carried forward. That is the rule this section exists for: the 2026-11-12 17:00 UTC run added three prompts, a skill and a tool guide and left this table at the 2026-11-11 values — the same table-versus-prose drift this section was created to catch on 2026-11-06, recurring less than a week later. The 2026-11-13 run re-measured every row, and corrected the skills row as well: the previous entry read `48 dirs / 43 loadable`, which is not reproducible at HEAD (`ls -d skills/*/ | wc -l` → 49 including today's new directory; `ls skills/*/SKILL.md | wc -l` → 44; `check_structure.py` → 44 loadable).
+**Every count above was measured against the tree on 2026-11-14**, not carried forward. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. This run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn here — see `daily-updates/2026-11-14.md`.
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**

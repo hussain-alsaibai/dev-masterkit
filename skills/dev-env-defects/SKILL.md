@@ -13,10 +13,19 @@ CI job that dies before your code runs.
 **Do not use when:** the error names a specific file and line of the code you
 wrote. That is a code defect and the log already told you where.
 
-**Last verified:** 2026-10-26 — every fact below was reproduced on this
-container. `tiny-store` 24 tests pass, `tiny-graceful` 55 pass,
-`tiny-mcp-observability` 35 pass, `tiny-mcp-skel` 43 pass,
-`fast-cache` 108 pass.
+**Last verified:** 2026-11-14 — the checks below reproduced today on two
+repos whose long-standing "test failures" were entirely environmental.
+MotionClone, both browser-related failures: **2 failed / 125 passed / 1
+skipped** as shipped; `channel='chrome'` replaced by an `executable_path` for
+**22/22 pass** on that one file; with a `HYPERFRAMES_BROWSER_PATH` set as
+well the whole suite is **128 passed**. NullMotion: **27 / 27 pass** with
+`TMPDIR` on the overlay, **2 fail** on the 512 MB tmpfs `/tmp`. *(An earlier
+edit of this line claimed "NullMotion 27 → 36 / 36" and "MotionClone 15 fail
+→ 0"; neither count was ever reproduced and both are withdrawn — see
+`tools/static-toolchain-without-root-guide.md` for the measured table.)*
+The 2026-10-26 facts
+(`tiny-store` 24, `tiny-graceful` 55, `tiny-mcp-observability` 35,
+`tiny-mcp-skel` 43, `fast-cache` 108 tests passing) still hold.
 
 ## The Core Rule
 
@@ -131,6 +140,41 @@ python -m venv /tmp/venv && /tmp/venv/bin/pip install -e .
 
 ## Other traps worth knowing
 
+- **`TMPDIR` must be able to *execute* binaries, not just hold them, and it
+  must not be small.** A test that writes a fake `ffmpeg` into
+  `os.tmpdir()` and `spawn`s it fails with `EACCES` on this host, because
+  `/tmp` is `noexec`. The failure surfaces as a **behavioural** assertion
+  (`false !== true`) because the spawn error handler swallows it. Proven by
+  running the identical fixture under `/home/node/.cache/tmp-exec`: exit 0,
+  expected output. Use `TMPDIR=/home/node/.cache/tmp-exec` and note that
+  `EACCES` \!= `ENOENT` — installing the binary changes nothing if the mount
+  is `noexec`. Second failure mode on the same mount: `/tmp` is **512 MB**,
+  and NullMotion's audio-extraction tests pass under the overlay `TMPDIR`
+  and fail under `/tmp` — a passing suite under a chosen `TMPDIR` is a claim
+  about that `TMPDIR`.
+- **Playwright `channel='chrome'` wants a root-owned path.** `/opt` is root
+  owned, there is no `sudo`, no user namespace (`unshare: Operation not
+  permitted`), `CapEff: 0000000000000000`. `playwright install chrome` dies
+  with `su: Authentication failure`. **`install chromium` does not need
+  root**; if the suite hardcodes the `chrome` channel, fetch Chrome for
+  Testing and point a fixture at it via `executable_path`.
+- **npm 11 blocks install scripts by default.** `npm install` completes and
+  **esbuild's** postinstall silently never runs, so the bundler cannot build
+  and the failure appears three layers later. `npm install-scripts approve
+  esbuild` (also `onnxruntime-node`, `protobufjs`). The `allowScripts` block
+  npm then writes into `package.json` is an install-policy artifact — revert
+  it before committing, it is not part of your change.
+- **No `xz`, no `unzip`, no `tar` for compressed tarballs.** `.tar.xz` needs
+  `python3 -c "import lzma,tarfile"`; `.zip` needs `python3 -m zipfile -e`.
+  `tar xf` on a `.tar.xz` here dies with `Child returned status 2`, which
+  reads like a corrupt download.
+- **`pip install --target` extracts into `/tmp`, not `$TMPDIR`.** It fails
+  `ENOSPC` while `df` shows 7.5 G free on the overlay. Set
+  `TMPDIR=/home/node/.cache/tmp` (a real directory on the overlay) before pip.
+- **`rm -rf` cannot clear a Go module cache.** The files are read-only, so it
+  fails on thousands of headers and frees nothing. The correct call is
+  `GOMODCACHE=<path> go clean -modcache` — and confirm the path is genuinely
+  orphaned with `go env GOMODCACHE` first (2.0 G was reclaimed this way).
 - **`package.json` `"allowScripts"` is not a real npm field.** npm ignores it.
   It only affects some other package managers.
 - **`prebuild-install` fails with `ECONNREFUSED 127.0.0.1:80`** — its own
