@@ -744,19 +744,19 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 44 dirs / 44 loadable | 2026-11-14 |
-| Prompts | 123 | 2026-11-14 |
+| Skills | 44 loadable / 49 dirs | 2026-11-15 |
+| Prompts | 131 | 2026-11-15 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 145 | 2026-11-14 |
+| Tool Guides | 146 | 2026-11-15 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 139 | 2026-11-14 |
+| Daily Updates | 140 | 2026-11-15 |
 | Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 137 | 2026-11-14 |
 | Additional hussain-alsaibai Repos | 43 | 2026-11-14 |
 
-**All 44 `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` in this session: `44 total, 44 loadable, 0 pending frontmatter`.
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-15: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
 
 **Every count above was measured against the tree on 2026-11-14**, not carried forward. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. This run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn here — see `daily-updates/2026-11-14.md`.
 
