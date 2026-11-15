@@ -13,7 +13,15 @@ CI job that dies before your code runs.
 **Do not use when:** the error names a specific file and line of the code you
 wrote. That is a code defect and the log already told you where.
 
-**Last verified:** 2026-11-14 — the checks below reproduced today on two
+**Last verified:** 2026-11-15 — two new entries verified this run: the pytest
+`-k` expression trap (a malformed filter runs *more* tests, never fewer, and
+exits 0) and the `--doctest-modules` boundary (a docstring example has no name
+predictable enough to filter, so scope by directory instead). Host facts
+re-checked: `/tmp` still `noexec,size=524288k`; no `xz`, no `unzip`; `go test`
+on a cgo project still excludes 198 files here, so `gofmt -l` + `go vet` on
+only the changed files is the available signal, not a green suite.
+
+**Prior verification:** 2026-11-14 — the checks below reproduced on two
 repos whose long-standing "test failures" were entirely environmental.
 MotionClone, both browser-related failures: **2 failed / 125 passed / 1
 skipped** as shipped; `channel='chrome'` replaced by an `executable_path` for
@@ -62,6 +70,31 @@ because `/tmp` is `noexec`:
 ```bash
 mount | grep ' /tmp '    # -> tmpfs ... noexec
 ```
+
+### 1b. A test filter that runs MORE tests than you meant
+
+`-k` evaluates a boolean expression over the test id; adjacent tokens are
+implicit `and`. Two forms are wrong in ways that exit 0:
+
+```bash
+pytest -k "not slice long"       # not(slice AND long) -> excludes almost nothing
+pytest -k "(not slice, not long)"  # syntax error in the expression
+pytest -k "not (slice or long)"    # the correct exclusion of two things
+pytest -k "not slice and not long" # also correct
+```
+
+The trap is silent in the safe direction: a bad filter **runs more**, never
+fewer, so the run is green and the slow or environment-dependent modules you
+tried to exclude are back in the count. Always read the collected line, or
+resolve the expression without running anything:
+
+```bash
+pytest -q -k "not (slice or long)" --co | tail -1
+```
+
+Prefer paths (`pytest tests/unit`) or `norecursedirs` when excluding a
+directory: `-k` matches by id substring and will hit a same-named test that
+lives somewhere you did not intend.
 
 ### 2. Is the interpreter new enough to *parse* the repo?
 
