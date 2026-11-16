@@ -13,7 +13,10 @@ CI job that dies before your code runs.
 **Do not use when:** the error names a specific file and line of the code you
 wrote. That is a code defect and the log already told you where.
 
-**Last verified:** 2026-11-16 — entry 1c added: a clean `go vet` on a tree whose
+**Last verified:** 2026-11-16 — collision trap added to *Other traps*: a bare
+install name can resolve to a different author's package (six confirmed on
+PyPI this session; `pip install tiny-cli` exits 0 and installs someone else's
+CLI). Entry 1c added earlier the same day: a clean `go vet` on a tree whose
 test files were never type-checked (missing `errors` import caught only after
 stubbing four grammars on `gortex` #1418). Host facts re-checked: 198 cgo
 files excluded, `gofmt -l` empty on changed files.
@@ -263,6 +266,17 @@ python -m venv /tmp/venv && /tmp/venv/bin/pip install -e .
 
   A hardcoded `/home/node` path in a test bootstrap is the same defect wearing
   a different hat — it makes the suite pass only on one machine.
+- **A published name that belongs to a stranger is an install defect with no
+  error message.** `pip install tiny-cli` exits 0 and installs TinyBio LLC's
+  genomics CLI; `tiny-router`, `tiny-eval`, `tiny-queue`, `tiny-flags` and
+  `snapdb` are the same (each checked against the PyPI JSON API on
+  2026-11-16, six confirmed collisions). Nothing fails, so CI and the reader
+  both pass. Check the registry **author**, not just the status code:
+  `GET https://pypi.org/pypi/<name>/json` → `info.author`. Report `unknown`
+  (429, timeout) separately from absent, or an outage reads as breakage. And
+  read `git show origin/main:README.md` before fixing — three repos here were
+  already correct remotely and only the stale clone held the broken line.
+  Full procedure: `tools/install-line-audit-collisions-not-404s.md`.
 
 ## The Procedure
 

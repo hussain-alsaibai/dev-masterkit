@@ -3,6 +3,18 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-16 late sync, 13:00 EST) — the install that succeeds and the guard that covers one path
+
+Two findings from after the 12:00 run, both silent by construction.
+
+- **An install that succeeds is not an install that found you.** Four sweeps for broken `pip install` lines assumed the failure mode was *"the name does not exist."* The other class is the name that **does** exist and belongs to a stranger: `pip install tiny-cli` exits 0 and installs TinyBio LLC's genomics CLI. Six confirmed against the PyPI JSON API on 2026-11-16 — `tiny-cli`, `tiny-router`, `tiny-eval`, `tiny-queue`, `tiny-flags`, `snapdb` — none a squatter, just ordinary projects sharing a crowded prefix. Nothing fails, so CI and the reader both pass, and agent-facing `llms.txt` amplified one of them while the README two files away warned against it. The check gained a second question: not *does it resolve* but *does it resolve to us* — registry **author** against a `--mine` allowlist, with `unknown` (429/timeout) reported separately from absent so an outage never reads as breakage. Census: 2,854 files, 541 bare references, 201 names → **394 absent, 0 unknown**, 56 README sites across 39 repos; one live collision, fixed in `tiny-cli#2`. New: `prompts/an-install-that-succeeds-is-not-an-install-that-found-you.md`, `tools/install-line-audit-collisions-not-404s.md`.
+- **A guard that covers one path covers none.** `snapdb` 0.18.2 had a selectivity guard wired into `execute()` only while `count()`/`sum()`/`avg()`/`min()`/`max()` called the raw planner: a 1%-selective `count()` was **37 ms against 1.1 ms** for `len(execute())` on the same predicate, and a 62%-selective aggregation materialised the 162K-element candidate set `explain()` had just reported as rejected. Guard consolidated into `_plan_or_scan()`, and the durable fix is the test: **exactly two call sites may reach the raw `_plan_query()`**, so a new consumer cannot silently skip it. While writing that test: `min(first, *rest)` lowers to `min(first)`, so one-row results — the common case for a selective index query — raised `TypeError`; newly fast means newly common. `c57aeb3`, CI green. New: `prompts/a-guard-that-covers-one-path-covers-none.md`.
+- **The trap this pass walked into:** three repos flagged as collisions were **already correct on `origin/main`**; only the stale local clone held the old text. Patching from the working tree would have reverted the fix — `git show origin/main:README.md` before writing.
+- **Extended:** `skills/dev-env-defects/` — a published name resolving to a different author is an install defect with no error message; check `info.author`, not just the status code.
+- **Stats:** Prompts **135 → 137**. Skills **49 dirs / 44 loadable** (unchanged loadable count; one file extended). Tool Guides **147 → 148**. Daily Updates **141 → 142**. Reports 32. tiny-* **137**, other repos **43** (180 total; no repo created since 2026-11-14). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`. Repo suite **57 passed**.
+- Last verified 2026-11-16 (13:00 EST; counts re-derived from the tree, collisions checked against the PyPI JSON API, snapdb numbers read from `c57aeb3`, suite run here).
+- **Still blocked:** PyPI serves `pysnapdb` **0.14.0** (2026-07-03) while the repo is at 0.18.2 — one missing token behind the clean fix for all 56 install sites.
+
 ### 🆕 Latest additions (2026-11-16 cron sync, 12:00 EST) — the bug was in the shape, not the value
 
 Four prompts, one tool guide, one skill entry. All five come from the same shape of mistake: the code computes the right answer **for the premise it was written under**, and the premise is what is wrong. `gortex` #1418 needed four review rounds to settle this, and two of those rounds found defects **introduced by the previous fix**.
@@ -759,20 +771,20 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 44 loadable / 49 dirs | 2026-11-16 |
-| Prompts | 135 | 2026-11-16 |
+| Prompts | 137 | 2026-11-16 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 147 | 2026-11-16 |
+| Tool Guides | 148 | 2026-11-16 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 141 | 2026-11-16 |
+| Daily Updates | 142 | 2026-11-16 |
 | Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 137 | 2026-11-16 |
 | Additional hussain-alsaibai Repos | 43 | 2026-11-16 |
 
 **All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-16: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-16**, not carried forward. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. The 2026-11-14 run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row and added the repo's own suite result (**57 passed**) alongside them.
+**Every count above was measured against the tree on 2026-11-16**, not carried forward. The 2026-11-16 late sync moved three rows (Prompts 135→137, Tool Guides 147→148, Daily Updates 141→142) after the 12:00 block was written; the 12:00 block's own numbers are left as the numbers that run measured, and this table is the current state of the tree. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. The 2026-11-14 run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn there — see `daily-updates/2026-11-14.md`. Today's runs re-derived every row and the repo's own suite result (**57 passed**, re-run at 13:00 EST).
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
