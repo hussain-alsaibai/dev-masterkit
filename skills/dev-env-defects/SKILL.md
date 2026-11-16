@@ -13,7 +13,12 @@ CI job that dies before your code runs.
 **Do not use when:** the error names a specific file and line of the code you
 wrote. That is a code defect and the log already told you where.
 
-**Last verified:** 2026-11-15 — two new entries verified this run: the pytest
+**Last verified:** 2026-11-16 — entry 1c added: a clean `go vet` on a tree whose
+test files were never type-checked (missing `errors` import caught only after
+stubbing four grammars on `gortex` #1418). Host facts re-checked: 198 cgo
+files excluded, `gofmt -l` empty on changed files.
+
+**Prior verification:** 2026-11-15 — two entries verified that run: the pytest
 `-k` expression trap (a malformed filter runs *more* tests, never fewer, and
 exits 0) and the `--doctest-modules` boundary (a docstring example has no name
 predictable enough to filter, so scope by directory instead). Host facts
@@ -95,6 +100,39 @@ pytest -q -k "not (slice or long)" --co | tail -1
 Prefer paths (`pytest tests/unit`) or `norecursedirs` when excluding a
 directory: `-k` matches by id substring and will hit a same-named test that
 lives somewhere you did not intend.
+
+### 1c. A clean `go vet` on a tree that never compiled your test files
+
+`go vet` reporting **zero** does not mean your test files type-check. On a cgo
+project with missing grammars, the package fails on build-constraint exclusions
+**before** the compiler reaches `_test.go`, so `go vet` reports clean on a
+package where a missing import would have shipped. Confirmed on `gortex`
+2026-11-16: a missing `errors` import in a `_test.go` file survived a "clean"
+vet. (This host excludes **198** cgo files; count your own with `go test ./pkg/
+2>&1 | grep -c 'excluded'`.)
+
+**Tell:** the claim is "vet was clean", but the package does not build. Run
+`go build ./pkg/` — a failure under grammar exclusions is the signal.
+
+**Fix shape — stub the blockers, compile, then restore:**
+
+```bash
+mkdir -p /tmp/bk && cp -r internal/grammar /tmp/bk/
+# replace each failing grammar with a minimal stub that declares the types
+# the package references, then:
+go build ./pkg/ && go vet ./pkg/     # now type-checks _test.go too
+cp -r /tmp/bk/grammar internal/      # restore
+```
+
+Four stubs (`cpp`, `swift`, `scala`, `kotlin`) were enough to reach the type
+checker. **Restore from a backup and confirm `git status` is clean apart from
+the files you meant to change** — a stub left in place compiles and lies.
+
+**Report it as a limit, not as a pass:** "`go test ./cmd/x/` cannot run here
+(N cgo files excluded); `gofmt -l` and `go vet` on the changed files are the
+available signals, plus a harness with the functions copied verbatim." A green
+vet presented as a green suite is the defect this entry exists to prevent.
+See `tools/answering-a-review-when-the-fix-is-the-next-bug.md` §6.
 
 ### 2. Is the interpreter new enough to *parse* the repo?
 

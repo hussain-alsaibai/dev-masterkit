@@ -3,6 +3,20 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-16 cron sync, 12:00 EST) — the bug was in the shape, not the value
+
+Four prompts, one tool guide, one skill entry. All five come from the same shape of mistake: the code computes the right answer **for the premise it was written under**, and the premise is what is wrong. `gortex` #1418 needed four review rounds to settle this, and two of those rounds found defects **introduced by the previous fix**.
+
+- **A list of records is not a list of values.** The "is this checkout unattributed?" guard was `len(kinds) != 1` over `IntentKinds()`, which is a projection of intent **rows** — one per `(checkout_id, source_kind, source_locator)`. A checkout recorded under an old root and then a new one yields `["manual_config", "manual_config"]`, still fully unattributed, and the count guard **suppressed the warning it existed to raise**. Replaced by `isManualConfigOnly` (non-empty, every element `manual_config`). Proven over nine intent sets: new correct 9/9, old wrong on exactly the two duplicate-row cases. New: `prompts/a-list-of-records-is-not-a-list-of-values.md`.
+- **The fix for a predicate is a rewrite, and rewrites have their own wrong cases.** The previous fix replaced an exclusion list (`cli_track || mcp_track`) with a positive test — right direction, wrong implementation, because the positive was written as a count. Fixing a bug by changing the **shape** of a predicate is not the same as fixing it. Derive the truth table from the data (empty / singleton / duplicate / mixed), carry the old fixture set forward, and publish an old-vs-new differential table. New: `prompts/a-fix-that-changes-the-shape-of-a-predicate-has-new-wrong-cases.md`.
+- **A function that swallows an error into a zero value is a lie amplifier.** `configuredRepoPaths` returned `nil` for "no repositories configured", "config unreadable" and "config unparseable" alike, so a failed read became a **completed check** reporting no legacy state. `config.LoadGlobal` already separated missing (`(gc, nil)`) from unparseable (`(nil, err)`); the caller collapsed it in one line. Now `([]string, error)`, failing closed with the reason carried, and the seam's signature change forced every stub to be revisited. New: `prompts/a-function-that-swallows-an-error-into-a-zero-value-is-a-lie.md`.
+- **When `go vet` is clean, ask what it type-checked.** On a cgo package with missing grammars the build fails on constraint exclusions **before** the compiler reaches `_test.go`, so `go vet` reported clean on a test file with a missing `errors` import. Stubbing four grammars (`cpp`, `swift`, `scala`, `kotlin`) let the type checker reach the tests and caught it immediately; stubs restored, tree confirmed clean. Verification that cannot reach the changed code has verified nothing. New: entry 1c in `skills/dev-env-defects/`.
+- **A path prefix stripped last is a prefix nobody matched.** `blixvip/NullMotion` #75: the `/null` strip was the **final** statement in the request handler, after the `/` and `/editor` rewrites, the `readOnly` lookup, the template-source route and the `/api/` guard. Only `serveFile` saw a stripped path, so `/null/api/…` failed the guard, `/null/editor` missed its rewrite, and `/null/` served the **template gallery** as the homepage. Second bug in the same two lines: `pathname = '/'` was assigned *after* the `'/' -> '/demo.html'` rewrite. Normalised at the top of the handler; test proven to fail on `origin/main`; suite **41 → 42**, 40 pass / 2 fail (both pre-existing on the base commit); all five routes curl 404 → 200. New: `prompts/a-path-prefix-stripped-last-is-a-prefix-nobody-matched.md`.
+- **Answering a review when the fix is the next bug.** A finding taxonomy (patch vs rewrite), the old-vs-new differential table with an `expected` column derived from the data rather than from either implementation, why `([]string, error)` beats a new boolean parameter (the compiler finds every caller), asserting the **absence** of the clean phrase in the human format, and the five verification signals in order of strength. New: `tools/answering-a-review-when-the-fix-is-the-next-bug.md`.
+- **Merged upstream:** `blixvip/NullMotion` #71 (`2b4eca13`) and `blixvip/MotionClone` #54 (`1704e790`), both issues auto-closed by the `Fixes #NN` line in the PR body.
+- **Stats:** Prompts **131 → 135**. Skills **49 dirs / 44 loadable** (unchanged loadable count; one file extended). Tool Guides **146 → 147**. Daily Updates **140 → 141**. Reports 32. tiny-* **137**, other repos **43** (180 total, `gh api --paginate user/repos` in this session). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`. Repo suite **57 passed** (`pytest tests/ -q --basetemp=/home/node/ptbase`).
+- Last verified 2026-11-16 (12:00 EST; every count re-derived from the tree in this session, test numbers from runs started and finished here, repo totals from the API, PR state from `gh pr view`).
+
 ### 🆕 Latest additions (2026-11-15 cron sync, 12:00 EST) — what the code's premise excludes is what leaks
 
 - **A redactor's pass-through is a leak when the scope is broader than the report.** `gortex` #1418, P2-4: `doctorPath` rewrote repo-root and home paths and returned everything else verbatim, justified as *"no name of ours to leak"*. That held for paths the report synthesised and failed for the legacy-state census, which is **daemon-wide** — checkouts in sibling homes and on other mounts came out verbatim in both JSON and human output under `--redact`. Fixed with an ordinal `<root-N>` alias for every reported root, behind its own seam so non-redacted output does not change. New: `prompts/a-redactors-escape-hatch-is-a-leak-when-the-scope-is-broader.md`.
@@ -744,21 +758,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 44 loadable / 49 dirs | 2026-11-15 |
-| Prompts | 131 | 2026-11-15 |
+| Skills | 44 loadable / 49 dirs | 2026-11-16 |
+| Prompts | 135 | 2026-11-16 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 146 | 2026-11-15 |
+| Tool Guides | 147 | 2026-11-16 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 140 | 2026-11-15 |
+| Daily Updates | 141 | 2026-11-16 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-14 |
-| Additional hussain-alsaibai Repos | 43 | 2026-11-14 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-16 |
+| Additional hussain-alsaibai Repos | 43 | 2026-11-16 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-15: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-16: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-14**, not carried forward. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. This run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn here — see `daily-updates/2026-11-14.md`.
+**Every count above was measured against the tree on 2026-11-16**, not carried forward. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. The 2026-11-14 run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row and added the repo's own suite result (**57 passed**) alongside them.
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
