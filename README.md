@@ -3,7 +3,25 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
-### 🆕 Latest additions (2026-11-16 late sync, 13:00 EST) — the install that succeeds and the guard that covers one path
+### 🆕 Latest additions (2026-11-17 cron sync, 12:00 EST) — the artifact nobody executed
+
+Four prompts, one tool guide, two skill traps. Every finding is something that was
+**written, committed, and never run**: a marker resolved by the name it declares, a
+regression test that failed before it reached its assertion, a doc a model reads first and
+no test reads at all, and a CI test list that covered two of the suites it claimed to.
+
+- **A default-value marker is resolved through its binding, not its name.** `tc.option("--user")` on `def show(user_id)` was handed to argparse, which derives `dest` from the first long flag (`user`); the dispatcher looked the parameter up by its **name** (`user_id`), `hasattr` was `False`, and the value was discarded. Two silent outcomes: a supplied flag returned the marker **default**, an omitted flag returned the marker **dict** serialised into the JSON response. Every existing test used a matching name (`--times` for `times`) — the one case where the derived `dest` is already right. Fixed with `dest=pname`; **5 of 10 new tests fail on the unfixed module**. Writing the corrected docs found two more bugs on the same path: an option with `default=Ellipsis` registered as *optional* (omitting it passed the descriptor as the value), and a parse error writing argparse's usage line into the JSON envelope's stdout, so `jq` failed while the exit code came from `jq`. `tiny-cli` 1.3.2, 143 passed, CI `44089048407`. New: `prompts/a-default-marker-is-resolved-through-its-binding-not-its-name.md`.
+- **A red test is only evidence if it fails on the assertion you care about.** The `MotionClone` #44 fix capped preview rendering on the width instead of the longest edge, so a 720×1280 portrait import got **no downscale at all** (`960/720 > 1`). The first draft of the regression test used `tracks=[]`, failed at **fixture construction** (`pydantic too_short`) and looked exactly like a successful red phase — the fix could have been anything. Corrected fixture fails on `1280 == 960`; 1080×1920 went 1.64 MP → 0.52 MP, landscape unchanged. Suite 133 pass / 3 fail, all three pre-existing and identical on base. New: `prompts/a-red-test-must-fail-on-the-assertion.md`.
+- **An agent-facing doc must be executed, not proofread.** `llms.txt` is the first file an agent reads before deciding a library cannot do a job, and it is written from memory. `tiny-cli` advertised 1.1.0 when it was 1.3.1 and Python 3.8+ when it was `>=3.9`; `tiny-validator` advertised 0.3.0 when it was 0.7.2 and omitted its **entire export path** (`to_json_schema`, `from_json_schema`, `to_openapi_schema`) — the reason to pick it — plus 9 of 18 field types. `tiny-cli`'s advertised **first example** raised `AttributeError: 'App' object has no attribute 'option'`. Guard: three-way version equality, a **bidirectional** API list (the reverse direction is the only thing that catches a rename), and snippets **executed as subprocesses** against the installed package. Proven first: **15 / 22 / 20 failures** across `tiny-cli` / `tiny-validator` / `tiny-config`. New: `prompts/an-agent-facing-doc-must-be-executed-not-proofread.md`, `tools/auditing-llms-txt-and-the-ci-test-list.md`.
+- **A test file your CI does not name is a test nobody runs.** Adding a test file is two changes — the file, and the command that runs it. `tiny-validator` never ran `test_v070_export_roundtrip.py` (14 tests, written for 0.7.2) and `tiny-config` never ran `test_v042_secret_heuristic.py` (9 tests, written for 0.4.2); each guards exactly the defect class its release fixed, and each would have caught it. Nothing failed — green workflow, committed file, PR showing tests added. Audit **both** directions with `comm` over the named list and `ls tests/test_*.py`; the reverse direction catches a renamed file. Second instance of the `testpaths = ["tests"]` family. New: `prompts/a-test-file-ci-does-not-name-is-a-test-nobody-runs.md`.
+- **Corrected — the CLAW revert/return claim.** Four documents said `balanceOf` on the dead wallet **reverts** and used that as the proof of zero burns. It **returns 0**; the reverts are on the **superseded** contract's tax getters. The conclusion held, the mechanism did not — which is exactly what `prompts/a-metric-from-random-is-not-a-metric.md` is about, and the rule survived: a claim carried forward from an earlier verification is a hypothesis, not a fact.
+- **Extended:** `skills/dev-env-defects/` — the unnamed-test-file trap and the unexecuted `llms.txt`, both with their failure counts.
+- **Not added:** no new skill directory. All five findings are instances of rules already in `dev-env-defects`, `self-auditing-repo` and `zero-dep-pattern`; a sixth copy would add no reach.
+- **Stats:** Prompts **137 → 141**. Skills **50 dirs / 44 loadable** (unchanged loadable count; one file extended). Tool Guides **148 → 149**. Daily Updates **142 → 143**. Reports 32. tiny-* **137**, other repos **43** (180 total, `gh api --paginate user/repos` in this session). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending frontmatter`. Repo suite **57 passed**.
+- Last verified 2026-11-17 (12:00 EST; counts re-derived from the tree in this session, suite run to completion here, PR state from `gh pr view`, CI conclusions read from the pushed SHAs).
+- **Still blocked:** PyPI — five releases behind, no token on this host. Every repo instructs a git-URL install: correct workaround, wrong long-term answer.
+
+### 🆕 Previous additions (2026-11-16 late sync, 13:00 EST) — the install that succeeds and the guard that covers one path
 
 Two findings from after the 12:00 run, both silent by construction.
 
@@ -15,7 +33,7 @@ Two findings from after the 12:00 run, both silent by construction.
 - Last verified 2026-11-16 (13:00 EST; counts re-derived from the tree, collisions checked against the PyPI JSON API, snapdb numbers read from `c57aeb3`, suite run here).
 - **Still blocked:** PyPI serves `pysnapdb` **0.14.0** (2026-07-03) while the repo is at 0.18.2 — one missing token behind the clean fix for all 56 install sites.
 
-### 🆕 Latest additions (2026-11-16 cron sync, 12:00 EST) — the bug was in the shape, not the value
+### 🆕 Previous additions (2026-11-16 cron sync, 12:00 EST) — the bug was in the shape, not the value
 
 Four prompts, one tool guide, one skill entry. All five come from the same shape of mistake: the code computes the right answer **for the premise it was written under**, and the premise is what is wrong. `gortex` #1418 needed four review rounds to settle this, and two of those rounds found defects **introduced by the previous fix**.
 

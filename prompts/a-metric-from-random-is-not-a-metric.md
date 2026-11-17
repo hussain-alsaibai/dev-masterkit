@@ -39,14 +39,31 @@ caught by **checking the output instead of the code**:
    wallet and treated a revert as a hard failure, falling back to `0` — right by
    luck, not by design. A revert on a zero-balance address is data, not an error.
 
-   *Corrected 2026-11-17:* on the contract as it stands, `balanceOf` on the dead
-   wallet **returns 0 — it does not revert**. The reverts live on a *superseded*
-   revision of the contract. The conclusion (zero burned) was right; the stated
-   mechanism was wrong, and it was copied forward into the README, a cron
-   reminder and the daily memory without one fresh `eth_call`.
+   *Corrected 2026-11-17 (re-measured against the vnet RPC):* on the **current**
+   contract, `balanceOf` on the dead wallet **returns 0 — it does not revert**.
+   The reverts are real, but they are on the **superseded** contract's tax
+   getters (`burnBps`, `rewardBps`, `totalTaxBps`), a 3170-byte revision, not the
+   live 4541-byte one. The superseded contract minted 10,000,000 CLAW to the dead
+   wallet in its constructor — 1% of supply, never destroyed, but that is where
+   any "10M burned" figure originates.
+
+   The conclusion (zero burned on the current contract) was right; the stated
+   mechanism was wrong, and it had been copied forward into the README, a cron
+   reminder, the daily memory and two documents here without one fresh
+   `eth_call`. **That is the rule of this prompt turned on this prompt.**
+
+## The second rule, which survived the correction
+
+Even where the mechanism was misattributed, the defensive rule was correct for
+the case it was written about: an address whose balance cannot be read is **not**
+an address with a balance of zero, and a generator must not turn an unreadable
+value into `0` — it should omit the metric. The bug was in the explanation, not
+in the handling. Both had to be separated before the correction could be made
+without weakening the guard.
 
 > **A revert on a zero-balance address is data, not an error — and a claim you
-> copied forward is a hypothesis. Re-read the chain before you repeat it.**
+> copied forward is a hypothesis. Re-read the chain before you repeat it, and
+> re-measure before you correct it.**
 
 ## How to check a generator
 

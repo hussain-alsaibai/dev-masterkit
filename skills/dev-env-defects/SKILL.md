@@ -277,6 +277,25 @@ python -m venv /tmp/venv && /tmp/venv/bin/pip install -e .
   read `git show origin/main:README.md` before fixing — three repos here were
   already correct remotely and only the stale clone held the broken line.
   Full procedure: `tools/install-line-audit-collisions-not-404s.md`.
+- **A test file the workflow does not name is a test that never runs.** Two of the
+  three repos touched on 2026-11-17 had a regression suite in the tree that CI could
+  not see: `tiny-validator` never ran `test_v070_export_roundtrip.py` (14 tests),
+  `tiny-config` never ran `test_v042_secret_heuristic.py` (9 tests) — each written for
+  the release that fixed that very defect class. Nothing failed: the workflow was
+  green and the file was committed. Check **both** directions with `comm` over
+  `grep -oE 'tests/[a-z0-9_]+\.py' .github/workflows/ci.yml` and
+  `ls tests/test_*.py` — a named path that no longer exists is the reverse defect.
+  Same family as `testpaths = ["tests"]` pointing at no directory: collection is a
+  claim about coverage. Full procedure: `tools/auditing-llms-txt-and-the-ci-test-list.md`.
+- **A hand-written `llms.txt` is an unexecuted claim about the API.** The first file an
+  agent reads before choosing a library, and the one file nobody tests. Three-way version
+  equality (`Version:` = `pyproject.toml` = `__version__`), a **bidirectional** API list
+  (documented => exported **and** exported => documented; the reverse direction is the
+  only thing that catches a rename), and execute every snippet in a temp dir on the
+  installed package. Proven against the previous files: 15 / 22 / 20 failures across
+  `tiny-cli` / `tiny-validator` / `tiny-config`. Fixing them found three real bugs the
+  57 existing tests had passed. Run the guard **before** fixing and record the count — a
+  guard that has never failed is untested.
 
 ## The Procedure
 
