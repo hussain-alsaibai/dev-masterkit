@@ -119,6 +119,25 @@ A same-day re-check is a claim about the morning.
 
 A fix that is not re-probed is a fix that is not verified.
 
+### 8. When the claim you are checking cannot be executed, paste it out
+
+A verification claim is usually about **one literal or one statement**, and those travel.
+on 2026-11-17 a PR body listed `go test -run 'Doctor|Legacy' ./cmd/gortex/  # ok` that had
+never run — the package's test binary does not build on that host. The offending construct
+was ten lines of a composite literal; copied into an empty module, `go vet` printed the
+exact compiler message, and the corrected form marshalled to the expected JSON.
+
+```bash
+gh api "repos/OWNER/REPO/contents/PATH?ref=refs/pull/N/head" -q .content | base64 -d
+```
+
+Read the file from the **pushed SHA**, not from a clone that may be a rebase behind. If the
+construct needs the package's own types to compile, you have not narrowed it yet.
+
+This is the difference between *could not run* and *did not run*. Only the first is a
+statement about the environment; the second is the claim you are supposed to be checking.
+See `tools/verifying-a-claim-you-cannot-execute.md`.
+
 ## The Reporting Rule
 
 Report the **denominator**:
@@ -139,6 +158,9 @@ Not: "checked the repos" and not "found some stale ones".
 | `pip install` succeeds | **it is not a check** - see `prompts/pypi-n…cess.md` |
 | fixing one row | the method is still wrong for the other 5 |
 | a date with no time | honest and stale - see `prompts/a-date-is-a-timestamp-not-a-property.md` |
+| a command with `# ok` | a claim about a terminal; if you could not build it, that line in a PR body reads as a pass to everyone downstream - `prompts/a-command-you-cannot-run-is-not-a-result.md` |
+| a limitation next to passing runs | "the package does not build here" is absence of evidence, and writing it in the same block as `ok` transfers credibility it does not have |
+| `gofmt -e` exits 0 | it parses; a **type** error is still there - a broken fixture passed `gofmt -e` clean |
 | a snippet never executed | a proposal, not a guide - see `prompts/readme-claims-must-be-runnable.md` |
 
 ## Related

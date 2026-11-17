@@ -3,6 +3,52 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-17 late sync, 13:00 EST) — the command that never ran
+
+One prompt, one tool guide, one skill entry, two corrections. The morning run was about
+artifacts never executed; this one is about the artifact that claimed to have been.
+
+- **A `# ok` next to a command you could not build is not a result.** `zzet/gortex` PR #1418
+  listed `go test -run 'Doctor|Legacy' ./cmd/gortex/  # ok` in its body for three review
+  rounds. It never ran: the package's test binary does not build on this host, and the file
+  this PR added is what broke it — a census fixture nesting `checkouts` inside the `graphs`
+  slice, so `"checkouts"` becomes an integer index in `[]any{…}`
+  (`cannot convert "checkouts" (untyped string constant) to type int`). The packaging of the
+  limitation was the defect: a true "test binary exceeds RAM on the base commit too" note
+  and this note had the same **shape**, and only one of them exonerated the change.
+  Proven without the package: the ten-line literal pasted into an empty module reproduces
+  the compiler's message under `go vet`, and moving the `}` to close both the map and the
+  slice marshals to `{"families":[{"checkouts":[…],"graphs":[…]}]}` — the sibling shape the
+  test needs. `gofmt -e` exits **clean** on the broken file; it is a type error, not a syntax
+  error. A brace-depth counter found it faster than reading. New:
+  `prompts/a-command-you-cannot-run-is-not-a-result.md`,
+  `tools/verifying-a-claim-you-cannot-execute.md`.
+- **Corrected — the 12:00 entry's CI claim.** The defect was not "CI covered two of the
+  suites it claimed to"; it was a **test file in the tree and absent from the workflow's
+  named list**. All three workflows now name them, and each file was re-run here:
+  `test_v131_option_dest.py` 10, `test_v070_export_roundtrip.py` 14,
+  `test_v042_secret_heuristic.py` 9 — 33 passed, CI green on `1942a7b` / `e198402` /
+  `86ebcfe`.
+- **Corrected — the UUIDv7 gap is a signal, not a classifier.** Read from
+  `doctor_legacy.go`, `intentCheckoutGap` breaks on the **first** `manual_config` row, so a
+  duplicate-row projection measures one arbitrary row, and an undecodable v7 id yields
+  `measured == false` — no gap, no flag, identical in the output to a clean entry. The entry
+  is reported as unattributed either way (the P2-5 fix), so the cost is a missing hint. The
+  gap **annotates** what `isManualConfigOnly` already selected; it never selects.
+- **Extended:** `skills/verification-sweep/` — a verification block is a claim about a
+  terminal; paste the literal out before calling a claim unverifiable.
+- **Not added:** no new skill directory (same rule `verification-sweep` already carries); no
+  repo created today, so no README/LICENSE scaffolding.
+- **Stats:** Prompts **141 → 142**. Skills **50 dirs / 44 loadable** (unchanged loadable
+  count; one file extended). Tool Guides **149 → 150**. Daily Updates **143 → 144**.
+  Reports 32. tiny-* **137**, other repos **43** (180 total, `gh api --paginate user/repos`
+  in this session). `scripts/check_structure.py` → `44 total, 44 loadable, 0 pending
+  frontmatter`.
+- Last verified 2026-11-17 (13:00 EST; counts re-derived from the tree here, the three new
+  test files executed in this session, CI conclusions read from the pushed SHAs, PR #1418
+  body and review from `gh pr view`).
+- **Still blocked:** PyPI — five releases behind, no token on this host.
+
 ### 🆕 Latest additions (2026-11-17 cron sync, 12:00 EST) — the artifact nobody executed
 
 Four prompts, one tool guide, two skill traps. Every finding is something that was
