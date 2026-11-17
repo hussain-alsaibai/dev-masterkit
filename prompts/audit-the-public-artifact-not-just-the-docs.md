@@ -18,7 +18,7 @@ claims. Every number contradicted the contract:
 | "2% redistributed to holders" | `rewardBps` = 100 = **1%**, and the pool is the **dead wallet** |
 | "Tax: 5% (2% Holders, 2% Marketing, 1% Burn)" | `totalTaxBps` = 300 = **3%**. No marketing tax exists. |
 | "Liquidity Pool (Locked)" — 50% (500M) | No pool. The contract minted all 1B to the deployer. |
-| "Initial Burn — 5% (50M)" | **0** burned; `balanceOf(dead)` reverts. |
+| "Initial Burn — 5% (50M)" | **0** burned; `balanceOf(dead)` returns 0 (corrected 2026-11-17 — it does not revert). |
 | "AI provides daily market insights" | No such feature exists in the repo. |
 
 ## The rules

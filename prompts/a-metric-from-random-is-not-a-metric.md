@@ -35,12 +35,18 @@ caught by **checking the output instead of the code**:
    burned tokens are *held* by the dead wallet, so burned **is** that balance.
    The inverted version printed **"100% of supply burned"** when nothing had
    ever been burned.
-2. **A revert treated as an error.** `balanceOf` on the dead wallet reverts on
-   a zero balance. That revert is the proof that zero tokens have burned. The
-   first version caught it as a hard failure and fell back to `0` — right by
-   luck, not by design.
+2. **A revert treated as an error.** The generator read `balanceOf` on the dead
+   wallet and treated a revert as a hard failure, falling back to `0` — right by
+   luck, not by design. A revert on a zero-balance address is data, not an error.
 
-> **A revert on a zero-balance address is data, not an error.**
+   *Corrected 2026-11-17:* on the contract as it stands, `balanceOf` on the dead
+   wallet **returns 0 — it does not revert**. The reverts live on a *superseded*
+   revision of the contract. The conclusion (zero burned) was right; the stated
+   mechanism was wrong, and it was copied forward into the README, a cron
+   reminder and the daily memory without one fresh `eth_call`.
+
+> **A revert on a zero-balance address is data, not an error — and a claim you
+> copied forward is a hypothesis. Re-read the chain before you repeat it.**
 
 ## How to check a generator
 
