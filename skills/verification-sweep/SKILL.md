@@ -164,10 +164,14 @@ Not: "checked the repos" and not "found some stale ones".
 | a snippet never executed | a proposal, not a guide - see `prompts/readme-claims-must-be-runnable.md` |
 | a green suite over an unobserved layer | a test that constructs the response cannot validate it; status codes were correct in 4 of 4 servers whose framing was wrong - see `prompts/a-test-that-constructs-the-response-cannot-validate-it.md` |
 | "works with curl" | HTTP/1.0 endpoints frame the body by EOF, so a missing `Content-Length` is invisible until a keep-alive proxy is in front |
+| a red suite on one host only | check `mount \| grep noexec` first: `/tmp` on this host is `noexec`, so a stub with mode `0o100755` fails `os.access(X_OK)` and 8 tests fail with an assertion that looks like a defect in the code under test. `TMPDIR=$HOME/tmp pytest` -> 301 passed - `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md` |
+| `chmod` returning 0 | it sets bits, it does not grant execution; only `os.access(p, os.X_OK)` or an actual `execve` proves the host will run the file |
 
 ## Related
 
 - `prompts/a-date-is-a-timestamp-not-a-property.md`
+- `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md`
+- `tools/test-tmpdir-on-a-noexec-mount.md`
 - `prompts/pypi-n…cess.md` (stored with a truncated filename in this repo)
 - `prompts/readme-claims-must-be-runnable.md`
 - `prompts/check-the-repo-before-you-recommend-the-bounty.md`

@@ -3,6 +3,35 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-18, 13:00 EST) — a host that forbids execution looks like a failing suite
+
+One prompt, one tool guide, four skill trap rows, one environment finding. The repo's own
+suite reported **8 failed, 293 passed** on this host; the code was correct and the host was not.
+
+- **`/tmp` here is `noexec`.** `pytest`'s `tmp_path` lives under `/tmp`, and
+  `tests/test_scan_skills.py` writes a scanner stub, `chmod 0o755`, then expects
+  `os.access(p, os.X_OK)`. Mode is `0o100755` on disk; `access(2)` on a `noexec` mount denies
+  execution regardless. `scripts/scan_skills.py` correctly refused to run it.
+- **One variable moved the verdict:** `TMPDIR=$HOME/tmp python3 -m pytest -q` → **301 passed**
+  in 2.83s, no test or source change. Verified both directions in this session.
+- **The red herring is the assertion.** The failure surfaces as `assert "does not match the
+  baseline" in '... is not an executable file'` — which points at the subject under test, not
+  at the mount. It is 100% reproducible on this host and invisible on CI, which reads as flaky.
+- **`chmod` succeeding proves nothing.** Only `os.access(X_OK)` or an actual `execve` does.
+  Checks: `mount | grep noexec`, and a 6-line probe in
+  `tools/test-tmpdir-on-a-noexec-mount.md`.
+- **Not fixed by weakening the test.** Relaxing `X_OK` to `isfile`, or running the stub through
+  `sys.executable`, both pass everywhere and stop testing the resolution contract. The env fix
+  is the fix.
+- **Framing:** this is the inverse of the 12:00 finding. There a green suite hid a defect in an
+  unexercised layer; here a red suite reports a defect in a layer that was never the subject.
+  Both are the harness measuring at the wrong boundary.
+- New: `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md`,
+  `tools/test-tmpdir-on-a-noexec-mount.md`; `skills/verification-sweep/` extended with four
+  trap rows. No new skill directory and no new repo today.
+- Last verified 2026-11-18 13:00 EST (suite run twice on this host: 8 failed / 301 passed;
+  mount flags read from `/proc/mounts`; counts re-derived from the tree).
+
 ### 🆕 Latest additions (2026-11-18 cron sync, 12:00 EST) — a test that constructs the response cannot validate it
 
 One prompt, one tool guide, one skill trap rows pair. The finding is a **class of defect**
@@ -880,13 +909,13 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 44 loadable / 49 dirs | 2026-11-18 |
-| Prompts | 143 | 2026-11-18 |
+| Prompts | 144 | 2026-11-18 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 151 | 2026-11-18 |
+| Tool Guides | 152 | 2026-11-18 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 145 | 2026-11-18 |
+| Daily Updates | 146 | 2026-11-18 |
 | Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 137 | 2026-11-18 |
 | Additional hussain-alsaibai Repos | 43 | 2026-11-18 |
