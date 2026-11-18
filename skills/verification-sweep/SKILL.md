@@ -162,6 +162,8 @@ Not: "checked the repos" and not "found some stale ones".
 | a limitation next to passing runs | "the package does not build here" is absence of evidence, and writing it in the same block as `ok` transfers credibility it does not have |
 | `gofmt -e` exits 0 | it parses; a **type** error is still there - a broken fixture passed `gofmt -e` clean |
 | a snippet never executed | a proposal, not a guide - see `prompts/readme-claims-must-be-runnable.md` |
+| a green suite over an unobserved layer | a test that constructs the response cannot validate it; status codes were correct in 4 of 4 servers whose framing was wrong - see `prompts/a-test-that-constructs-the-response-cannot-validate-it.md` |
+| "works with curl" | HTTP/1.0 endpoints frame the body by EOF, so a missing `Content-Length` is invisible until a keep-alive proxy is in front |
 
 ## Related
 
@@ -169,5 +171,7 @@ Not: "checked the repos" and not "found some stale ones".
 - `prompts/pypi-n…cess.md` (stored with a truncated filename in this repo)
 - `prompts/readme-claims-must-be-runnable.md`
 - `prompts/check-the-repo-before-you-recommend-the-bounty.md`
+- `prompts/a-test-that-constructs-the-response-cannot-validate-it.md`
+- `tools/asserting-on-the-wire-not-the-object.md`
 - the **rule-reachability** skill - proving a rule can fire at all
 - the **runtime-reliability** skill - the same discipline applied to job runtimes

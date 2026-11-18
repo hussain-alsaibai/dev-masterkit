@@ -3,6 +3,51 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-18 cron sync, 12:00 EST) — a test that constructs the response cannot validate it
+
+One prompt, one tool guide, one skill trap rows pair. The finding is a **class of defect**
+rather than an instance: four independent Python HTTP servers in one ecosystem, written at
+different times, all unframed, all with a green suite.
+
+- **Four servers, four green suites, one defect.** `tiny-router` 0.9.3 wrote `response.body`
+  for every status and method (204 carried a `content-type`; HEAD wrote the 6 bytes it
+  declared); `tiny-metrics` 0.1.1 implemented only `do_GET` (`HEAD /metrics` → **501** to every
+  uptime checker and mesh sidecar); `tiny-webhook` 0.2.1 sent no `Content-Length` at all and
+  called `int()` on the incoming header outside a `try` (`Content-Length: abc` → **no response
+  at all** — the caller sees a timeout and the retry queue never drains); `tiny-agent-service`
+  0.1.1 had the same two copied verbatim, plus a header error reported as "invalid JSON".
+  Reproduced over a raw TCP socket **before** any code changed. Tests proven against the
+  pre-fix file: **3/7, 4/4, 5/6, 4/4** failures. Suites re-run here: **7 / 36 / 27+4s / 21+2s**
+  passed. New: `prompts/a-test-that-constructs-the-response-cannot-validate-it.md`,
+  `tools/asserting-on-the-wire-not-the-object.md`.
+- **Why all four were green.** The status codes were *always correct* — `assert
+  resp.status == 204` passed everywhere. The defect lived between "I have a `Response`" and
+  "bytes are on the wire", hidden by three different shims: a hand-rolled WSGI adapter (no
+  socket), `http.client` used with GET only (the transport exercised on the one path that
+  happened to be right), and asserting on the dict a handler returns (no transport at all).
+  The invariant that catches the whole class is a round-trip, not a constant:
+  `headers["content-length"] == str(len(body))`.
+- **`curl` is not a framing test.** HTTP/1.0 frames the body by EOF, so curl, `http.client`
+  and the suite all agree a headerless response works. Behind a proxy that speaks 1.1
+  upstream, the body has no boundary: stall, then timeout — or the next `HTTP/1.0 200 OK`
+  status line read as body bytes and handed to the app as corrupt JSON, intermittently.
+- **Found by one grep, and that is the point.** `grep -rln "send_header\|Content-Length"
+  --include=*.py .` — the fourth repo had byte-identical code because `_json_resp` was copied
+  when it was created. Copy-paste is how a defect becomes a convention. Deliberately *not*
+  changed: `tiny-router` still 404s a HEAD to a GET-only route, and a test now pins that so
+  adding a fallback later is a visible decision.
+- **Extended:** `skills/verification-sweep/` — two trap rows (a green suite over an
+  unobserved layer; "works with curl"). No new skill directory: the rule that skill already
+  carries is "a claim is not a check", and a 45th directory restating it would add a
+  directory, not a reach.
+- **Stats table was three days stale** while the prose above it was current. Every row
+  re-derived from the tree today — see the table below. `scripts/check_structure.py` →
+  `44 total, 44 loadable, 0 pending frontmatter`.
+- Last verified 2026-11-18 (12:00 EST; all four suites executed in this session, the
+  reproduction and pre-fix failure counts observed, repo totals from
+  `gh api --paginate user/repos`).
+- **Still blocked:** PyPI — no token on this host; every release documents a git-URL install.
+
 ### 🆕 Latest additions (2026-11-17 late sync, 13:00 EST) — the command that never ran
 
 One prompt, one tool guide, one skill entry, two corrections. The morning run was about
@@ -834,21 +879,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 44 loadable / 49 dirs | 2026-11-16 |
-| Prompts | 137 | 2026-11-16 |
+| Skills | 44 loadable / 49 dirs | 2026-11-18 |
+| Prompts | 143 | 2026-11-18 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 148 | 2026-11-16 |
+| Tool Guides | 151 | 2026-11-18 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 6 | 2026-11-11 |
-| Daily Updates | 142 | 2026-11-16 |
+| Daily Updates | 145 | 2026-11-18 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-16 |
-| Additional hussain-alsaibai Repos | 43 | 2026-11-16 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-18 |
+| Additional hussain-alsaibai Repos | 43 | 2026-11-18 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-16: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-18: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-16**, not carried forward. The 2026-11-16 late sync moved three rows (Prompts 135→137, Tool Guides 147→148, Daily Updates 141→142) after the 12:00 block was written; the 12:00 block's own numbers are left as the numbers that run measured, and this table is the current state of the tree. The 2026-11-13 run had to correct the skills row because the 12:00 sync left one copy of the old number standing while writing the correction above it. The 2026-11-14 run found the same class one layer down: **two test counts had been written into a skill and a tool guide without being run**, and were withdrawn there — see `daily-updates/2026-11-14.md`. Today's runs re-derived every row and the repo's own suite result (**57 passed**, re-run at 13:00 EST).
+**Every count above was measured against the tree on 2026-11-18.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**).
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
