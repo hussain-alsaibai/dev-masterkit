@@ -3,6 +3,45 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-19 cron sync, 12:00 EST) — a detector that declined a file is not a file that was clean
+
+One prompt, one tool guide, one new skill with a working script, one extended skill. The
+finding is a **decline path that looks like a pass**, verified against a third-party
+classifier in this container rather than against our own code.
+
+- **`Bearer/bearer` skips every `.phtml` file and reports success.** Dispatch is
+  `slices.Contains(scanner.language.EnryLanguages(), fileInfo.Language)`; the PHP
+  implementation declares `[]string{"PHP"}`, and `go-enry` returns **`HTML+PHP`** for a
+  `.phtml` file. Probed here on go1.27.3 with `go-enry` **v2.9.6**: `vuln.phtml` →
+  `"HTML+PHP"`, `vuln.php` → `"PHP"`, `a.html` → `"HTML"`, `b.inc` → `"PHP"`. The HTML
+  detector already claims `HTML+PHP`, so only one extension was lost — which is why nobody
+  noticed. Fix is two lines; **not verified here**, because this tree needs cgo `tree-sitter`
+  and `go test` was not run against it.
+- **A decline and a clean scan print the same report.** Add a skipped-language counter and
+  print it on **success**, not behind `-v`: the failure mode is a green run, so a counter only
+  visible in debug output is never read on a green run.
+- **Every existing test is green by construction.** A "the PHP detector finds this pattern"
+  test uses a `.php` fixture; the extension that fails is the one no fixture uses.
+- **The prune job was pruning a path that had been empty for months** — `disk-check: 91% ->
+  91%`. The script targeted `/home/node/go/pkg/mod/cache`; the 1.2 G stale cache was
+  `/home/node/go-mod`. `rm -rf` cannot remove it (Go marks module files read-only);
+  `GOMODCACHE=/home/node/go-mod go clean -modcache` frees it.
+- **The prune threshold must sit below the alert line by the size of the growth.** One
+  `go build` adds 2.1 G: pruning at 88% lands at 90.19% raw and `df` still reports 91%.
+  Threshold moved to **85%**, which clears the alert *and* survives a build cycle.
+- New: `prompts/a-detector-it-declined-is-not-a-file-it-cleaned.md`,
+  `tools/telling-a-decline-from-a-clean-scan.md`,
+  `skills/disk-prune-that-actually-frees/` + `scripts/prune-disk.sh` (verbatim from the live
+  health-monitor skill, `bash -n` clean), and `skills/sibling-pattern-sweep/` gained two trap
+  rows and a **Step 7** for sweeping every `EnryLanguages` list against the classifier's
+  vocabulary.
+- **Repo suite reproduces yesterday's `noexec` failure and clears the same way**:
+  `8 failed, 49 passed` → `57 passed in 1.40s` with `TMPDIR=$HOME/tmp`. `check_structure.py`
+  → `45 total, 45 loadable, 0 pending frontmatter`. Repo count corrected to **179** (137
+  `tiny-*`, 42 other) — the README carried 180 / 43 from yesterday.
+- Last verified 2026-11-19 (counts re-derived from the tree; enry classification executed in
+  this container; suite run twice; `bash -n scripts/prune-disk.sh` clean).
+
 ### 🆕 Latest additions (2026-11-18, 13:00 EST) — a host that forbids execution looks like a failing suite
 
 One prompt, one tool guide, four skill trap rows, one environment finding. The repo's own
@@ -908,21 +947,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 44 loadable / 49 dirs | 2026-11-18 |
-| Prompts | 144 | 2026-11-18 |
+| Skills | 45 loadable / 50 dirs | 2026-11-19 |
+| Prompts | 146 | 2026-11-19 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 152 | 2026-11-18 |
+| Tool Guides | 153 | 2026-11-19 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Scripts | 6 | 2026-11-11 |
-| Daily Updates | 146 | 2026-11-18 |
+| Scripts | 8 | 2026-11-19 |
+| Daily Updates | 147 | 2026-11-19 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-18 |
-| Additional hussain-alsaibai Repos | 43 | 2026-11-18 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-19 |
+| Additional hussain-alsaibai Repos | 42 | 2026-11-19 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-18: `44 total, 44 loadable, 0 pending frontmatter` (49 directories exist; 5 are reference-only).
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-19: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-18.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**).
+**Every count above was measured against the tree on 2026-11-19.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**).
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**

@@ -5,7 +5,7 @@ description: "After fixing a defect that has a recognisable code pattern, find a
 
 # sibling-pattern-sweep — fix the family, not the instance
 
-**Last verified:** 2026-11-12 (`tiny-router` 0.9.2 `c177510`)
+**Last verified:** 2026-11-19 (`Bearer/bearer` PHP allow-list, `go-enry` v2.9.6 probe executed in this container; `tiny-router` 0.9.2 `c177510`)
 
 A one-file fix in a codebase with parallel modules is an unfinished fix. The
 sibling that was written from the same template has the same defect, and the
@@ -35,6 +35,8 @@ Not the file, the *pattern*. Examples that worked:
 | defaulted field emitted as required | `if field.required:` without the `default is ...` conjunct |
 | status set from windowed list | every assignment of the status variable |
 | unref'd timer | `.unref()` |
+| dispatcher declines a file and reports nothing | `slices.Contains(...Languages())`, `EnryLanguages()`, `return nil, nil, nil` — see `prompts/a-detector-it-declined-is-not-a-file-it-cleaned.md` |
+| allow-list written from extensions | `{"PHP"}`, `{"Python"}`, `strings.HasSuffix(path, ".")` next to a classifier call |
 
 ## Step 2 — Grep the whole repo, not the directory
 
@@ -91,6 +93,18 @@ If the pattern is mechanical, the repo should refuse it. A CI grep step or a
 test that reconstructs the old code and asserts it is flagged beats a note in a
 changelog. Fleet version of the same idea:
 `scripts/scan_push_to_main_side_effects.py` over 499 workflows.
+
+## Step 7 — A fix in one scanner implementation is one language family
+
+Language implementations are siblings by construction: `pkg/languages/<lang>/<lang>.go`
+differs by a name and a tree-sitter import. On 2026-11-19 `Bearer/bearer`'s PHP
+implementation declared `EnryLanguages() []string{"PHP"}` while `go-enry` v2.9.6
+returns **`HTML+PHP`** for a `.phtml` file, so those files were skipped with a
+success status. Grep every `EnryLanguages`/`GoclocLanguages` pair in the tree and
+compare each one to the classifier's vocabulary — not to a list of extensions.
+Verified vocabulary on this host: `vuln.phtml -> "HTML+PHP"`, `vuln.php -> "PHP"`,
+`a.html -> "HTML"`, `b.inc -> "PHP"`. Probe:
+`tools/telling-a-decline-from-a-clean-scan.md`.
 
 ## Anti-patterns this skill exists to stop
 
