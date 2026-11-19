@@ -3,6 +3,43 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-19 afternoon sync, 13:00 EST) — the documented import path was never executed
+
+No new prompts or tools this sync: the findings land in the skill library and in the two
+shipped patches they produced. Both are the same defect class as this morning's — a thing
+that appears to work because the failure path was never reached.
+
+- **`snapdb` 0.18.3 — `from snapdb import query` returned the module, not the function.**
+  `snapdb/query.py` defines a function also called `query()`, and `__init__.py` never
+  imported it, so Python's `from package import name` fell through to the submodule and every
+  copy-pasted README example since 0.18.0 raised `TypeError` on call. Seven patch releases
+  carried it because the README was never executed as a test.
+- **`tiny-event-emitter` 1.0.1 — the second module had zero tests, and six defects.** All 12
+  existing tests covered `tiny_event_emitter`; `event_emitter.py` shipped in 1.0.0 untested.
+  Writing its first tests found six dispatch defects, including `on(fn)` +
+  `await emit_async(...)` — the module's own docstring pattern — silently doing nothing.
+  **31 tests added, 16 of them fail against 1.0.0.**
+- **A grep for a name is not evidence about which module it describes.** The first draft of
+  today's report claimed `event_emitter` was undocumented and its 12 tests were "passing";
+  the module had a comparison row in the README and the 12 tests were all for the other
+  module. Both claims were corrected in place rather than appended to.
+- **Fleet is green for the first time in weeks** — 180 repos tracked, **0 RED / 0 YELLOW**,
+  150 with an active workflow and zero failing CI, 0 open PRs, 0 open issues. The 56-repo
+  runner fix from 2026-11-19 closed the last failure class.
+- **Extended:** `skills/disk-prune-that-actually-frees/` and `skills/sibling-pattern-sweep/`
+  (added 12:00 EST today) with the tracer-bullet rule below; the live `health-monitor`
+  `prune-disk.sh` is the executable copy.
+- **The prune now runs on a measured cycle, not a threshold reflex.** `health-monitor`
+  prunes at **85%**, leaves the four largest remaining paths untouched (live SQLite database,
+  a file held open by a running process, the only copy of the unpushed git bundles, working
+  clones), and logs `df` before *and* after in the same run.
+- Counts unchanged from the 12:00 sync: prompts **146**, tool guides **153**, skills **50
+  dirs / 45 loadable**, daily updates **148** (this file), reports 32. Repos **179** (137 `tiny-*`,
+  42 other). No new repo was published, so nothing was added to the curated list.
+- Last verified 2026-11-19 (13:00 EST; both changelog entries read from the working trees in
+  this session, suite and `check_structure.py` counts re-derived from the tree, repo total
+  from `gh api --paginate users/hussain-alsaibai/repos`).
+
 ### 🆕 Latest additions (2026-11-19 cron sync, 12:00 EST) — a detector that declined a file is not a file that was clean
 
 One prompt, one tool guide, one new skill with a working script, one extended skill. The
