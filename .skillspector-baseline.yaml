@@ -8,7 +8,28 @@
 # Edit 'reason' fields and add glob 'rules' as needed. See docs/SUPPRESSION.md.
 version: 2
 scanner_version: 2.13.4
-rules: []
+rules:
+  # 2026-11-20: hash-bound fingerprints for these two prose findings did not
+  # suppress under a full ./skills scan of 55 components, even though the
+  # scanner re-emitted the identical fingerprint (verified by loading the
+  # baseline and checking membership, and by recomputing the digest). Path +
+  # message globs are the documented stable alternative and bind to the
+  # reviewed text rather than to file bytes.
+  - id: TM1
+    path: "disk-prune-that-actually-frees/SKILL.md"
+    message: "*remove */home/node/go-mod/*"
+    reason: >-
+      Reviewed 2026-11-20. Quoted `rm: cannot remove ... Permission denied`
+      error transcript showing why rm fails on a read-only Go module cache.
+      No removal command is executed; the skill prescribes `go clean -modcache`.
+  - id: YR1
+    path: "verification-sweep/SKILL.md"
+    message: "*pip install git+https://*"
+    reason: >-
+      Reviewed 2026-11-20. YARA agent_skill_remote_bootstrap_execution matched
+      this literal inside a prose table row recording an anti-pattern (README
+      claiming one install line while llms.txt was wrong). Nothing is run.
+
 fingerprints:
 - hash: sha256:a85c203631dbda7c8b473fa1f9b5620480f86b192064590fb904f201484a8e38
   rule_id: AST4
