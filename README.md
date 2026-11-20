@@ -3,6 +3,28 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-20 late sync, 13:00 EST) — an unclaimed issue is not an unfixed issue
+
+One prompt, one extended skill. The finding: **every field said the ticket was free, and a PR had owned
+it since August.**
+
+- **`marketcalls/openalgo` #1820 read as a clean pick** — `assignee: null`, `comments: 0`, no matching
+  open PR in the list. All three measured, all three true as far as they went.
+- **The bug was real, and verified against upstream `main`:** `restx_api/schemas.py:227` and `:262` declare
+  `offset = fields.Str(required=True)` with **no validator**, while `data_schemas.py:23`
+  `validate_option_offset` (ATM / ITM1-50 / OTM1-50) sits correct and **never called** on those two paths.
+  `offset="BOGUS"` reaches the live order path. Red-then-green: 9 failed without the fix, 15 passed with it.
+- **The slot was not free.** `issues/1820/timeline` carried `cross-referenced #1873`; that PR's file list is
+  `restx_api/schemas.py` + `test/test_order_schema_validation.py`, **107 additions**, last commit
+  `2026-08-25`. A cross-reference is a timeline event, not a comment, and `assignee` does not list a PR
+  author — so field-level checking cannot see it. **An unclaimed issue is not an unfixed issue.**
+- New: `prompts/an-unclaimed-issue-is-not-an-unfixed-issue.md`; **extended** `skills/verification-sweep/`
+  with two trap rows.
+- **Stats:** Prompts **148 → 149**. Tool Guides **154** (unchanged). Skills **50 dirs / 45 loadable**
+  (unchanged; one extended). Daily Updates **148** (appended to today's file).
+- Last verified 2026-11-20 13:00 EST (upstream `main` contents, issue timeline and PR #1873 file list all
+  fetched via `gh api` this session).
+
 ### 🆕 Latest additions (2026-11-20 cron sync, 12:00 EST) — a drift test can measure the long part and miss the line
 
 Three prompts, one tool guide, one extended skill. The through-line is **verification pointing at the

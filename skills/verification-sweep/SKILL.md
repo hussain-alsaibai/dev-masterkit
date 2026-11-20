@@ -172,8 +172,12 @@ Not: "checked the repos" and not "found some stale ones".
 | a README that agrees | in the 2026-11-20 census all 15 broken repos had a **correct** README (`pip install git+https://...`); only the agent-facing `llms.txt` was wrong. Two files agreeing proves nothing about the third |
 | 3 commits behind | a working clone reading as "the fix never landed". `repos/<name>` showed the original broken line after the fix was pushed and merged; `gh api .../contents/<path>` showed the corrected file. `git fetch` before believing any `origin/*` - `prompts/a-stale-clone-makes-shipped-work-look-unshipped.md` |
 
+| `assignee: null` + `comments: 0` | a field check, not a work check. `openalgo` #1820 read as unclaimed on every field; its timeline carried `cross-referenced #1873`, an open PR with the same two-line fix and 107 additions. Read the timeline and the PR's **file list** - `prompts/an-unclaimed-issue-is-not-an-unfixed-issue.md` |
+| a free slot inferred from a title search | PR #1873 was titled `fix: validate option offsets in order schemas`; a keyword search for "offset validator" misses it. A real bug in a contested slot still costs a maintainer a reconciliation |
+
 ## Related
 
+- `prompts/an-unclaimed-issue-is-not-an-unfixed-issue.md`
 - `prompts/a-date-is-a-timestamp-not-a-property.md`
 - `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md`
 - `prompts/a-drift-test-can-measure-the-long-part.md`
