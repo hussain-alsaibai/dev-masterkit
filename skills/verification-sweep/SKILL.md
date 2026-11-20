@@ -166,11 +166,19 @@ Not: "checked the repos" and not "found some stale ones".
 | "works with curl" | HTTP/1.0 endpoints frame the body by EOF, so a missing `Content-Length` is invisible until a keep-alive proxy is in front |
 | a red suite on one host only | check `mount \| grep noexec` first: `/tmp` on this host is `noexec`, so a stub with mode `0o100755` fails `os.access(X_OK)` and 8 tests fail with an assertion that looks like a defect in the code under test. `TMPDIR=$HOME/tmp pytest` -> 301 passed - `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md` |
 | `chmod` returning 0 | it sets bits, it does not grant execution; only `os.access(p, os.X_OK)` or an actual `execve` proves the host will run the file |
+| a drift test that passes | check **which line it asserts on**. `tiny-config`/`tiny-validator` shipped `test_llms_drift.py` green for months while asserting the version header, the Python floor and the API list - and never the install command, the one line a reader acts on. Large coverage is not placed coverage - `prompts/a-drift-test-can-measure-the-long-part.md` |
+| a guard built on "the name is in `pyproject.toml`" | passed on all three broken files: the declaration is the claim under suspicion, not evidence for it. `pip install tiny-config` failed while `name = "tiny-config"` sat in the metadata - `tools/auditing-an-agent-facing-install-line.md` |
+| a positional guard ("within N lines of the note") | two drafts failed: a 6-line forward window reached into the next section and let a broken file pass, and moving the note above the install line broke the files that were fixed correctly. Assert on the specifier, not the distance |
+| a README that agrees | in the 2026-11-20 census all 15 broken repos had a **correct** README (`pip install git+https://...`); only the agent-facing `llms.txt` was wrong. Two files agreeing proves nothing about the third |
+| 3 commits behind | a working clone reading as "the fix never landed". `repos/<name>` showed the original broken line after the fix was pushed and merged; `gh api .../contents/<path>` showed the corrected file. `git fetch` before believing any `origin/*` - `prompts/a-stale-clone-makes-shipped-work-look-unshipped.md` |
 
 ## Related
 
 - `prompts/a-date-is-a-timestamp-not-a-property.md`
 - `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md`
+- `prompts/a-drift-test-can-measure-the-long-part.md`
+- `prompts/a-stale-clone-makes-shipped-work-look-unshipped.md`
+- `tools/auditing-an-agent-facing-install-line.md`
 - `tools/test-tmpdir-on-a-noexec-mount.md`
 - `prompts/pypi-n…cess.md` (stored with a truncated filename in this repo)
 - `prompts/readme-claims-must-be-runnable.md`

@@ -3,6 +3,42 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-20 cron sync, 12:00 EST) — a drift test can measure the long part and miss the line
+
+Three prompts, one tool guide, one extended skill. The through-line is **verification pointing at the
+wrong place**: a drift test that guards a file but not the line that gets executed, and a working clone
+that reports an already-shipped fix as missing.
+
+- **Fifteen of our own repos told an agent to run an install that 404s.** `llms.txt` said
+  `pip install <own-name>`; none of those names are on PyPI. **Every README was correct**
+  (`pip install git+https://...`) — the repo knew the truth and the file written for the *agent reader*
+  was wrong, and that is the reader least able to notice a 404.
+- **The guard was green the entire time.** `tiny-config` and `tiny-validator` both shipped
+  `test_llms_drift.py`. Read from `origin/main` in this session it is **seven tests** — version header,
+  Python floor, API list, masking table — and **not one assertion on the install command**. Coverage
+  that is *large* is not coverage that is *placed*.
+- **Three-way PyPI test, executed here:** `tiny-bulkhead` → **404** (free), `tiny-config` → **404**,
+  `tiny-cli` → **200** and **not ours** (squatted). Row three is the one that gets missed; its
+  "do NOT run `pip install tiny-cli`" note is now the template the other fourteen follow.
+- **Two guard drafts failed only when run**, not when read: "the name is in `pyproject.toml`" passed on
+  all three broken files (the declaration is the claim under suspicion), and a 6-line forward window
+  for the warning reached past `- Docs:` and let `tiny-cli` pass by accident — then broke the corrected
+  files when the note moved above the install line.
+- **A stale clone made the shipped fix look unshipped.** Three `repos/` clones still showed the broken
+  line after the fix was pushed; `gh api .../contents/llms.txt` showed the corrected file. They were
+  **3 commits behind**, and in a stale clone `origin/main` is a memory, not a query. The danger here is
+  the mirror of the standing rule: not pushing *over* newer work, but **re-doing work already merged**.
+- New: `prompts/a-drift-test-can-measure-the-long-part.md`,
+  `prompts/a-stale-clone-makes-shipped-work-look-unshipped.md`,
+  `tools/auditing-an-agent-facing-install-line.md`; **extended** `skills/verification-sweep/` with five
+  trap rows (it already owned install-line verification, so no fifth sibling skill).
+- **Suite:** `TMPDIR=$HOME/tmp python3 -m pytest tests -q` → **57 passed in 1.49s** (`TMPDIR` still
+  required — `/tmp` here is `noexec`). `check_structure.py` → **45 total, 45 loadable, 0 pending**.
+- **Stats:** Prompts **146 → 148**. Tool Guides **153 → 154**. Skills **50 dirs / 45 loadable**
+  (unchanged count; one extended). Daily Updates **147 → 148**. All four re-derived from the tree.
+- Last verified 2026-11-20 (PyPI status codes, the remote `test_llms_drift.py` test list and remote
+  `llms.txt` contents fetched from `origin/main`/`pypi.org` this session; suite run twice).
+
 ### 🆕 Latest additions (2026-11-19 afternoon sync, 13:00 EST) — the documented import path was never executed
 
 No new prompts or tools this sync: the findings land in the skill library and in the two
