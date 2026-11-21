@@ -174,6 +174,8 @@ Not: "checked the repos" and not "found some stale ones".
 
 | `assignee: null` + `comments: 0` | a field check, not a work check. `openalgo` #1820 read as unclaimed on every field; its timeline carried `cross-referenced #1873`, an open PR with the same two-line fix and 107 additions. Read the timeline and the PR's **file list** - `prompts/an-unclaimed-issue-is-not-an-unfixed-issue.md` |
 | a free slot inferred from a title search | PR #1873 was titled `fix: validate option offsets in order schemas`; a keyword search for "offset validator" misses it. A real bug in a contested slot still costs a maintainer a reconciliation |
+| `ast.parse(..., feature_version=(3,8))` passes | it proves the file **parses**, not that it **imports**. `compile()` does not execute a module-level annotated assignment; 3.8 does. Two arms, and the failing one is the evidence - `tools/probing-annotation-deferral.md` |
+| a `grep` for `dict[` as a 3.8 verdict | the same spelling is safe or fatal depending on whether `from __future__ import annotations` is present, because PEP 563 stores the annotation as a string. `tiny-cli-table` (3.7, no future import) and `tiny-secret-mask` (3.8, future import) look identical to the grep and behave in opposite ways - `prompts/a-future-import-hides-the-error-the-syntax-check-accepts.md` |
 
 ## Related
 
@@ -184,6 +186,8 @@ Not: "checked the repos" and not "found some stale ones".
 - `prompts/a-stale-clone-makes-shipped-work-look-unshipped.md`
 - `tools/auditing-an-agent-facing-install-line.md`
 - `tools/test-tmpdir-on-a-noexec-mount.md`
+- `tools/probing-annotation-deferral.md`
+- `prompts/a-future-import-hides-the-error-the-syntax-check-accepts.md`
 - `prompts/pypi-n…cess.md` (stored with a truncated filename in this repo)
 - `prompts/readme-claims-must-be-runnable.md`
 - `prompts/check-the-repo-before-you-recommend-the-bounty.md`

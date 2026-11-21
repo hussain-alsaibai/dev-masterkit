@@ -3,6 +3,41 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-21 cron sync, 12:00 EST) — a future import hides the error the syntax check accepts
+
+One prompt, one executed tool guide, one extended skill. The finding is a check that reports **parsing** as **runtime**:
+`ast.parse(src, feature_version=(3,8))` passes a module-level `dict[str, int]` annotation, and on 3.8 that import raises
+`TypeError`.
+
+- **`compile()` does not execute an annotated assignment; `import` on 3.8 does.** So a "3.8 compatibility" job written as a
+  parse check measures the grammar and reports a runtime result. `feature_version=(3,8)` accepted the spelling too.
+- **`from __future__ import annotations` changes the answer, and it is not a style choice.** PEP 563 stores annotations as
+  strings; with it, the same module-level constant is deferred on *every* version. Without it, it is an expression evaluated
+  at import.
+- **Proven by a probe with a failing arm, executed here (Python 3.11.2):** with an unresolvable name rather than
+  `dict[str, int]` (which is legal on the probe's own interpreter and would pass in both arms):
+  `no future import -> rc=1 NameError` / `WITH future import -> rc=0`. A pass-only probe cannot distinguish a deferred
+  annotation from a probe that never ran.
+- **Census of our own libraries:** `tiny-cli-table` declares `requires-python = ">=3.7"`, has **no** future import, and
+  carries `_STYLES: dict[str, dict[str, str]]` — an import failure below 3.9. `tiny-secret-mask` (`>=3.8`) has the same
+  spelling **and** the future import, and is fine. A `grep` for `dict[` cannot tell them apart. The other four hits
+  (`tiny-llm-budget`, `tiny-log`, `tiny-rate-limiter`, `tiny-router`) were `typing`-based and are not defects — the first
+  pass measured the corpus, not the defect.
+- **`tiny-cli-table` is recorded, not repaired.** It is outside this sync's scope, and a fix means a patch release plus a
+  3.7 matrix row to prove it.
+- New: `prompts/a-future-import-hides-the-error-the-syntax-check-accepts.md`,
+  `tools/probing-annotation-deferral.md`; **extended** `skills/verification-sweep/` with two trap rows (a passing parse
+  check; a `grep` used as a runtime verdict). One prompt, not three: `python-support-is-a-claim.md` and
+  `a-module-that-cannot-be-imported-is-not-a-library.md` already own the adjacent rules.
+- **Suite:** `TMPDIR=$HOME/tmp python3 -m pytest tests -q` → **57 passed**. `check_structure.py` → **45 total, 45 loadable,
+  0 pending**. Both re-run against the tree being committed.
+- **Stats:** Prompts **149 → 150**. Tool Guides **154 → 155**. Skills **50 dirs / 45 loadable** (unchanged; one extended).
+  Daily Updates **148 → 149**. All re-derived from the tree with `ls`; repo total from `gh api --paginate` (**179**, 137
+  `tiny-*`).
+- Last verified 2026-11-21 12:00 EST (probe executed twice, both arms; census re-run over every `tiny-*/*.py`; suite and
+  structure check run this session).
+
+
 ### 🆕 Latest additions (2026-11-20 late sync, 13:00 EST) — an unclaimed issue is not an unfixed issue
 
 One prompt, one extended skill. The finding: **every field said the ticket was free, and a PR had owned
@@ -1042,21 +1077,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 45 loadable / 50 dirs | 2026-11-19 |
-| Prompts | 146 | 2026-11-19 |
+| Skills | 45 loadable / 50 dirs | 2026-11-21 |
+| Prompts | 150 | 2026-11-21 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 153 | 2026-11-19 |
+| Tool Guides | 155 | 2026-11-21 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 8 | 2026-11-19 |
-| Daily Updates | 147 | 2026-11-19 |
+| Daily Updates | 149 | 2026-11-21 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-19 |
-| Additional hussain-alsaibai Repos | 42 | 2026-11-19 |
+| tiny-* Ecosystem Repos | 137 | 2026-11-21 |
+| Additional hussain-alsaibai Repos | 42 | 2026-11-21 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-19: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-21: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-19.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**).
+**Every count above was measured against the tree on 2026-11-21.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**).
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**
