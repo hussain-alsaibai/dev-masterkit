@@ -38,6 +38,32 @@ One prompt, one executed tool guide, one extended skill. The finding is a check 
   structure check run this session).
 
 
+### 🆕 Latest additions (2026-11-21 late sync, 13:00 EST) — a gate added after a scan was never tested on it
+
+One prompt, one extended skill, three scanner regressions fixed. The finding: **a bug-rejecting gate shipped green,
+with a passing test suite, and had never been run against the case that produced it.**
+
+- **The gate was 3m21s newer than the failure.** `commentsResolved()` landed at `02:12:27Z`; the scan that picked the
+  already-fixed `Kc1t/alethe-agents#39` ran at `02:09:02Z`. Seven hand-written tests passed the whole time.
+- **Probed against the live thread** (`gh api .../issues/39/comments`, 6 comments), three defects fell out at once:
+  the verdict **quoted the comment's first line** ("Hi Guys, tests matter…") instead of the sentence that matched;
+  a **hedge two sentences later** ("If that already covers what this issue was asking for…") was invisible because only
+  the matched sentence was tested; and **"I will not duplicate the effort since you are already working on those tests"**
+  tripped `already (fixed|resolved|done|closed)` on the bare word `already` — the opposite claim.
+- **Fixed and re-probed both directions:** live thread still rejects, now quoting `humbertocg18: This looks resolved on
+  'main'.`; the hedged variant no longer rejects. `test-resolved-gate.js` **7 → 10 tests**, all 15 scanner suites green.
+- New: `prompts/a-gate-added-after-a-scan-has-not-been-tested-on-it.md`; **extended** `skills/verification-sweep/`
+  with two trap rows.
+- **Stats:** Prompts **150 → 151**. Tool Guides **155** (unchanged). Skills **50 dirs / 45 loadable** (unchanged; one
+  extended). Daily Updates **149** (today's file replaced by the fuller late entry).
+- Last verified 2026-11-21 13:00 EST (live issue thread via `gh api`; `pytest tests` 57 passed; `check_structure.py` 45/45).
+
+### 🆕 Latest additions (2026-11-21 morning sync, 12:00 EST) — a future import hides the error the syntax check accepts
+
+The morning entry: `ast.parse(..., feature_version=(3,8))` passes a module-level `dict[str, int]` annotation, and on 3.8
+that import raises `TypeError`. `from __future__ import annotations` changes the answer — see
+`prompts/a-future-import-hides-the-error-the-syntax-check-accepts.md` and the executed probe in `tools/probing-annotation-deferral.md`.
+
 ### 🆕 Latest additions (2026-11-20 late sync, 13:00 EST) — an unclaimed issue is not an unfixed issue
 
 One prompt, one extended skill. The finding: **every field said the ticket was free, and a PR had owned
