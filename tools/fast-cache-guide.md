@@ -399,4 +399,26 @@ fix — Go's `singleflight` package (since 2014) and Java's
 - **Upstream `main` is now `version = "0.8.0"`** (fetched 2026-11-02), so the
   earlier note that upstream was still at 0.7.3 no longer applies.
 - Commit: `30a9f94` (this file, before today's corrections).
+
+### 0.9.0 / 0.9.1 — the cached-`None` path, and the one it missed
+
+Re-verified 2026-11-22 against `repos/fast-cache` at `d646559`.
+
+- **0.9.0 stopped counting expired entries and made `get_or_set` cache a `None`.**
+  The changelog named the **sync** path only.
+- **0.9.1 (`d646559`) found `get_or_set_async` still testing `is not None`** —
+  for a cached `None`, the async factory re-ran on every call. Two of the six new
+  tests in `tests/test_v091_async_none.py` fail against `3427e21` (0.9.0):
+
+  ```
+  FAILED tests/test_v091_async_none.py::test_cached_none_is_a_hit_async
+  FAILED tests/test_v091_async_none.py::test_get_or_set_async_always_returns_an_awaitable[True]
+  2 failed, 4 passed
+  ```
+- **Suite at `d646559`: 55 passed** (was 49). Run in this container.
+- **No documented symbol was removed by 0.9.x**, so every snippet above still
+  applies. `Cache.get_or_set_async` is the only surface this section adds.
+
+**Last verified:** 2026-11-22 (`d646559`, 55 passed; red phase reproduced on
+`3427e21` by restoring the new test file over the old source).
 - Verification: every API claim in this file was checked by running it.

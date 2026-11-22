@@ -3,6 +3,43 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-22 12:00 EST) — a cache that cannot store `None` is not a fix, and one path is not all paths
+
+One prompt, one new tool guide, one guide rewritten from a 7-line stub, one amended, one extended skill. The finding:
+**the same defect landed twice in one day, in two libraries, in the call path the previous release's changelog did not name.**
+
+- **`fast-cache` 0.9.0 fixed the cached-`None` miss in the sync path and said so.** 0.9.1 (`d646559`) found
+  `Cache.get_or_set_async` still testing `is not None`, so the async factory re-ran on every cached `None`. Six new tests in
+  `tests/test_v091_async_none.py`; **2 fail against `3427e21` (0.9.0)**, reproduced here by restoring the new test file over
+  the old source. Suite **55 passed** at `d646559` (was 49).
+- **`tiny-prompt-cache` 0.1.1 had the worse variant**: `get_or_call` ran `len(response)` **before** storing, so a `None`
+  backend response raised `TypeError` on the **first** call. Fixed with a `_MISSING` sentinel, a public `has()`, and the
+  token estimate computed only for `str`. **66 passed** at `d51e093`.
+- **The distribution detail nearly swallowed the second fix**: `origin/main` had **no v2 module** — v2 lived only on
+  `feature/prompt-cache-v2`, three commits ahead. Merging to `main` is what made the fix reachable. `git ls-tree
+  origin/main <path>` answers it in one command; a test run on the feature branch does not.
+- **Third occurrence of the shape this month** (`snapdb` 0.18.3 module-vs-function, `fast-cache` sync-vs-async,
+  `tiny-prompt-cache` v1-vs-v2). Grep the shape — `is not None` as a hit test, `if cached:`, `len(x)` on an optional return —
+  not the method name, which differs in all three.
+- **Bounty scanner, three defects from hand-checking one candidate.** `crewAIInc/crewAI#8003` (61,153 stars) reported as
+  uncontested with **five** open PRs. (a) `stars` was a shared/derived field printed as this repo's own count (`Repo has 0
+  stars`); (b) the farm gate summed `no_stars` across a repo's **issue** records, so six issues in a 61k-star repo equalled
+  six in a 0-star farm — now computed once per repository with the fork signature (0-1 stars, >1 fork); (c) `>= 3` open PRs
+  was the wrong competition floor — `MAX_COMPETING_PRS = 2`, with the worker's guards moved to match.
+- New: `prompts/a-cache-that-cannot-store-none-is-not-a-fix.md`, `tools/probing-a-one-path-fix.md`. **Rewritten:**
+  `tools/tiny-prompt-cache-guide.md` (was a 7-line stub dated 2026-08-14 documenting a `prefix_mode` keyword that does not
+  exist; now 110 lines against the real signature, with the snippet **executed** — `get_or_call(p, lambda: None)` returns
+  `None` twice with `calls=1`). **Amended:** `tools/fast-cache-guide.md` (2026-11-02 → **2026-11-22**, 0.9.x section, red
+  phase quoted). **Extended:** `skills/verification-sweep/` with three trap rows.
+- **Suite:** `TMPDIR=/home/node/tmp python3.12 -m pytest tests -q` → **57 passed**. `check_structure.py` → **45 total, 45
+  loadable, 0 pending frontmatter**.
+- **Stats:** Prompts **151 → 152**. Tool Guides **155 → 156**. Skills **50 dirs / 45 loadable** (unchanged; one extended).
+  Daily Updates **149 → 150**. All re-derived from the tree with `ls`.
+- **Nothing removed.** Both guides named above carry documented symbols that still exist; removing a live guide is the
+  expensive direction of that error.
+- Last verified 2026-11-22 12:00 EST (both package suites run here, the 0.9.0 red phase reproduced by checkout + test-file
+  restore, the prompt-cache guide snippet executed against `d51e093`).
+
 ### 🆕 Latest additions (2026-11-21 cron sync, 12:00 EST) — a future import hides the error the syntax check accepts
 
 One prompt, one executed tool guide, one extended skill. The finding is a check that reports **parsing** as **runtime**:
@@ -1103,21 +1140,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 45 loadable / 50 dirs | 2026-11-21 |
-| Prompts | 150 | 2026-11-21 |
+| Skills | 45 loadable / 50 dirs | 2026-11-22 |
+| Prompts | 152 | 2026-11-22 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 155 | 2026-11-21 |
+| Tool Guides | 156 | 2026-11-22 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Scripts | 8 | 2026-11-19 |
-| Daily Updates | 149 | 2026-11-21 |
+| Scripts | 7 | 2026-11-22 |
+| Daily Updates | 150 | 2026-11-22 |
 | Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 137 | 2026-11-21 |
 | Additional hussain-alsaibai Repos | 42 | 2026-11-21 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-21: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-22: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-21.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. Today's run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**).
+**Every count above was measured against the tree on 2026-11-22.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. The 2026-11-22 run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**); `Scripts` was re-measured as **7** after three consecutive entries carried **8** without a recount.
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**

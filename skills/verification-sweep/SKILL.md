@@ -110,7 +110,7 @@ the footnote.
 For anything that can change intraday, write the **timestamp**:
 
 ```
-**Last verified:** 2026-11-03 12:20 UTC - GET /repos/OWNER/NAME returns 200
+**Last verified:** 2026-11-22 (two-path cache fix re-run in this container; Pypi/repo probes last executed 2026-11-03 12:20 UTC) - GET /repos/OWNER/NAME returns 200
 ```
 
 A same-day re-check is a claim about the morning.
@@ -138,7 +138,16 @@ This is the difference between *could not run* and *did not run*. Only the first
 statement about the environment; the second is the claim you are supposed to be checking.
 See `tools/verifying-a-claim-you-cannot-execute.md`.
 
-## The Reporting Rule
+### 7. Re-verify the two-path fix (2026-11-22)
+
+When the claim being swept is "this defect is fixed", the defect's **shape** is
+the family, not the package. Grep `is not None` used as a hit test, `if cached:`,
+and `len(x)` on an optional return across every package you maintain; then check
+the default branch actually contains the fix (`git ls-tree origin/main <path>`).
+Run the recorded procedure in `tools/probing-a-one-path-fix.md` and quote the
+red count on the previous release, not just the green count on the new one.
+
+## ## The Reporting Rule
 
 Report the **denominator**:
 
@@ -178,6 +187,9 @@ Not: "checked the repos" and not "found some stale ones".
 | a `grep` for `dict[` as a 3.8 verdict | the same spelling is safe or fatal depending on whether `from __future__ import annotations` is present, because PEP 563 stores the annotation as a string. `tiny-cli-table` (3.7, no future import) and `tiny-secret-mask` (3.8, future import) look identical to the grep and behave in opposite ways - `prompts/a-future-import-hides-the-error-the-syntax-check-accepts.md` |
 | a boolean gate returning the right answer with the wrong quote | the live replay of the issue that motivated the gate showed it quoting the comment's first line instead of the sentence that matched, and missing a hedge two sentences later. Run the gate against the **live input**, and assert on its reported evidence, not just on `null`/`not-null` - `prompts/a-gate-added-after-a-scan-has-not-been-tested-on-it.md` |
 | a fix whose mtime is newer than the artifact that failed | the gate landed 3m21s *after* the scan it was written for, so that scan never exercised it. `stat -c '%y'` the fix against the scan output before calling the bug closed |
+| `is not None` as a cache hit test | `None` is a value the backend is free to return; the hit test reads it as absence and re-runs the factory. `fast-cache` 0.9.0 fixed the sync path only and named only that path in its changelog - 0.9.1 found `get_or_set_async` unchanged - `prompts/a-cache-that-cannot-store-none-is-not-a-fix.md` |
+| a fix merged into a non-default branch | `tiny-prompt-cache` v2 existed only on `feature/prompt-cache-v2`; the corrected code was unreachable for anyone installing the default branch. `git ls-tree origin/main <path>` answers it in one command - `tools/probing-a-one-path-fix.md` |
+| a star count read from an issue record | a candidate's `stars` can be a shared/derived value, and a 61k-star repo was reported as "Repo has 0 stars". A per-repo fact must be computed once per repository, keyed by repo, never summed over issue records |
 
 ## Related
 
