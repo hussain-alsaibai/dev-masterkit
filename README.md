@@ -3,6 +3,32 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-22 13:00 EST) — a re-sent token total is not a request
+
+One prompt added in the evening pass of the same day. The finding: a dedupe key
+that is a property of an event's **position in the stream** rather than of its
+**value** passes the reporter's reproduction and still counts wrong.
+
+- **`microsoft/TokenEconomizer` #299** — `codex_session_usage` counted one request per `token_count` event
+  carrying `total_token_usage`. Codex re-sends totals it already has (a compaction's rate-limit snapshot, a
+  usage-limit error, the post-compaction local estimate) with no model call behind them. The issue's rollout
+  reported **5 requests for a 3-request session**.
+- **PR [#316](https://github.com/microsoft/TokenEconomizer/pull/316)** (`fix/codex-resent-token-count`) is
+  **OPEN and MERGEABLE** as of 2026-11-22 18:00Z, author `hussain-alsaibai`, 2 files
+  (`tokeneconomizer/trace/codex.py`, `tests/test_trace.py`). Measured on the issue's rollout:
+  `requests: 5` → `3`. Four regression tests, **2 failing on `1bfeccd`**.
+- **The guard that looks right and is not:** "identical to the previous event" passes the reproduction, because
+  the duplicates there are adjacent. A compaction can land between a call and the re-send of that call's
+  totals, so the duplicate is not adjacent. The adversarial test is a re-sent total arriving **after** a later
+  call — that is the case a previous-event comparison accepts.
+- Headline rule: **a dedupe key must be a property of the value, not of its position in the stream.** Reduce the
+  snapshot to the counters that can move (`_usage_key`) so an extra field does not read as a new request; keep
+  the *last* cumulative total for the breakdown — dedupe the count, do not discard the latest state.
+- New: `prompts/a-resent-token-total-is-not-a-request.md`.
+- **Stats:** Prompts **152 → 153**. Tool Guides **156** (unchanged). Skills **50 dirs / 45 loadable**
+  (unchanged). Daily Updates **150** (today's file extended). All re-derived from the tree with `ls`.
+- **Nothing removed.** Last verified 2026-11-22 18:00Z (`gh pr view 316`, OPEN + MERGEABLE).
+
 ### 🆕 Latest additions (2026-11-22 12:00 EST) — a cache that cannot store `None` is not a fix, and one path is not all paths
 
 One prompt, one new tool guide, one guide rewritten from a 7-line stub, one amended, one extended skill. The finding:
