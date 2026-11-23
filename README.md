@@ -3,6 +3,40 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-23 12:00 EST) — a gate keyed on the field the adversary can buy
+
+Three prompts, one tool guide, two skills extended. No upstream PR today: the
+work was the scanner that finds them. Third consecutive zero-pick day, and the
+zero was **correct** — two defects and one unreadable report came out of trying
+to prove that.
+
+- **`limitlessprojects/Go-Hybrid`: 33 stars, 329 forks, 2 watchers, 862 open issues, six weeks old.** Every
+  farm rule keys off `stars < 5` (or `stars < 2`), so a farm that **buys** stars passes all of them. It was
+  only dropped because `young_repo` happened to fire. Rule 1b is a **ratio**, `forks >= stars * 3` at
+  `stars >= 4` and `forks >= 4`, named `fork_heavy` and skipped on `unmeasured_stars`. Does not fire on
+  crewAI (61k/9k), 6★/4-fork, or 1,000★/1,200-fork. **19/19** checks; **1 fails** on the pre-fix scanner.
+- **`market_complete` must mean the whole result set was READ, not that no step raised an error.** A rescan
+  found **8,838** issues where the scan 20 minutes earlier found **10,209**. `collectBand()` did `break` on a
+  failed page, dropping every remaining page while the band still counted complete — the run had been
+  rate-limited twice, and both truncated bands reported `incomplete_bands: []`. The single-page sweeps had the
+  same bug: `label:opire` matches **74** issues and the sweep read 50 and printed that as the market.
+  `test-pagination-completeness.js` **10/10**, **6 fail** pre-fix. Live recovery: Opire **50 → 74**, matching
+  `total_count`; the two contributor bands back to 1,685 and 1,003.
+- **`scored_count: 0` is not "nothing was scored".** It counts post-gate survivors, so the report said "0
+  reached a score" when 5 candidates had been scored and killed. The report now names each population
+  (`scored 5 / shortlisted 5 / survived 2`, deaths `1 contested, 2 stale`), and `rejected_all` stores the
+  untruncated list beside the `slice(0, 10)` display array — a capped array is not an audit trail.
+- **The reusable diagnostic:** two runs of the same query with different totals is a bug report, not noise.
+- New: `prompts/a-ratio-is-not-a-threshold-you-can-buy.md`,
+  `prompts/a-count-that-shrinks-is-a-bug-report.md`,
+  `prompts/a-zero-pick-day-needs-a-receipt.md`,
+  `tools/adding-a-second-axis-to-a-single-field-gate.md`. **Extended:** `skills/bounty-scanner/` (filter rows +
+  today's verification note) and `skills/verification-sweep/` (three trap rows).
+- **Stats:** Prompts **153 → 156**. Tool Guides **156 → 157**. Skills **45 loadable / 50 dirs** (unchanged; two
+  extended). Daily Updates **150 → 151**. All re-derived from the tree with `ls`.
+- **Nothing removed.** Last verified 2026-11-23 (18 scanner suites / 151 checks run here, both red phases
+  reproduced by restoring the pre-fix scanner, `check_structure.py` green on the committed tree).
+
 ### 🆕 Latest additions (2026-11-22 13:00 EST) — a re-sent token total is not a request
 
 One prompt added in the evening pass of the same day. The finding: a dedupe key
@@ -1166,21 +1200,21 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 45 loadable / 50 dirs | 2026-11-22 |
-| Prompts | 152 | 2026-11-22 |
+| Skills | 45 loadable / 50 dirs | 2026-11-23 |
+| Prompts | 156 | 2026-11-23 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 156 | 2026-11-22 |
+| Tool Guides | 157 | 2026-11-23 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
-| Scripts | 7 | 2026-11-22 |
-| Daily Updates | 150 | 2026-11-22 |
+| Scripts | 7 | 2026-11-23 |
+| Daily Updates | 151 | 2026-11-23 |
 | Reports | 32 | 2026-11-10 |
 | tiny-* Ecosystem Repos | 137 | 2026-11-21 |
 | Additional hussain-alsaibai Repos | 42 | 2026-11-21 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-22: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-23: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
 
-**Every count above was measured against the tree on 2026-11-22.** This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. The 2026-11-22 run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**); `Scripts` was re-measured as **7** after three consecutive entries carried **8** without a recount.
+**Every count above was measured against the tree on 2026-11-23** (`ls prompts/*.md | wc -l` → 156, `ls tools/*.md | wc -l` → 157, `ls daily-updates/*.md | wc -l` → 151 after today's file, `ls -d skills/*/ | wc -l` → 50, `ls skills/*/SKILL.md | wc -l` → 45). The 2026-11-22 run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**); This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. The 2026-11-22 run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**); `Scripts` was re-measured as **7** after three consecutive entries carried **8** without a recount.
 
 > **All three skill numbers were measured against the tree this run, and they
 > do not agree because they count different things:**

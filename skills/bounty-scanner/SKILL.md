@@ -27,6 +27,14 @@ Scans GitHub for open **official** bounty issues from verified platforms, scores
 - **Bounties already contested by 3+ open PRs** — a "first merged PR takes the
   payout" bounty with 10 rival PRs is effectively closed (added 2026-10-24)
 - **Issues that already have an assignee** — added 2026-10-25. See below.
+- **Repos where `forks >= stars * 3` at `stars >= 4` and `forks >= 4`**
+  (`fork_heavy`) — a farm that buys its stars passes every `stars < 5` rule.
+  A ratio cannot be bought by moving either side alone. Must not fire on
+  crewAI (61k stars / 9.2k forks) or a 6-star repo with 4 forks. Added
+  2026-11-23; see `prompts/a-ratio-is-not-a-threshold-you-can-buy.md`.
+- **Candidates removed by a gate are only a real reject if the gate ran after
+  the scan it judged.** Check the mtime of the fix against the scan output
+  before calling a bug closed.
 
 ## Scoring (0–100)
 | Factor | Max | Logic |
@@ -587,3 +595,49 @@ The credential fix was verified against the live API: `GitHUB_PAT` returns
 HTTP 401 and `gh auth token` returns HTTP 200 on the same host, at the same
 moment. A post-fix scan returned a real 50 USD target
 (`caley-io/marketing#1`) instead of an empty shortlist.
+
+
+## 2026-11-23: a star-bought farm, a partial market, and a receipt for zero picks
+
+Third consecutive zero-pick day. The zero was **correct** — every candidate was
+genuinely unavailable — but two defects and one unreadable report came out of
+checking it by hand. All three fixes are in `scanner.js` and covered by tests.
+
+**1. `fork_heavy` (Rule 1b).** `limitlessprojects/Go-Hybrid` sat in the
+shortlist with **33 stars, 329 forks, 2 watchers, 862 open issues, 6 weeks old**.
+Every farm rule keys off `stars < 5` (or `stars < 2`), and none runs above five
+stars, so it passed all of them — it was dropped only because `young_repo`
+happened to fire, for a reason unrelated to its signature. Stars cost money;
+forks cost a click. The fix is a **ratio**, `forks >= stars * 3` at
+`stars >= 4` and `forks >= 4`, skipping repos flagged `unmeasured_stars`.
+`test-repo-wide-farm-gate.js`: **19/19**; restored `.bak-20261123-farm-ratio`
+fails the ratio check, so the test measures the rule.
+
+**2. `market_complete` means READ, not "no error".** A rescan found **8,838**
+issues where the scan 20 minutes earlier found **10,209**. `collectBand()`
+paginated a band and on a failed page did `break`, dropping every remaining
+page while the band still counted complete — the run had been rate-limited
+twice, and the two truncated bands reported `incomplete_bands: []` and
+`market_complete: true`. A lost page now pushes the band onto `INCOMPLETE_BANDS`
+and prints `[CAP] PAGE LOST`. The single-page sweeps got `searchAllPages()`:
+`label:opire` matches **74** open issues and the sweep had read 50 and printed
+"Opire: 50 issues" as the market. `test-pagination-completeness.js`: **10/10**,
+6 of 10 failing against the pre-fix source. Verified live: a clean run restored
+Opire to 74 (matching `total_count`), "How to verify" to 1685, "help wanted +
+verify" to 1003.
+
+**3. `gate_counts` + `rejected_all`.** `scored_count` counts **post-gate
+survivors**, so on a zero-pick day it read 0 and the report printed "0 reached a
+score" when 5 candidates had been scored. And `rejected` is stored as
+`slice(0, 10)`, so the two farm rejects that day's gate produced were absent
+from the file entirely. The report now names each population
+(`scored 5 / shortlisted 5 / survived 2`, deaths `1 contested, 2 stale`) and
+`rejected_all` keeps the untruncated list beside the display slice.
+
+**The diagnostic that found #2:** two runs of the same query with different
+totals is a bug report. Diffing the per-source counts (`1686→1209`,
+`1003→109`) located it in one command; one `gh api` with `per_page=1`
+established ground truth.
+
+All 19 scanner suites green on 2026-11-23 (151 checks). Last verified
+2026-11-23 07:52Z.

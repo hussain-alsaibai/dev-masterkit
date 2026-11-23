@@ -110,7 +110,7 @@ the footnote.
 For anything that can change intraday, write the **timestamp**:
 
 ```
-**Last verified:** 2026-11-22 (two-path cache fix re-run in this container; Pypi/repo probes last executed 2026-11-03 12:20 UTC) - GET /repos/OWNER/NAME returns 200
+**Last verified:** 2026-11-23 (bounty-scanner 19/19 suites green here; the farm-gate and pagination red phases reproduced by restoring `scanner.js.bak-20261123-farm-ratio`; Pypi/repo probes last executed 2026-11-03 12:20 UTC) - GET /repos/OWNER/NAME returns 200
 ```
 
 A same-day re-check is a claim about the morning.
@@ -190,6 +190,9 @@ Not: "checked the repos" and not "found some stale ones".
 | `is not None` as a cache hit test | `None` is a value the backend is free to return; the hit test reads it as absence and re-runs the factory. `fast-cache` 0.9.0 fixed the sync path only and named only that path in its changelog - 0.9.1 found `get_or_set_async` unchanged - `prompts/a-cache-that-cannot-store-none-is-not-a-fix.md` |
 | a fix merged into a non-default branch | `tiny-prompt-cache` v2 existed only on `feature/prompt-cache-v2`; the corrected code was unreachable for anyone installing the default branch. `git ls-tree origin/main <path>` answers it in one command - `tools/probing-a-one-path-fix.md` |
 | a star count read from an issue record | a candidate's `stars` can be a shared/derived value, and a 61k-star repo was reported as "Repo has 0 stars". A per-repo fact must be computed once per repository, keyed by repo, never summed over issue records |
+| a gate keyed on a field the adversary can buy | every farm rule keyed on `stars < 5`, so a wave that bought 33 stars and carried 329 forks passed all of them and was caught only as a side effect of `young_repo`. Add the second axis as a **ratio** (`forks >= stars * 3` at `stars >= 4`), and prove it does not fire on crewAI (61k/9k) or a 6-star/4-fork repo - `prompts/a-ratio-is-not-a-threshold-you-can-buy.md` |
+| a count that shrinks between two runs of the same query | 10,209 issues at 06:09Z, 8,838 at 07:12Z, in a market that cannot shrink. Two bands lost a page to a 403 and `break`ed the pagination loop while still reporting `incomplete_bands: []` and `market_complete: true`. Diff the **per-source** counts first; confirm with `gh api -X GET 'search/issues' -f q='...' -f per_page=1 --jq .total_count` - `prompts/a-count-that-shrinks-is-a-bug-report.md` |
+| `scored_count: 0` on a zero-pick day | it counts **post-gate survivors**, so "0 reached a score" was printed when 5 candidates had been scored and killed. Record `gate_counts` per population (scored / shortlisted / rejected_contested / rejected_stale / survived) and store `rejected_all` beside the `slice(0, 10)` display array, because a capped array is not an audit trail - `prompts/a-zero-pick-day-needs-a-receipt.md` |
 
 ## Related
 
@@ -198,6 +201,10 @@ Not: "checked the repos" and not "found some stale ones".
 - `prompts/a-host-that-forbids-execution-looks-like-a-failing-suite.md`
 - `prompts/a-drift-test-can-measure-the-long-part.md`
 - `prompts/a-stale-clone-makes-shipped-work-look-unshipped.md`
+- `prompts/a-ratio-is-not-a-threshold-you-can-buy.md`
+- `prompts/a-count-that-shrinks-is-a-bug-report.md`
+- `prompts/a-zero-pick-day-needs-a-receipt.md`
+- `tools/adding-a-second-axis-to-a-single-field-gate.md`
 - `tools/auditing-an-agent-facing-install-line.md`
 - `tools/test-tmpdir-on-a-noexec-mount.md`
 - `tools/probing-annotation-deferral.md`
