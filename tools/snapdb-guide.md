@@ -107,7 +107,24 @@ Any primitive that picks a strategy should ship a way to ask "what strategy did 
 
 **Tests:** 33 new tests, all 213/213 pass.
 
-**Last verified:** 2026-10-18 (after snapdb v0.18.0 commit)
+### v0.18.4 — absent is not zero (added 2026-11-23)
+
+`DocumentStore` no longer drops fields introduced after the first document, and
+`SnapDB.replace_schema()` widens the on-disk row layout. Absent values come back
+**missing** rather than as `0` / `""` / `False`, sort last in both directions,
+and `query(sort=…, limit=…)` sorts *before* slicing — the order of those two
+operations is observable and was wrong before this release.
+
+```python
+db = SnapDB("app.db")
+db.replace_schema([("id", int), ("name", str), ("score", float)])
+# a document written before "score" existed now reads back as missing,
+# not as 0.0 — and sorts last regardless of direction
+```
+
+Tests: **264 passed, 22 skipped** on CPython 3.12 (2026-11-23).
+
+**Last verified:** 2026-11-23 (after snapdb v0.18.4 commit `f985ac6`)
 
 ## Benchmarks (100K rows, 5 engines)
 

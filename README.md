@@ -3,6 +3,31 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-23 18:00Z) — a skip that was really an abort
+
+Two releases and one prompt, both ships measured here rather than read from a
+changelog.
+
+- **`tiny-router` 0.9.4 (`fa3c96a`)** — `test_v074_redact_headers.py` did a bare `import tiny_secret_mask`
+  at module scope, so without the *optional* dependency pytest reported **1 collection error** instead of
+  **16 skipped**, hiding every dependency-independent test in the file. Availability is now resolved at call
+  time, and CI runs the suite with the sidecar absent **and asserts it is really absent** (`find_spec(...)
+  is None`) — an isolation job that quietly has the extras installed proves nothing. Measured: **196 passed /
+  26 skipped** with `tiny_secret_mask` confirmed missing.
+- **`snapdb` 0.18.4 (`f985ac6`)** — absent values come back **missing**, not `0`/`""`/`False`; new
+  `SnapDB.replace_schema()` widens the on-disk row layout; `query(sort=…, limit=…)` sorts *before* slicing.
+  Measured: **264 passed / 22 skipped** on CPython 3.12.
+- **The trend signal that named our own bug:** `is:issue is:open "ModuleNotFoundError" created:>2026-11-16`
+  → **501** issues; `"zero-dependency"` → **1,793**, including two against one repo pair for live numpy imports
+  under a zero-dep claim. A checkable claim gets audited.
+- New: `prompts/a-missing-optional-dependency-aborts-collection.md`,
+  `tools/proving-a-skip-path-in-ci.md`. **Amended:** `tools/snapdb-guide.md` (`Last verified` 2026-10-18 →
+  **2026-11-23**, 0.18.4 section). Extended `daily-updates/2026-11-23.md` §7.
+- **Stats:** Prompts **156 → 157**. Tool Guides **157 → 158**. Skills **45 loadable / 50 dirs** (unchanged).
+  Daily Updates **151** (same day, extended in place, not a new file).
+- **Nothing removed.** Last verified 2026-11-23 18:00Z (both suites run against the named commits,
+  `check_structure.py` 45/45 green).
+
 ### 🆕 Latest additions (2026-11-23 12:00 EST) — a gate keyed on the field the adversary can buy
 
 Three prompts, one tool guide, two skills extended. No upstream PR today: the
@@ -1201,7 +1226,7 @@ open skills/repo-creator/SKILL.md
 | Category | Count | Last Updated |
 |----------|-------|-------------|
 | Skills | 45 loadable / 50 dirs | 2026-11-23 |
-| Prompts | 156 | 2026-11-23 |
+| Prompts | 157 | 2026-11-23 |
 | Commands | 5 | 2026-07-23 |
 | Tool Guides | 157 | 2026-11-23 |
 | Agents | 3 | 2026-07-23 |
