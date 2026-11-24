@@ -1,13 +1,17 @@
-# 2026-11-13: regenerated at 2.13.4, pinned scanner 2.13.2 -> 2.13.4.
-# The upgrade re-issues every fingerprint hash even though the set of
-# (rule_id, file) pairs is unchanged: all 125 accepted findings are the
-# same findings, re-hashed. That is why the hash changed and the review
-# did not. Never bump PINNED_SCANNER without regenerating this file in
-# the same commit.
+# 2026-11-24: regenerated at 2.13.1 after CI (skill-security) started failing.
+# Why it failed: the 2026-11-23 commit extended skills/bounty-scanner/SKILL.md,
+# which re-issues the PE3 fingerprints for that file (v2 fingerprints bind to
+# the whole component sha256), so 4 reviewed PE3 findings on prose about
+# credential paths (`~/.git-credentials`, `access token`) looked new. The CI
+# job installed the newest skillspector (2.13.4) while the previous baseline
+# named 2.13.4 -- so this was NOT a version bump. The change was the skill.
+# Regenerated with the pinned 2.13.1 install; rule+file set is unchanged
+# (125 -> 127 entries: TM1 and YR1 now report as exact fingerprints, and their
+# glob rules are kept below as the stable fallback).
 # SkillSpector baseline — findings listed here are suppressed on future scans.
 # Edit 'reason' fields and add glob 'rules' as needed. See docs/SUPPRESSION.md.
 version: 2
-scanner_version: 2.13.4
+scanner_version: 2.13.1
 rules:
   # 2026-11-20: hash-bound fingerprints for these two prose findings did not
   # suppress under a full ./skills scan of 55 components, even though the
@@ -31,503 +35,511 @@ rules:
       claiming one install line while llms.txt was wrong). Nothing is run.
 
 fingerprints:
-- hash: sha256:a85c203631dbda7c8b473fa1f9b5620480f86b192064590fb904f201484a8e38
+- hash: sha256:b0917079e62eab8cfcea96760d7417b836746184c7006aab028e79b9b18e8fbd
   rule_id: AST4
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:374fdb75ce88d5e93d2e7ab73648a5514867ed8bac1975a8b5f1ba2fe9580d9f
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d4677601d52f69da5cd9954663fa78b7ccf8215533ace403c8a1b93c09d34250
   rule_id: AST4
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:16407d525a74e90bd10fb60ddc5c09e5ac070ecdfc063627632b703acfd49e4e
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:5e6fa5472412c235f618107d2c2f84af532cbb65a111a9d0f966a441143afe30
   rule_id: AST4
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ec8499127d9da594ef7f95ed8b90e3b0f9250e908347c6c16defcf39085aa746
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:8b9af17a1835059d53d6df3de3893b433753972dbda5497d52db3543c62d60ad
   rule_id: TT3
   file: youtube-transcript/scripts/fetch_transcript.py
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b468397023652cb051951c6d63b2dfb6f4c096a63875b3339e2280290e548a19
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:778f93b20d6e481af04ba44188329085c15d1adb3913c64b509e9ac96c77fdb5
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:0a1d5f168466729da8101b210fdb0abfce1ddbf8189de5f975321d8b031aa2f6
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e1575da629849d624d6c2fff6cacf835ebd43e7affb7f359d7234704f905197b
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:7d13d576307ce7f9436a7486cd47f408808dab39da72c31fbf7cba2871882f7f
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:0d72f9cafd74c02e64e38eda50c56c6dc9622e465d0ba35cc6d49c533b32f1b3
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f06a266ab93f2be0c79777453744738a462daef57d27a9e0bc982ed3e07147e2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2a0d529cb04079375aaf0e92acd2b8af4763c1798f2dc0a0efab45bf0ecc4715
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:583670a2dc3b6a6c71785c46d2b48839b2eb408553806db6b08185243d8e493c
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:107b5e82ef779f4eaa0b1bd82a04625175b02d422197bf931c7df208caf33167
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f8f945887d8936e1850be917493b1d00cafaf87cf8a0502f6d85da69053a4975
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:68cd9765fd583e6dc8a70c9194acb0877b48d4d01a51d48c3029869a31f90b07
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:c86e7db715da34b18b7cdaf50d542bdfb63bb56c82c5887e5c637a143781d1c5
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:ce5f69073449941eef01795b4d3ccbe738798c6023dcc98cacecc4532a2af19d
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b7aa2b987a6700a8e535078b674ea3d29ee4e0d4a9f09c79b017948166210e4a
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6b795fba692f5eca1865b2d582a41b91353699dc9c5cfb64c4d3301d111bb51a
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:cc3a78e6a4fec1fdf34cda41c0d70984cd50188dca0c9d9ac738871790c654c6
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:1551d4d97baa08fd82c1be2139a310c29d4a752509a8c0afe440d086ccdace55
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:c54d7a81e7cfbc3d63ecfe486e7e3995e1801a9f7ec2c28f72fd63dbeb8a14b0
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:42b07e9071ecc78c10004966b8b1793314634c18b943b6e337be649dce5a2a7e
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ff60f9d6b6822111e9a7f1d8e5f518bcaaf03f73a9707f8b33cf35396dd6443a
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2ff9e8d74e9f726d5d50c6d6e66ad6c2332fc0449d3ffdfe67c77f9d1eb4b078
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e87785b6b92cde13638d379a3be84cce748cfadba51d5c117260360765220467
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6c2d7fedbe6b181b018a47dfa0ec9a0d251053b953d0f3fb12230c328a80b4c0
   rule_id: RP1
   file: docker-essentials/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:9ca43ed6491d92770888ad04822bc35b98fe05072d47d1258296f7c3e49d36a5
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:fef43ce2cd27a6706bc93d02d6f0b4875a67764040dda17aa53cb12b26ebb5fe
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ad303b730246150e4457569fe34b2e674cc1d545871f5ce10c76ab8aa4300239
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:20b297e7986a9f3eacdf1b50f5b79d530751c29b34d77e896ef42280d0623663
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:22647c0a6fd93bd507590f893f6ac169d3abcab93da75c09b3af7483908db091
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d6e7f4317222819b6093e7dbd8febaba0d7805727c91ec4906ae7ead31d4c41f
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:fecb7c023229e44d9da6d6a43e697eb2c3b0a1c31bae4fc0d4b5e4ac6ac3922e
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:9ca0cc804606fbcb35575b0a457a98e49245669280726964873eb21082e86b42
   rule_id: RP1
   file: mcp-duckgo/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e67e5e1b5a90aacd6bc123ed236d78fd5aa79f53d0758e97b56daead696a6a15
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:10d9a99569ff4adcd56a32d0ec66e506a834321e25044f48f95182173eeefbf1
   rule_id: AS3
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ce75311567e3dd3433bc4fa38689a5afa3f31ddbd2067a5f3f3650df7cb9720c
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e1263feeba417259b448a7adef4631c8d5281bf74e0889013dd36f91f187053b
   rule_id: AS3
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f6deee3ea90ff189d08f26bdda263585acaa6b0f360e1a7f64cb8284241fc410
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:8d30f28e7e26656b07abfd3e1eea8f51349f5f06afed17d9f1abec5584333908
   rule_id: AS3
   file: ci-census/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:41a1be398d7bdbeadfcfa649ed0b21ea39dfb379700a2922102d5144b2be3bdc
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:685a6adc31023d7465d47caaf69504a158b7f50751cfdf52673d02eba82666b5
   rule_id: AS3
   file: ci-census/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b1905fe36598c5d590227f35b3231f7fc577e5128984eb7a482466b8df09820f
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:b862dae900028d89db39a9a70d90cd5889f347b81540e03bfe2c236221ba1a8c
   rule_id: AS3
   file: data-analyst/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:3106e98a3f3fe9c374e027b713807b10e3970c6097ab315257e31d7e2fe608d2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d814f1e89f66ef7d613e00520b709c539a9821e0c55a707ff6366880d51f763a
   rule_id: AS3
   file: data-analyst/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ff832fe7beee37c2106193aa00e17a5f03760cde7fed43b1d3f72481c2bdfaa2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e023cb367ff48f71f4b49f3bab97c8be29f2608e8b504111e21ea46d24e69c3d
   rule_id: AS3
   file: data-analyst/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:5e9e8cfc236b897d4cfa694d1e9ed32c58bca24afed800cac9d1f6b7e7339bbb
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a45e6489fafed0c7ef567758de512547fb59541a65351a9892812124e5f30e1c
   rule_id: AS3
   file: runtime-reliability/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:7a9e75c840549f9eff90150717ce0ec9dc4618328a29ec0c4ce75509792ab26a
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:b1dfe1d6229273b44096d7a3e75f2c13d7408c13dbca59b9e8c97ba23f904829
   rule_id: AS3
   file: runtime-reliability/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:4d55f02d42db78c7e43ff8396d687f185ac502e61e5fef50a3cbe38bee157054
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:44bc7ba38c5e0e01b840bd2a8688f2ed50eecd365558e418b5f7ec3885e86209
   rule_id: AS3
   file: runtime-reliability/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:720fb06d11ad92054282ae566a33f0e97479bf76ef7076401bfa0f4e19986b43
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:acdd9718c76f6fb63b00b2594294038da14637c33f74b29e55ec2e51df02cd38
   rule_id: AS3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:213f8c82032f28c128cf41558bdcc7fe1508237759154545ac469f77129ede35
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:7c71f906c7395b932cf11842149ae025da0a5c882b57e8b070023b081ddb847f
   rule_id: AR3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f1200b81a252bfb77a4480e72a850833b07f20bbf83ea316cca679eac1ffb6c1
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a712959e362a0d451f36c62e550a732980d19dc7c197dd228e588cc737b3b011
   rule_id: AR3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:1a0648c6ad7327b8f07a86db284bb395bb7a83f953a7df3a81897dcdb622909d
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:aaded6f2f48a354aa55dc66783eef978095de459993087f56d1bb941bfca50c7
   rule_id: E1
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:64abe99182c4cacf58fae4bd95693365ff48fee0d2ec039bef80927a55a7c361
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e75afabbfcd43f79eb4dafd768896618a737df185a756a12771fef040049427b
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:404cc887b50bfd12fd77de699e7ab21bea894244d366977b8170856006e6a1ab
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:862f9d989bf544739e311028606d3f2fbd744b8d36e525864ddec2397f3e49e5
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:66520068882f7a907eb0c55ac1ce025994aa5020c56ce4d7a1dda10969bc9c55
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:bd76ce3febaffa6b9c9a1eace9de593b0fbaf1882971de04122b363d4d079af9
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:8b83fe98bba02521cb6b19c589338b3a433eb87d6e5db7122c6e2590eb09bb4b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e2f6458bcfdb8cc2d6aeaeb4a1481e16aa2754f851aff3c5627e0990dda34db9
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:4a8bad0b43805fbe875b41732420d7f468a4b7b7f231bce33267d46dab3bee0b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:281142716243c7cad9428fa9c92ed87b0ed6daddadb14dd4fd3e8f1ac05997b7
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:a8e9c40acac36fd00673d1f7d7e2ee9e001068344ec0afedb1d8d9b5811ba8bd
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a71d0d201f0f6d7662fd0c75a08936c27303e4ae6f44bd4ed8a56e232b77e274
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:5c17d712fedc57fcb0eccd2c34ffc0d3d20fabaad17136966a91c246f610a985
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2086df3cc984c95b779897f9a45f7abee164da5c3892af3750cdffd3b9471145
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:051b3b17590efc0cd7ada05ce2d392008dd92e7cbbb1cf15c1d34475464416c8
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:3705dfbc1dcd7ea6557b1c253736f3996b8b5f0c3b9aa3c17880eb40d90b3a9a
   rule_id: E1
   file: api-dev/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:592a8c6cd8eec2fcdd7c3414d5d147893f56c24edb1a5c4fca77b6d2b3687ca3
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:08e0552097d944a60bd7b40142a40002e1c0790a07a76c2e46facc1208dedf6e
   rule_id: E1
   file: api-retry/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:6805cf465685e49c1444c20a3e156062758e6204cb7f0c35e0af480afbb4cec3
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:b7a20794b1f8a1a0b073219482fd1981cc79c4a15a939a28de019aac194c9108
   rule_id: E1
   file: api-retry/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b4a13f81b623443f8c47b892b31db21e5f5da0613e5ca3f6b923995514981954
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:51fe48b524fb33e6c2e2c426c2bd8222de990caaab817bfed74557500ee793f4
   rule_id: E1
   file: api-validation/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:c30ec88f0408b492016e64264c26bda24fed91326943fa898ba14d6e13430c38
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:f6e95a532136d8865b6f3316e4680c526d8e04d7784d7b2af2c44ab4942c4742
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:790608e10f5baa0f6551b0857fec52ee7714132ecc0c29558d01db5b12355cae
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:ebf5960637c4083139a67882c521dc8e169adbe214f2ed807b5cfc2df4d841ef
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:6bb884b7869bc1351a47028b65ef02f9daa6ffe00fa0088914bc415f7c9198e9
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e8b7120e4f76ff2b1fc99f12bdadb9b82f53d8f1e89c1df21659242957fca275
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:eb1427c2b40b460f8deafc4cd682bfb316af8434dd303aae72d03a520e345aec
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:620774e62f1d4728034ac7e59e5ff3a768fa28f9c53401ffe39d693afff2f48c
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:1169f6e2538ae651b353108c5f879b5600c77f005acb9b149c2a5455928af679
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e86a6599bc059216631d89093c38b497252283112ceb80d8e65dd04cccf83b6a
   rule_id: E1
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:d5681c82986b7d62765e3587e92f5a3a999123a43076b56f8da8d8889534c3d2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:5b79d0a2db86411de104a8f544904f4647fcd6d2c53e120cc2dd09c391420e5e
   rule_id: E3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:2b69fc97561da968c09e26535ef4d08ec160ec1ffad9a2d75a1c83b27a990ba0
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:8e52657597fb7cc4be1d039b63d5dc36260e73313e8c7de7af30457b26898548
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:7af18d9796b728ad3d0e7f6df2abb87fc5aa8cd7b4ca5d2b511f7943c0483e3b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:fb7cbd44e82024df3e8fa014cb86d3366524b658232a9ff6aad4a93178a0cfe6
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:a5fa23daade67126f6bb73785d8eb8f96c0d568fb4b9f46eae05926e6c8b8d2f
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6372952a5676a2fab530d64c00fbd58075b0a3d4edcd3c582eee9651c1f4f69a
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:3b5919f9da96cfa7f2a2ad30881ceed06adec5cfadb69739f46f7a28253c0063
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:fd75f0f95ec142d617e4dfd79eaa9f845ce2a63d63a46ea88e16a7b09799fc8d
   rule_id: E1
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:a4356f9acdf8bc3e5323dc9ab0a68025fdb84791a80791ed192fd1d2ef672f2a
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:11d0ed334aa3840019fe4c7f375ff44362c6260f6909dd124a97b1cc8bf60292
   rule_id: E1
   file: runtime-reliability/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:8bd90fbf35cc38d44b121cb7a3df1665416c827e0669b32f4cbc240409e38ffd
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a3c1f46cf0fc1a1cc67b5d5bcb721ba217cea2d9cb14cb2bcb370541119cbd70
   rule_id: E1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:50e2813f42ac5f0b082b8f1c435def1f204215285428fb9d76237a2e51f54bc1
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a82b3f7636295b6b56bf19046df7cb4b831d0e8ea37c92439b8354c21f5c1c17
   rule_id: E1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:2f7198f3e6652e61a79068483af341c1c6c52ceac589308096ca39f29ebf1c11
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:aca35acb009aa82ac01af7134ce07ac1ce7da7854ef8ceca7c00e8052cf729c7
   rule_id: E1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:bb37a1d2b7a96c2ae026af8d76837d8367ad860dac7bedf966f08103138aa819
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:26bdaee77c058b631f28a15128718da02bca908012ea7bac408e4e0544c9e680
   rule_id: EA2
   file: code-verify/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:fce970b2ff22b504f89405d06597294131a75b3d4445f83cf54315aeb871ed97
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2a7941e4186d9a7b0e101e97ff3cb1b7f31b69209badbfcf5e45c7e8c0572d35
   rule_id: MP3
   file: codebuddy-code/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:a545d210c960f657bc2862cf0da86b0442f969b8eb7a06cc1ef1879057097fa8
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:9cc65f69872dba60344ff15a1d7a4788162834b9a2bb37e3505481586f4fd74a
   rule_id: MP3
   file: working-memory/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f0b31a7e374c5aa6c81084fec9b30e9169afef340602caeebc19e8741289c4e1
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:5add5be446397edcd3ef3deffe72a64e97a6624ded95052210b3bcc5fdcb2c97
   rule_id: OH3
   file: cron-orchestrator/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:7322757c1513229ced7f6e876fc577dba852b94d6014c5e436eb1724ce60028c
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:0cc38369aeffd22d47316b41d49ba3acc58c823a1c73578633830bd0613e2d5b
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e904c296afcce2db49148552a0cdc895a66b763dfd7e81f6d6aa475689b84242
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:cad7cc44cace31733e075ee3b08413d4c85decebbddc054ab3a9efad8e2c8461
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:4b1e3e125d567a51c5e50ff7d420bdc8054b3ee989407c2ff8c2f19275ec204b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:9d219c5ce48d6a2de79b8d4288bf8a5f4e651c3b9dcc7d1d9481027f091a2a8d
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:12a2b8ec945d3b99270320ce95741bf4efb7aad2d5d2ef63075482bb2bebc097
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:7451b616f17c3db1f5be22da2d5c6a86729e85d42dbf205d519914262afbb9f3
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:66fe2530df87f1efcb83b2e498b0f8cb9187a87a43ae9595c76a41f08a73a0c6
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:ae6894405cc2ab13b4e6006778d90ca9f40241a02454c01e6d626b723ef5b667
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e679375fa09627ef742ae04694bc2272c44171137492722217b96237b478465b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:92253aa11eec2d000d80d1148bda0a0cb1f262ef8aa49b7bda57e5bfc13d1346
   rule_id: PE3
   file: accountability/daily-accountability-check.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b890683d81040b4bfdfae72f9adc231054235865abe18be2dfbb82bb37e87e19
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6e581de5e594f2a2e20e972198540d93fbcd43e8ece9b1ac906c404637f98395
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e7f770d2f92cebb601a3d95ca3745b330e1c5a82d000a60c1280711e4a5c1363
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:5732e16173ffa7ce5b688affbeda8b1f76816101c2a01acdd9e90f0ec7fae25f
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:392a6d20b88f429fa8f2a62df47d9541821c0f8f7d4cb88179f17162ab386eb4
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a36914ed6b0cae4adc3a0291eb7a2f87dac87a482851a25f880a46e479be8b2d
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:3385a6a82e2da0fbc0e015ec4e9d9fdb2a072b9cfee09bdb693c546641f6f96d
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:b8ca82900b3e02ff9bf61a50ba1bed0dceeced25838ba72bcc9cf6ed10b35cc0
   rule_id: PE3
   file: bounty-scanner/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:83ce44e7157009e60fa48615bb22d5923d0e6631c22d4d736010c5b4a6dd1323
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:b966d2a71bc8d2cb44d4c462c51eb166dc2a9e3f6c2f6a21700144ee6557e2fc
   rule_id: PE3
   file: bounty-verifier/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:68853200651191ef97241aa8a8d2ada2e9a6ea637ed1e09f0428021e78c1effa
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:15ecaeeb3d6b8d8e78ccf2e06459994f82c225b81dd3cd19acd87c666e5c1abc
   rule_id: PE2
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:20669e1e1db99a6fe3be8ae76aa38e3bf4f94e680a43c370c1176e704fab2e0b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:ddb6fb37dbd1f06025985b86999e61ad464d757e62cc2be27346f84652c71e04
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:26bebe1b2681630f579b3a66bac7c8d957b70b0fb9cef46d6ede8fff94119a1b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:8c527b41dffe41c90c8db535a5aeef62c1a846fe6471ea43743c719c33fd76e6
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:c420f9c412e934d605f301c7519d593abd9b5b222fb344c9bcd57c9a24f5b0b6
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6213b1ff8198f978ebf4a68cf4d6e4650b594fb87871ce5a639e5809657dae14
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b3ad6780508ec4510cf604fa2b267fdc03debbd1ff78455d1d8facb9c44f5404
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:aeea3044869473b0cf0681dc4be64bef0cdb84eb9b44466671bc80fd9f57f47b
   rule_id: PE3
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b4dc171cd17b53f065a34803da23718b712391a48f4a6b4e45fe4d8758e360ff
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d2cce3c35cf1348c886bcba0aeb24374f573c42ef3e8e7ba53480aece291af40
   rule_id: PE1
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:fa084937a5df46cadf674ebe7a6c11790b6c4ac2acd96b01687388ec4c954add
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:fe21c5c067a8163ea0bb5fc7b2a190ad4a1e92684984be4d8fb612025a7a9fa2
   rule_id: PE2
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:c889832276c60be91120ca8cb69f18d8a39a21c24033226d0b4c50191091e34e
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:7831b8cba5e303d12ff52a067ffdce739992247cd5bf3e15e7362852dc78b7a8
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:63abf4af0f53e20cc78e88c97d52046f3dbb987ed660a960f99d1cfd1c624e5d
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:ac8feb5f7ea031ecb33efb75240a784d6f04dd81d7b236c303ae90b1c7f22735
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:d0b4f8c3adb4c93b0f195613c8fdce96e859fd858e3a592dddbba5e4bc9fbae2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:dfc8ffed8e1478215ac02e3ea19f00755d1c1e3eeca889564e3732ce3215f9b8
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:60ed47d98646cc3715420275619cb2bb03d2f9be7a8f6ae690b1129abeba77bc
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e5b5708a964a706aab4d0b778fa3d0092d1ea93871f0e50ce16e0fce9e236b64
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:3688889f129248b8dcbd4429865f0b5cadaa2856377826d4ed7cca73171590d2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6547f5bef7c24d5f1d5ee3658312a12854200d7ea015b360158643e0ad0e5436
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e022f7177e56b2e77335679b6bd7279725968eda1492e735bb01c4ba2e79a39f
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:711300491c903fb0b5fe3e7df42995444b537b83b309524c766875d043855d67
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:836f96395a4fc3767b7b649012dd3b2f208615ecd816098daaf588629111880b
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6c48757562140306d08eafef6789556989e2f19c3d5cc2768a7f04175839f635
   rule_id: PE3
   file: github-setup/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:37ea3457a3aa8053dd9441c40387fe833910d01867340b3ba31a0655b1304598
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:3356d3eb1ae8acbc8576934bff13b56a5bcdcda39035d0abae092d5581c97323
   rule_id: PE3
   file: pr-monitor/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:1570b7e118b0d06062732d25f5ccb0a0f7d6a0ca36cb8b34405089b7bd0ef600
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:375e24d13a0df62a7f135b23de956938d3428696ccf2304fb6d91c2f621d389d
   rule_id: PE2
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b0f3d8eae4454552de7f231b9b327e7226d31249c50ebd1ad0e30d603d1772e4
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:f97d420b29d73fe6b71e863d8356808ad815cf457392269aeb49b4ba2452361c
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f9aeaf2c4063cf7274578440e7ce4e4fb3c27a874ea89fd854fe74adeb1b8b0c
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:0b4b1907f3ebb57812543b1c158ec345fbd433cf80b091bfc66d9d17002b90da
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:9af80b1dde86a16cf49df5c22533fa06063a733ad58b80f2bebdce4ff5832790
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:3ee80200752b1c6569f181ebfed48aaf36146eea3ea23546ce62159db79327b0
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ce27c9eb7c67cfffd26356de7354e980817ebe86eae68ad74db7afe3b5f70438
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2c3351e29bc6ca66152e507c25bffedbabea077cf17acd1baacb8a14964300f5
   rule_id: PE3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:e3976921d90aaa6cb4d39af8c7f19d5ac0a8f09dc82e83ef0cba5f7591e26c65
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:938835867f44a470e80f34acd0cf359c0f97822b7f84f32b9979f2a0f39c7512
   rule_id: PE3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:cba8ddf629a28589c8e0d75124222ffd0526a1aace982a4652acaf4f671239c9
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d62aba0565addde705837f8fec9aea5c482444d2e36ee8c2ce85554bb15e4c04
   rule_id: PE3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:b463c25aec960ab8b818c9070f05a4ce2df1aacb1f69035abd6be310d1251418
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:7190c4c5fa21a2b212eaafa6aba9bed62d48b55f0588007c21ac3a0d61a05942
   rule_id: PE3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:76d9610586b47287d4e593a599ff27bd30c86c0425b1fbc3c33314b24b50d450
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:f8c065e28409cb028ecf27cd0ef992dd09517fc99eb04cc99a7432defe75520f
   rule_id: PE3
   file: youtube-analyzer/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:35f25cb9239c589bc730a9fde91a6bbcc36c446a3895e2ffcb68c7882129abfb
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:980514e2afb9127f41faa511daf534ba71dc1310e0d73ea822615b89601a2cfd
   rule_id: PE3
   file: youtube-analyzer/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:2036a4a97a974d211388267230c3fdce79542a7a38a6835c6c70f3ef0d08922e
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:dd35639bca111ecfb24ac12ad24eae0033cbe0ccf297fe8318e47e5cb6a393ab
   rule_id: RA2
   file: codebuddy-code/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:86b45c4ef412aebdcceae04198eac8073aa90770dd986c43ae990c6476900df5
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a9fe95d6fc550cadbb26abb8faa0e17f2d404711887d1554bb50b4c96742b327
   rule_id: RA2
   file: working-memory/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:417693b9450a2cd6b99047fd4939666717e9ec4499e899c90781edaeffa806ff
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2dec4843b380d01566463889a1c363d3e47dc646b5b62b8136266bbadb2840d7
   rule_id: SC2
   file: credential-recovery/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:0433be17b4050abb6f26fb0fe94e341bc399786b1b9f0bb09a77710da78c2836
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d653b2996abd66dc3ffe1cbc2ba9dcf485d82774b1a363770355ab39ce78387e
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:5a74e6647f53c90a037c452cbc3260e39d80e396ea7dddb3d7bb194904d378c5
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:62d33dbdf0248e84be0580777ecf93ab1e5f617dba8f3efa8b7f8b7cf0ed20b4
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:67c0e7c37a28a2da04fd0e155570a002fb8def9e36632df519ddd9ce28d15852
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:117cf3b54d79c1fa0ddeb87bdb2b534a7f35def2d7cc4a80e358f52c82b9bdc3
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:d6d37de0c65318eca9afe9ccbe56898725f319c882ce3179a926a56b9f512f13
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:4cd96d4055e17d9e66c92ebd8294832b4da005b1b09e06b41bdd28543c0f57ac
   rule_id: SC2
   file: repo-monitor/repo-monitor-enhanced.js
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:88754928b56c64049395bf6d41b000f1bf060676f827d3819d3f95fd4a250322
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:79e775f6be5782ef6dac76724e028318afb8e59b67a2e2f5b8ae914838d2d16f
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:c24098d151d279e82906081afd252fd75a1964b923e8bdc343de1ec3b2a4aee1
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:573336fc2411ac567571affdda237d9fec4c4a3721b0a9ac9df945abebb1ce5d
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:23d933a1f2bcad8433b889925da1814cf5b1698abb9eb1dfe2ca5d7e621650db
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:47cfab8e2544cd7060e866a2ac5c3acf538c9f663505e9fc4238c902f7a33567
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:4d68d568d74ffd220c4da2cd87c6ce4c091985c8ba0d919e16e4c3a4f6477366
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a32264a2bdca32a119184f001d73dce7c4d60b4fb131b78da1f3ef94be8026cd
   rule_id: TM1
   file: code-verify/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:cd4cd57476e6d609fc8a73784a530ac4ad24a5a816183546fbd7acdbef39d578
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:bcb711e4e5aaeefc76db4ee2a2a8dbd2585c44bb4aeb33e2df5b2a5522e3c21a
+  rule_id: TM1
+  file: disk-prune-that-actually-frees/SKILL.md
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:b2b01d1d47d8cddd956994d3298c755018f82e60db17c14fd7ca5987a5d8d6fe
   rule_id: TM1
   file: external-pr-rebase-and-maintenance/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:52692c8215a6aacea6d1376117291545f147be778e322fb1af6dd94325db7c88
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:2fc1b803ba8ace1d4428daa45804fd1d9646737d554a5d5a8215dd8a761245c8
   rule_id: TM1
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:f56752b03898cfe019b8fc0ea09ad02dd583183f8a902e8fc7bcd3dae6fea8ad
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:dd967d039d3a2177c10776c9a52270d1cf32a586903a209eef75474d8fb51089
   rule_id: TM1
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:deaaafc6341147085d5dff17d890caf7ada222b5bad3382629cb4bfd588c989a
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e81651b32d08b3d7960c89a1c77dbaef2aff1e815402c2ded2e79da33b7b7874
   rule_id: TM3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ba3f7a8ce21f88b8e3cefe58bc7bf8197855f41af9fa34a1b69bf7fede42877e
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e5fa603c6ebf43e2fb6f9d488ec700f1d735466468f41a67372bf900373d2c30
   rule_id: TM3
   file: security-audit/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:461543937f2fcd26193ac89a558494540bcb06c20e445723b24a1bfe8a7aa669
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:0805c2484ab57bf254e872ffa892b17c46f11a76b993991152c51316a5351efd
   rule_id: TM3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:645c6e3895107caf9a5c36d798d28b4fd20e759d843013b3c0985c049fd5920c
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:9b9bf1224c88a759844e60a6fd7df8969549389134dc055768c4b4c19493bfb7
   rule_id: TM3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:413f01f02cb35f3cf7cb2c9086f9a48de7621b1b3c4d67d470806b121a293acd
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:e893ca483c6b7b2eb5d84f3d58cad3daa447d828e2a9378d41bcc6e778b64865
   rule_id: TM3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:7c401eeb1cd25a0c6cd82ac69b3f71276f49ddc312569cc9c6e6c6ddf7452f72
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:6bdd1fd8ea12c935b81c583340e33d441a9f7869ec60e702cc50c08cca45689f
   rule_id: TM3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:ac77af81d4fce78eabc7df103af536507fcfa46ddea46d2be21cdc4fa7a08797
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:285e9c17c0a2332163fe6f0c2b0644077951f02ab8cba479fcfbb0dbdac3454d
   rule_id: TM3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:1b1ce217d4646d47f6c078edcb466eff7efee75e447044e5fc95259045ff6de2
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:a134e75e3afff9217129126f2ccde188b6d4fef59fb2ab83410a6242caa99082
   rule_id: TM3
   file: security-sentinel/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:06d50ef7ec5128bc27b1fc6d95419fe54123969ba31fb42ee5fce42aff6211f8
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:7e78d5d6c3e2cb98ace9fa9a7315564a3f0d07672e3668ec9219dbc19d73fbfd
   rule_id: TM1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:fc506081530c502ee5f5ac4e05cb2688dc1c9ccf1c36699c7bf0eeb5be993b85
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:537688aec37190276dcfcdd6714f86bc60389e81f1813aecc36187df559d6e39
   rule_id: TM1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:5641747a9ebbacd4a8940418b02757f2f10020ce804e004011eebd04026826db
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:cc9e8b9214dee5173b6054c4f23e9fafff6dd66674d57ae63d343955a7eb29d7
   rule_id: TM1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
-- hash: sha256:59453571315f30aeb051a260bb3d8d4303789fe70f2837ccd5c5ff181d21a7e7
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:d821de266ce4a460a1a2c1877d25dba2a0dfaa624f09315ed90e33cf8009205e
   rule_id: TM1
   file: youtube-api-skill/SKILL.md
-  reason: Reviewed 2026-11-13; same rule+file as the 2.13.2 baseline, hash re-issued for 2.13.4
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
+- hash: sha256:8facbba5388ab015f2e48aaec57eecbc8a50bcc47e12b54ab22c63ac42dd5aca
+  rule_id: YR1
+  file: verification-sweep/SKILL.md
+  reason: Regenerated 2026-11-24 at 2.13.1; same rule+file set as the 2.13.4 baseline (125 to 127, TM1 and YR1 now report as fingerprints), reviewed and accepted
