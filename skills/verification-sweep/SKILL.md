@@ -26,6 +26,31 @@ that same day** - after the check that signed them off. Re-probing all six
 "local only" claims showed **2 of 6 still 404 and 4 were live**. The claim
 was 33% true and 100% cited.
 
+
+## Trap rows from 2026-11-24: a claim certified against the wrong artefact
+
+Both defects below passed a full test suite and a "fixed" status read. Each was
+found by calling the module at the boundary, not by reading a diff.
+
+| the claim | what was actually true | the probe that would have caught it |
+|---|---|---|
+| `bytes_human` renders sizes correctly (140 tests green) | `1023.9999 -> "1024.0 B"` — a number that contradicts its own unit; `inf` raised `OverflowError` **inside a logging call** | one loop over `(1023.9999, 1048575.99, 0, inf)` |
+| `nullable` is supported because `Field.allow_none` exists | `allow_none` was a read-only property only `Any` overrode; `fields.String(allow_none=True)` raised `TypeError`, and `required=False, default=None` **rejected every document** | construct one nullable field, validate `{}` and `{"x": None}` |
+| a schema imported from JSON Schema enforces what it said | `from_json_schema` **stripped `"null"`** from `["string","null"]` and built a non-nullable field — narrower than the contract it imported | import a union-with-null, validate `None` |
+| the exporter describes the validator | exporter emitted no nullability while the validator accepted nulls (fixed 0.7.4: emits `"nullable": true`) | round-trip `import(export(s))` |
+
+**The rule these share:** a claim is certified against an **artefact**, and when
+the artefact is "the suite is green" you have re-checked the cases the suite
+names. Certify against the behaviour the claim is about — one call per claim,
+at the boundary or the sentinel.
+
+**Second rule: `pytest` missing from the default interpreter is not "tests
+passed".** Both suites here report green only when run with an interpreter that
+has pytest (`/home/node/venvs/mx-3.12/bin/python -m pytest -q` ->
+140 passed / 16 skipped and 234 passed / 4 skipped). `python3 -m pytest` in this
+container answers `No module named pytest`; a verification line that omits the
+interpreter is indistinguishable from one that skipped the suite.
+
 ## Procedure
 
 ### 1. Build the family list from the documents, not from memory

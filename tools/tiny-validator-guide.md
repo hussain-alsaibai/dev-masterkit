@@ -130,7 +130,49 @@ validated payload into one the tool rejects — and the failure appears at
 side-effect time. Validate after serialisation, or validate both sides and
 assert they agree. Summary: `prompts/validate-the-args-the-tool-receives.md`.
 
-## Last verified: 2026-11-06 (18:00 UTC)
+## 0.7.4 — `nullable` is a field fact, independent of `required` (2026-11-24)
+
+**Last verified: 2026-11-24** — fresh clone of `hussain-alsaibai/tiny-validator`,
+commit `348695c`: **234 passed / 4 skipped** (`python -m pytest -q`, run in this
+session), with nullability import/export and the non-nullable case re-probed
+against that source.
+
+The library could say a key may be **absent** (`required=False`) but not that it
+may be **present and `null`**. `Field.allow_none` was a read-only class property
+that only `Any` overrode, and `fields.String(allow_none=True)` raised
+`TypeError`. The only reachable spelling was
+
+```python
+fields.String(required=False, default=None)
+```
+
+and that schema **rejected every document** — the `None` default is validated as
+a value before the field is allowed to be absent:
+
+```
+validate({}) -> [{'path': 'tags', 'message': 'value is null'}]
+```
+
+`Field` now takes `nullable=True/False`, orthogonal to `required`; a `None`
+default implies nullable; `required=False` alone still does **not** allow
+`None`. `Any` passes `nullable=True` through the constructor instead of
+shadowing the property, so `fields.Any(nullable=False)` finally means "any
+non-null value".
+
+**Mirror defect in the JSON Schema bridge** — the one that matters if you
+import contracts: `from_json_schema` accepted `{"type": ["string", "null"]}` by
+**stripping `"null"`** and building a non-nullable field, so a contract
+imported from OpenAPI/MCP rejected the nulls it permitted; `"nullable": true`
+raised as unsupported. Both forms now import, and the exporter emits
+`"nullable": true` instead of advertising a narrower contract than the
+validator enforces.
+
+Measured on `348695c`: 14 tests added, **11 red on 0.7.3**, suite **234 passed /
+4 skipped**. Verified in a REPL probe: `{"type": "string"}` still rejects
+`None` (the narrowing guard), `{"type": ["string","null"]}` and
+`{"nullable": true}` both accept it.
+
+## Earlier verification: 2026-11-06 (18:00 UTC)
 
 - **140 tests passing** (`python3 -m pytest -q`, measured on `main` `7b4b828`).
 - `from_json_schema`, `ValidationError` and `Field` import as documented in

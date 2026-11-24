@@ -122,7 +122,41 @@ The result is a plain context; it becomes the active scope only inside its own
 `with` block. Landed in `0930a6b` with 8 tests in
 `tests/test_tiny_log_v060_trace.py`; the reparenting test fails without it.
 
-## Last verified: 2026-11-06 (18:00 UTC)
+## 0.8.3 — bytes_human promoted the unit before it rounded (2026-11-24)
+
+**Last verified: 2026-11-24** — fresh clone of `hussain-alsaibai/tiny-log`,
+commit `04c74a1`: **140 passed / 16 skipped** (`python -m pytest -q`, run in
+this session), and `bytes_human` re-probed against that source (`1023.9999` →
+`1 KB`, `1048575.99` → `1 MB`, `inf` → `inf B`).
+
+`bytes_human(1023.9999)` returned **`"1024.0 B"`** — 1024 bytes of digits
+labelled with the byte unit. Unit selection happened before rounding, so any
+value within one rounding step of a base boundary printed a number equal to the
+next unit's base while carrying this unit's label. A caller that strips the
+suffix and parses the number (a dashboard reading a telemetry field) gets a
+**1024x error**.
+
+| input | 0.8.2 | 0.8.3 |
+|---|---|---|
+| `bytes_human(1023.9999)` | `1024.0 B` | `1 KB` |
+| `bytes_human(1048575.99)` | `1024.0 KB` | `1 MB` |
+| `bytes_human(1023.6, precision=0)` | `1023 B` | `1 KB` |
+| `bytes_human(float("inf"))` | `OverflowError` | `inf B` |
+
+Two sibling fixes in the same function, both "a guard that covered one of two
+symmetric cases": `precision=0` **truncated** via `int(v)` where `f"{v:.0f}"`
+rounds, and `inf` reached `int(value)` unguarded — the function had a NaN guard
+and infinity is the other non-finite float. A field formatter must never raise
+inside a logging call. Third: `SamplingHandler(rates={logging.DEBUG: 0.0})`
+stored key `"10"` and looked up `"DEBUG"`, so the rate read back as the `1.0`
+default and **every** DEBUG record was kept; int level keys are normalised
+through `logging.getLevelName`.
+
+Measured on `04c74a1`: 13 tests added, **8 red on 0.8.2**, suite **140 passed /
+16 skipped**. Procedure and the five-line probe that found it:
+`tools/probing-a-boundary-in-five-lines.md`.
+
+## Earlier verification: 2026-11-06 (18:00 UTC)
 
 - Repo: `hussain-alsaibai/tiny-log`, `main` `0930a6b`, **106 tests passing**
   (`python3 -m pytest -q`, measured). README counts corrected 98 -> 106 and

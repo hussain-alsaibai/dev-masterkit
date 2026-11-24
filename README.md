@@ -3,6 +3,44 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-24 17:20Z) — two facts computed separately that no longer agree
+
+Two releases of our own libraries, both audited at the boundary before the
+suite was believed. No upstream PR today.
+
+- **`tiny-log` 0.8.3 (`04c74a1`)** — `bytes_human(1023.9999)` returned **`"1024.0 B"`**: the unit
+  was chosen *before* the value was rounded, so anything within one rounding step of a base
+  boundary printed the next unit's base digits under this unit's label — a **1024x** error for a
+  caller that parses the number, which is what a dashboard does with a telemetry field. Also:
+  `precision=0` truncated via `int(v)` where `f"{v:.0f}"` rounds; `inf` reached `int(value)`
+  unguarded and raised `OverflowError` **inside a logging call**; and
+  `SamplingHandler({logging.DEBUG: 0.0})` stored key `"10"`, looked up `"DEBUG"`, read the rate
+  back as the `1.0` default and kept **every** DEBUG record. Measured: **140 passed / 16 skipped**,
+  13 tests added, 8 red on 0.8.2.
+- **`tiny-validator` 0.7.4 (`348695c`)** — `nullable` had no API. `Field.allow_none` was a
+  read-only property only `Any` overrode, so the only reachable spelling was
+  `required=False, default=None`, and that schema **rejected every document** (the `None` default
+  is validated before the field may be absent). `nullable` is now a constructor fact, orthogonal
+  to `required`. **Mirror defect:** `from_json_schema` accepted `["string","null"]` by *stripping*
+  `"null"`, so an imported OpenAPI/MCP contract rejected the nulls it permitted; both spellings
+  import now and the exporter emits `"nullable": true`. Measured: **234 passed / 4 skipped**,
+  11 of 14 new tests red on 0.7.3.
+- **The reusable lesson: grep for agreement invariants, not bug names.** `value↔unit`,
+  `required↔nullable`, `export↔import`, `cache key↔lookup key`, `count↔population`,
+  `pagination↔total_count`. Both defects today were **plausible-looking answers** that survived a
+  green suite because every test sampled the centre of its domain. The five-line REPL probe found
+  the unit bug in under a minute while 140 tests passed.
+- New: `prompts/a-unit-chosen-before-rounding-contradicts-its-number.md`,
+  `prompts/nullable-is-a-field-fact-not-a-missing-value.md`,
+  `prompts/two-computed-separately-things-must-agree.md`,
+  `tools/probing-a-boundary-in-five-lines.md`. **Amended:** `tools/tiny-log-guide.md` and
+  `tools/tiny-validator-guide.md` (`Last verified` 2026-11-06 → **2026-11-24**, new release
+  sections); `skills/verification-sweep/` (four "certified against the wrong artefact" trap rows).
+- **Stats:** Prompts **157 → 158**. Tool Guides **158 → 159**. Skills **45 loadable / 50 dirs**
+  (unchanged; one extended). Daily Updates **151 → 152**. All re-derived from the tree with `ls`.
+- **Nothing removed.** Last verified 2026-11-24 17:20Z (both suites run from fresh clones in this
+  session; `check_structure.py` 45/45 green).
+
 ### 🆕 Latest additions (2026-11-23 18:00Z) — a skip that was really an abort
 
 Two releases and one prompt, both ships measured here rather than read from a
