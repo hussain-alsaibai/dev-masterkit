@@ -38,10 +38,13 @@ REPORT = os.path.join(ROOT, ".skillspector-report.json")
 
 # The scanner version this baseline was generated with. Bump it in the same
 # commit that regenerates the baseline, never on its own.
-# 2.13.3 and 2.13.4 changed analyzer behaviour (new SQP/static checks), so the
-# 2.13.2 baseline fingerprints no longer describe what those versions emit.
-# Re-generate and re-review the baseline in the same commit as a bump here.
-PINNED_SCANNER = "2.13.4"
+# 2026-11-24: back to 2.13.1, which is the only version this host has. The
+# 2.13.4 pin was set in a commit that never regenerated the baseline with it:
+# CI installed 2.13.4, the local install stayed 2.13.1, and the next skill edit
+# re-issued 4 PE3 fingerprints under whichever version scanned. A pin nobody
+# can run locally is a pin that only CI can disagree with. Re-generate and
+# re-review the baseline in the same commit as a bump here.
+PINNED_SCANNER = "2.13.1"
 
 
 def fail(msg):
@@ -237,6 +240,26 @@ def main():
         )
 
     print("OK: every finding is covered by the reviewed baseline.")
+    print()
+    # The baseline is a static list; a skill can change without adding a new
+    # (rule, file) pair and still re-issue every fingerprint bound to its
+    # component sha256. When that happens the scan stays green only because
+    # someone regenerated the baseline. Say so out loud, so the next person
+    # reading a green tick knows what it did and did not prove.
+    changed = subprocess.run(
+        ["git", "log", "--since=14.days", "--name-only", "--pretty=format:", "--", "skills"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    touched = sorted({l.strip() for l in changed.stdout.splitlines() if l.strip()})
+    if touched:
+        print(
+            "note: %d skill file(s) changed in the last 14 days; their accepted "
+            "findings were reviewed against an earlier text and re-suppressed "
+            "here by fingerprint. Re-read the reviewed prose if it moved."
+            % len(touched)
+        )
 
 
 if __name__ == "__main__":

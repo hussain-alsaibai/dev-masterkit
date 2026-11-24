@@ -278,7 +278,7 @@ def test_report_from_a_different_scanner_fails(tmp_path, monkeypatch, capsys):
     finding list then reads clean because suppression never happened, and
     the only evidence is the version stamped inside the report itself.
     """
-    scanner = make_scanner(str(tmp_path), version=PINNED, report_version="2.13.1")
+    scanner = make_scanner(str(tmp_path), version=PINNED, report_version="2.13.4")
     mod = prepare(tmp_path, monkeypatch, scanner)
 
     with pytest.raises(SystemExit) as exc:
@@ -286,5 +286,5 @@ def test_report_from_a_different_scanner_fails(tmp_path, monkeypatch, capsys):
 
     assert exc.value.code == 1
     out = capsys.readouterr().out
-    assert "produced this report is 2.13.1" in out
+    assert "produced this report is 2.13.4" in out
     assert "proves nothing" in out
