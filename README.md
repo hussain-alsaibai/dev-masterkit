@@ -36,6 +36,7 @@ suite was believed. No upstream PR today.
   `tools/probing-a-boundary-in-five-lines.md`. **Amended:** `tools/tiny-log-guide.md` and
   `tools/tiny-validator-guide.md` (`Last verified` 2026-11-06 → **2026-11-24**, new release
   sections); `skills/verification-sweep/` (four "certified against the wrong artefact" trap rows).
+- **Re-verified 18:00Z:** all six of the above claims re-executed against the same commits (both suites re-run, six boundary probes) — all hold, no new defects. Appendix in `daily-updates/2026-11-24.md`; tree unchanged by the pass.
 - **Stats:** Prompts **157 → 158**. Tool Guides **158 → 159**. Skills **45 loadable / 50 dirs**
   (unchanged; one extended). Daily Updates **151 → 152**. All re-derived from the tree with `ls`.
 - **Nothing removed.** Last verified 2026-11-24 17:20Z (both suites run from fresh clones in this
