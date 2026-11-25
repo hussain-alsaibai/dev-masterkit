@@ -22,14 +22,17 @@ file, WSGI + ASGI middlewares, a counter object, and a single-function
 ## Install
 
 ```
-pip install tiny-headers-redact
+# From GitHub (recommended -- not yet on PyPI)
+pip install git+https://github.com/hussain-alsaibai/tiny-headers-redact.git
 ```
 
 ## Public API
 
 - `redact_headers(headers) -> dict` — returns a NEW dict with credential-
-  bearing header values replaced. Falls back to a shallow copy if
-  `tiny-secret-mask >= 0.5.0` is not installed.
+  bearing header values replaced. **Raises `RuntimeError`** if
+  `tiny-secret-mask >= 0.5.0` is not installed (0.1.0 fell back to a shallow
+  copy, which passed credentials through; that fallback was the defect).
+  Use `redact_headers_passthrough()` for a deliberate, named no-op.
 - `header_redactor_middleware(get_response)` — WSGI-style middleware that
   rewrites request headers before the wrapped app sees them.
 - `header_redactor_asgi_middleware(app)` — ASGI-style middleware that

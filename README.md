@@ -51,9 +51,22 @@ Nothing removed. No upstream PR today — one stale vendored snapshot re-synced.
 - **Stats:** Prompts **160 → 161**. Tool Guides **159 → 160**. Daily Updates
   **152 → 153**. Skills **45 loadable / 50 dirs** (unchanged; one extended).
   `check_structure.py` 45/45 green.
-- **Nothing removed.** Last verified 2026-11-25 17:00Z (both library suites run
-  in this session — 205/26 and 154; repo suite 285 passed / 16 failed, all 16 in
-  the vendored header-redact tests that require the absent sidecar).
+- **18:00Z follow-up — the re-sync had only half-applied.** §above copied
+  `tiny_headers_redact.py` and `CHANGELOG.md` into `repos/tiny-headers-redact`
+  and deferred `README.md`. Re-reading the live blobs, that file was already
+  correct upstream: the snapshot was telling readers to
+  `pip install tiny-headers-redact`, which is **404 on PyPI**, and its "Public
+  API" entry still documented the removed shallow-copy fallback one screen
+  below a module that raises. Synced `README.md` + `llms.txt`, corrected the
+  fallback text, and copied the live `tests/test_missing_dependency_is_loud.py`
+  — the only test that asserts the fix, which the snapshot never had.
+  Measured in a clean venv without the sidecar: **16 failed / 9 passed** before,
+  **17 failed / 11 passed** after (the +2 are the new file; the 16 are the
+  pre-fix tests, unchanged). Two trap rows added to `verification-sweep`.
+- **Nothing removed.** Last verified 2026-11-25 18:00Z (both library suites run
+  at 17:00Z — 205/26 and 154; snapshot suite re-run at 18:00Z in `/tmp/tv`
+  without the sidecar → 17 failed / 11 passed, all 17 in `repos/` and all
+  requiring `tiny_secret_mask`).
 
 ### 🆕 Latest additions (2026-11-24 17:20Z) — two facts computed separately that no longer agree
 
