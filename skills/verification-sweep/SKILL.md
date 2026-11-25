@@ -51,6 +51,59 @@ has pytest (`/home/node/venvs/mx-3.12/bin/python -m pytest -q` ->
 container answers `No module named pytest`; a verification line that omits the
 interpreter is indistinguishable from one that skipped the suite.
 
+## Trap rows from 2026-11-25: who enforces it, and which path reaches it
+
+Two defects, both green suites (143 and 196 tests), both fixed and re-measured
+here. Each is a rule that was **declared** but not **enforced by the library on
+the path that mattered**.
+
+| the claim | what was actually true | the probe that would have caught it |
+|---|---|---|
+| `cors(allow_credentials=True)` is the incantation to allow cookies | it defaulted `allow_origins=["*"]` and **reflected the caller's `Origin`** with `Allow-Credentials: true` — a *valid* grant, so any site could read authenticated responses. Reflecting is worse than `"*"`, which browsers reject | send `Origin: https://evil.example` and read the reply headers, not the request status |
+| `cors` "enforces" the Fetch rule that a wildcard cannot carry credentials | it never had to: **browsers** enforce it, by withholding the response. A library that delegates an illegal combination has not validated it | ask *who enforces this*; if the answer is the browser, the library emits no error |
+| `def top(limit: int = option("--limit", default=10))` is typed `int` | `type` defaulted to `str`, so the *supplied* path gave `"5"` and the *omitted* path gave `10` — one parameter, two types, chosen by the command line; `choices=[1,2,3]` rejected its own values | call the same command twice, print `type(v).__name__` on both paths |
+| the suite covers option typing | all 143 tests wrote `type=int` **explicitly** — the single spelling that could not fail | grep the tests for the *omitted* spelling; find none, then probe it |
+
+**Third rule: name the enforcer before believing the guard.** "The library
+validates X" and "X cannot be misused" are different claims. The first
+requires an error at construction/parse time; the second is satisfied when a
+browser, a caller, or CI catches it — silently, and only for the configurations
+someone actually runs.
+
+**Fourth rule: a default has at least two paths, and the suite names one.**
+Supplied vs omitted, explicit vs implied, preflight vs simple request. Probe
+both and compare **types**, not values, or the divergence reads as agreement.
+See `tools/probing-both-paths-of-a-default.md`.
+
+## The vendored snapshot that silently re-introduced a fixed defect (2026-11-25)
+
+`repos/` holds snapshots of published packages, and a snapshot is an artefact
+with its own `Last verified` claim. `repos/tiny-headers-redact` was synced on
+**2026-10-15** (`3e5d620`, v0.1.0) while the live repo fixed the same file on
+**2026-10-26** (`fc4acaa`). The vendored copy therefore still contained
+`redact_headers()` **returning a shallow copy** when `tiny_secret_mask` could
+not be imported — a security function that silently passed credentials through
+and looked like it worked. Anyone reading the toolkit's copy read the defect
+the live repo had already fixed.
+
+**Fifth rule: a vendored copy is a claim, and it decays from the day it was
+synced.** `Last verified` on a snapshot is the sync date, not the read date.
+Before citing `repos/<pkg>` as current, `git -C ../<pkg> log --oneline -1` and
+compare; a divergence means the snapshot is stale, not that the fix was
+reverted.
+
+**Sixth rule: re-sync per file, and only the files you executed.** A blind
+`cp -r` of the live repo into the snapshot pulls in unrelated, unreviewed
+in-flight work (here: a half-merged `.github/workflows/ci.yml` with conflict
+markers, and an install-line rewrite). Copy the files whose behaviour you
+probed, and leave the rest for a session that can verify them.
+
+**Seventh rule: a docstring is part of the behaviour you are certifying.** The
+fixed `redact_headers()` **raised**, but its docstring still said "falls back to
+a shallow copy". The suite, the probe, and the changelog footer all agreed with
+the code; only the sentence a caller reads in `help()` disagreed. Grep the
+docstring for the old contract whenever you change the contract.
+
 ## Procedure
 
 ### 1. Build the family list from the documents, not from memory

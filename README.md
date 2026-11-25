@@ -3,6 +3,58 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-25 17:00Z) — who enforces it, and which path reaches it
+
+Two defects in our own libraries, both with a green suite before and after.
+Nothing removed. No upstream PR today — one stale vendored snapshot re-synced.
+
+- **`tiny-router` 0.9.5 (`1c64aee`)** — `cors(allow_credentials=True)` defaulted
+  `allow_origins=["*"]` and then **reflected the caller's `Origin`** back with
+  `Access-Control-Allow-Credentials: true`. That is a *valid* credentialed grant,
+  not a refusal: any site could read authenticated responses while the user's
+  session cookie was present. Reflecting is **worse than `"*"`**, which browsers
+  reject. The library never enforced the Fetch rule because it never had to —
+  browsers enforce it by withholding the response, so the broken config failed
+  silently and only safely. Fix: `ValueError` at construction, naming the
+  remedy. Measured: **205 passed / 26 skipped**; probes in four directions
+  (dangerous combos refused, own origin granted, foreign origin gets no headers,
+  non-credentialed wildcard still legal).
+- **`tiny-cli` 1.3.3 (`11c9539`)** — `option()` declared `type: type = str`, so
+  an omitted `type=` meant `str` rather than "infer it". `def top(limit: int =
+  option("--limit", default=10))` gave `10` (int) when the flag was omitted and
+  `"5"` (str) when supplied — **one parameter, two types, chosen by the command
+  line**. The same cause made `choices=[1,2,3]` reject its own values. Now
+  `_resolve_marker_type()`: explicit `type=` > annotation > `type(default)` >
+  `str`. It needed a `_has_annotation` flag because `hints.get(name, str)` makes
+  "unannotated" indistinguishable from "annotated `str`". Measured: **154
+  passed**, 11 tests added, 6 red on 1.3.2. It survived **143 green tests**
+  because every one of them wrote `type=int` explicitly.
+- **Stale snapshot re-synced:** `repos/tiny-headers-redact` was synced
+  2026-10-15 (`3e5d620`, v0.1.0); the live fix landed 2026-10-26 (`fc4acaa`)
+  and the snapshot never picked it up, so the toolkit shipped the **pre-fix**
+  `redact_headers()`, which returned a shallow copy when `tiny_secret_mask` was
+  missing — credentials passing through while the caller believed they were
+  scrubbed. Re-synced `tiny_headers_redact.py` + `CHANGELOG.md` only, and
+  corrected the docstring that still documented the removed fallback as the
+  feature. (The live `ci.yml` and README install line were **not** copied: both
+  are unverified in-flight changes.)
+- **The reusable lesson:** ask *who enforces this rule* and *which path reaches
+  it*. Both defects read as correct code; each was only wrong when the
+  enforcement was traced to the browser rather than the library, or when the
+  same parameter was called with its argument omitted. This is the third shape
+  next to `absent ↔ None` and `value ↔ unit`.
+- New: `prompts/name-who-enforces-it-and-which-path.md`,
+  `tools/probing-both-paths-of-a-default.md`. **Extended:**
+  `skills/verification-sweep/` (four trap rows from today plus three rules on
+  vendored snapshots: they decay from the sync date, re-sync per file, and a
+  docstring is part of the behaviour you certify).
+- **Stats:** Prompts **160 → 161**. Tool Guides **159 → 160**. Daily Updates
+  **152 → 153**. Skills **45 loadable / 50 dirs** (unchanged; one extended).
+  `check_structure.py` 45/45 green.
+- **Nothing removed.** Last verified 2026-11-25 17:00Z (both library suites run
+  in this session — 205/26 and 154; repo suite 285 passed / 16 failed, all 16 in
+  the vendored header-redact tests that require the absent sidecar).
+
 ### 🆕 Latest additions (2026-11-24 17:20Z) — two facts computed separately that no longer agree
 
 Two releases of our own libraries, both audited at the boundary before the
