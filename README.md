@@ -1380,19 +1380,30 @@ open skills/repo-creator/SKILL.md
 
 | Category | Count | Last Updated |
 |----------|-------|-------------|
-| Skills | 45 loadable / 50 dirs | 2026-11-23 |
-| Prompts | 157 | 2026-11-23 |
+| Skills | 45 loadable / 50 dirs | 2026-11-26 |
+| Prompts | 164 | 2026-11-26 |
 | Commands | 5 | 2026-07-23 |
-| Tool Guides | 157 | 2026-11-23 |
+| Tool Guides | 162 | 2026-11-26 |
 | Agents | 3 | 2026-07-23 |
 | Orchestrators | 1 | 2026-07-23 |
 | Scripts | 7 | 2026-11-23 |
-| Daily Updates | 151 | 2026-11-23 |
+| Daily Updates | 154 | 2026-11-26 |
 | Reports | 32 | 2026-11-10 |
-| tiny-* Ecosystem Repos | 137 | 2026-11-21 |
+| tiny-* Ecosystem Repos | 140 | 2026-11-26 |
 | Additional hussain-alsaibai Repos | 42 | 2026-11-21 |
 
-**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-23: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
+**Every row above was re-derived from the tree on 2026-11-26 18:00Z**
+(`ls prompts/*.md | wc -l` → 164, `ls tools/*.md | wc -l` → 162,
+`ls daily-updates/*.md | wc -l` → 154, `ls -d skills/*/ | wc -l` → 50,
+`ls skills/*/SKILL.md | wc -l` → 45). The table was accurate on its own
+2026-11-23 date; what failed is that the 2026-11-26 17:00Z commit edited the
+prose counts above it and left the table untouched — the "one copy of the old
+number left standing beside the correction" sibling this README already warns
+about. `tiny-*` counts are from
+`gh api 'search/repositories?q=user:hussain-alsaibai+tiny-'` → **140**
+(the 137 was a hand-maintained list, not an API count).
+
+**All `SKILL.md` files carry AgentSkills YAML frontmatter**, so every skill in this repo is loadable by an agent runtime. Verified by `scripts/check_structure.py` on 2026-11-26 18:00Z: `45 total, 45 loadable, 0 pending frontmatter` (50 directories exist; 5 are reference-only).
 
 **Every count above was measured against the tree on 2026-11-23** (`ls prompts/*.md | wc -l` → 156, `ls tools/*.md | wc -l` → 157, `ls daily-updates/*.md | wc -l` → 151 after today's file, `ls -d skills/*/ | wc -l` → 50, `ls skills/*/SKILL.md | wc -l` → 45). The 2026-11-22 run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**); This table was found three days stale while the prose above it was current — the 2026-11-13 failure (one copy of an old number left standing beside the correction) had a sibling here: the blockquote was updated and the table under it was not. The 2026-11-14 failure was a different layer again: **two test counts written into a skill and a tool guide without being run**, withdrawn there — see `daily-updates/2026-11-14.md`. The 2026-11-22 run re-derived every row from the tree and re-ran the repo's own suite (**57 passed**); `Scripts` was re-measured as **7** after three consecutive entries carried **8** without a recount.
 

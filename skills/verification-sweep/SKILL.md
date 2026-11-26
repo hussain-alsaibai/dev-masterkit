@@ -1,6 +1,6 @@
 ---
 name: verification-sweep
-description: "Re-verify a family of dated or installable claims in one pass - upstream repo existence, registry name ownership, install-line safety, and guide snippet runnability - so that a wrong claim in one member exposes the method used on all of them. Use when documentation cites Last Verified dates, when a guide says pip install <name>, when a README claims a repo does not exist upstream, before publishing a package, before choosing a release version number, or when a library exports or stores a contract a second system consumes."
+description: "Re-verify a family of dated or installable claims in one pass - upstream repo existence, registry name ownership, install-line safety, and guide snippet runnability - so that a wrong claim in one member exposes the method used on all of them. Use when documentation cites Last Verified dates, when a guide says pip install <name>, when a README claims a repo does not exist upstream, before publishing a package, before choosing a release version number, when an open PR of yours is reported blocked or stale, before rebasing onto an unmerged release PR, or when a library exports or stores a contract a second system consumes."
 ---
 
 # verification-sweep — Re-verify a whole family of claims at once
@@ -107,6 +107,29 @@ rebase conflicted in `CHANGELOG.md`. And read the version-surface list from the
 repo (`snapdb` has three: `snapdb/__init__.py`, `pyproject.toml`,
 `package.json`) — a missed surface failed `test_version_consistency` after the
 commit. See `prompts/fetch-before-you-choose-a-version-number.md`.
+
+## Trap rows from 2026-11-26 (evening): a version number is not taken until it is merged
+
+The morning's rule said *fetch before choosing a number*. The evening run showed
+the sibling failure: **reading a number as taken from an open, unmerged PR.**
+Both upstream contributor PRs had already been moved to `RULESET 10` to make room
+for upstream's `release: 0.9.0` — while that release PR was still `OPEN` and
+`mergedAt: null`, and the default branch still reported 8.0.
+
+| the claim | what was actually true | the probe that would have caught it |
+|---|---|---|
+| ruleset 9 is spoken for, so we need 10 | the claim came from **PR #35**, which is unmerged; `main`'s newest commit is `Merge #32: release 0.8.0` | `gh pr view 35 --json state,mergeable,mergedAt` — `OPEN`, `MERGEABLE`, `null` |
+| the release PR must be waiting on CI | every check on it was `pass`; it is waiting on a **human merge** | `gh pr checks 35 \| grep -Ev '\bpass\b'` → empty |
+| my branch was rebased again at 17:38Z | `updated_at` moved but `head.sha` did not; an unrelated schedule event touched it | compare `head.sha` across two probes before re-running a matrix |
+
+**Eighth rule: a version, ruleset id or schema field is taken when it is
+*merged*, not when it is proposed.** A release PR is a global decision and a
+contributor PR is a local one; when both are open, the local change can be
+correct and still land wrong, because the number moves under it. Re-running
+tests cannot see this — they compare against a base that is about to change.
+The cheapest correct answer is usually "wait for the merge, rebase once".
+See `prompts/check-the-release-contract-before-the-rebase.md` and
+`tools/pqproof-version-gate.md`.
 
 ## The vendored snapshot that silently re-introduced a fixed defect (2026-11-25)
 
