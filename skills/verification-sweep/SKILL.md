@@ -1,6 +1,6 @@
 ---
 name: verification-sweep
-description: "Re-verify a family of dated or installable claims in one pass - upstream repo existence, registry name ownership, install-line safety, and guide snippet runnability - so that a wrong claim in one member exposes the method used on all of them. Use when documentation cites Last Verified dates, when a guide says pip install <name>, when a README claims a repo does not exist upstream, or before publishing a package."
+description: "Re-verify a family of dated or installable claims in one pass - upstream repo existence, registry name ownership, install-line safety, and guide snippet runnability - so that a wrong claim in one member exposes the method used on all of them. Use when documentation cites Last Verified dates, when a guide says pip install <name>, when a README claims a repo does not exist upstream, before publishing a package, before choosing a release version number, or when a library exports or stores a contract a second system consumes."
 ---
 
 # verification-sweep — Re-verify a whole family of claims at once
@@ -74,6 +74,39 @@ someone actually runs.
 Supplied vs omitted, explicit vs implied, preflight vs simple request. Probe
 both and compare **types**, not values, or the divergence reads as agreement.
 See `tools/probing-both-paths-of-a-default.md`.
+
+## Trap rows from 2026-11-26: the second consumer's artifact, and the minimal payload
+
+Two shipped defects, two fully green suites (246 and 277 tests), both in
+**released** versions. Each was a contract the library advertised and did not
+enforce — or enforced and did not advertise.
+
+| the claim | what was actually true | the probe that would have caught it |
+|---|---|---|
+| an imported `enum` works, because `validate({"role":"superadmin"})` rejects it | `from_json_schema` added a **validator** and no **constraint**; `to_json_schema` builds from `field.constraints`, so the export carried **no `enum`** and every consumer (OpenAPI, MCP tool schema, generated client) accepted any string | `to_json_schema(from_json_schema(doc))` and **read the export**; the reject call alone is identical on the broken release |
+| `update(idx, doc)` updates the record | it wrote `doc` as the **whole row**; the fixed-width decoder omits null placeholders, so `insert({name,age,role}); update(0,{age:31})` left `get(0) == {'age': 31}` — no error, row present, edited field correct | one call with the **minimum** payload: `update(0, {"age":31})` then `get(0)` |
+| `update` on a row that does not exist is a no-op | it **wrote a placeholder row**; the caller believes an existing record was modified | `update(999999, {...})` and assert it raises |
+| the suite covers `update` | all **264** tests passed a **complete** record — the one spelling where a rewrite and a patch are indistinguishable | grep the tests for a partial payload; find none, then probe it |
+
+**Fifth rule: for a contract-emitting API, assert the artifact, not the
+in-memory object.** A validation test answers "does it reject a bad value". It
+never answers "does it still *say* what it enforces" (the export) or "does it
+keep what the caller did not mention" (the record). Those are separate
+assertions about separate objects, and the second one is the published
+contract. See `prompts/the-artifact-the-other-system-reads-is-the-contract.md`.
+
+**Sixth rule: a write API's name is a contract, and the dangerous payload is
+the partial one.** `update` = change what I named; `replace`/`put` = make this
+the record. One test per write API with the minimum valid payload separates
+them; a test with a complete record cannot.
+
+**Seventh rule: the right first step of a version bump is `git fetch`.**
+Local head is not published head. This session's first bump used a number the
+remote had already published two days earlier; the push was rejected and the
+rebase conflicted in `CHANGELOG.md`. And read the version-surface list from the
+repo (`snapdb` has three: `snapdb/__init__.py`, `pyproject.toml`,
+`package.json`) — a missed surface failed `test_version_consistency` after the
+commit. See `prompts/fetch-before-you-choose-a-version-number.md`.
 
 ## The vendored snapshot that silently re-introduced a fixed defect (2026-11-25)
 

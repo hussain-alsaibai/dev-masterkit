@@ -3,6 +3,57 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-26 17:00Z) — the artifact the other system reads is the contract
+
+Two released versions of our own libraries, both with a suite green **before and
+after**, both re-measured from fresh clones in this container. Nothing removed.
+No upstream PR today.
+
+- **`tiny-validator` 0.7.5 (`161f444`)** — `from_json_schema` enforced `enum` in
+  memory but never stored it as a *constraint*, and `to_json_schema` builds from
+  constraints. So `{"enum":["admin","user"]}` correctly rejected
+  `"superadmin"` while the **export carried no `enum` at all** — every OpenAPI
+  document, MCP tool schema and generated client built from it accepted any
+  string. Fix: `set_constraint` at import; the export now also emits and honours
+  `additionalProperties: False`. Measured: **246 passed / 4 skipped**, 12 tests,
+  6 red on 0.7.4. Invisible to validation tests because the reject call prints
+  **identically** on the broken release.
+- **`snapdb` 0.18.5 (`8a87963` + `288e97e`)** — `DocumentStore.update(idx, doc)`
+  wrote `doc` as the **entire row**. Fixed-width rows plus a decoder that omits
+  null placeholders meant `insert({name,age,role}); update(0,{"age":31})` left
+  `get(0) == {'age': 31}`: no error, row present, edited field correct, every
+  other field erased. `update` is now a patch, `replace(idx, doc)` keeps the old
+  behaviour under its right name, and a missing row raises `IndexError` instead
+  of writing a placeholder. Measured: **277 passed / 22 skipped**, 13 tests, 10
+  red on 0.18.4. It survived **264 green tests** because every one passed a
+  **complete** record — the one payload where a rewrite and a patch look alike.
+- **The reusable lesson:** for every write or contract-emitting API, *name the
+  artifact a second system consumes and assert that artifact* — the export, not
+  the schema object; the stored record, not the argument. Two sub-rules: a write
+  API's **name is a contract** and the dangerous payload is the partial one, and
+  **a write with nowhere to go must raise**. Fourth shape next to `absent ↔ None`,
+  `value ↔ unit`, and `declared ↔ enforced`.
+- **Version bumps must fetch first.** The first bump used `0.7.4`, which
+  `origin/main` had published two days earlier: push rejected, rebase conflicted
+  in `CHANGELOG.md`. And `snapdb` carries its version in **three** files
+  (`snapdb/__init__.py`, `pyproject.toml`, `package.json`) — the first bump
+  edited two and `test_version_consistency` caught the third after the commit.
+- New: `prompts/the-artifact-the-other-system-reads-is-the-contract.md`,
+  `prompts/fetch-before-you-choose-a-version-number.md`,
+  `tools/probing-the-second-consumers-artifact.md`. **Extended:**
+  `skills/verification-sweep/` (four trap rows from today, three rules, and a
+  wider trigger covering version bumps and exported/stored contracts).
+- **Known limitation recorded, not fixed:** a real `0` in an int/float field on
+  a nullable `snapdb` column reads back as absent (empty slot and zero are the
+  same bytes). Schema-level fix; documented in snapdb's CHANGELOG.
+- **Stats:** Prompts **161 → 163**. Tool Guides **160 → 161**. Daily Updates
+  **153 → 154**. Skills **45 loadable** (unchanged; one extended).
+  `check_structure.py` 45/45 green. **Nothing removed.**
+- Last verified 2026-11-26 17:00Z — both suites run from `--depth 5` clones at
+  the SHAs above; the repo's own `tests/` show 8 failures in
+  `test_scan_skills.py` from `/tmp` being `noexec`, reproduced on an unmodified
+  tree (recorded in `daily-updates/2026-11-26.md` §5, not worked around).
+
 ### 🆕 Latest additions (2026-11-25 17:00Z) — who enforces it, and which path reaches it
 
 Two defects in our own libraries, both with a green suite before and after.
