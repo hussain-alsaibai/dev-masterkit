@@ -92,6 +92,13 @@ read from a dict whose order you do not control.
 
 ## A correction worth carrying
 
+> **Status 2026-11-27 18:00Z — read this first.** The `tiny-config` 0.4.4
+> CHANGELOG and its `_env_key_parts` comment still say `startswith` returns
+> `False` "for a string it plainly begins with". That sentence is wrong and is
+> now tracked as a **documentation defect in a released package**: the code is
+> right, the comment is not. If you consume `tiny-config`, do not copy the
+> claim; copy the rule below.
+
 The 0.4.4 changelog and code comment explain the slice comparison by claiming
 that `"COLTEST_DB__HOST".startswith("COLTEST__")` returns `False` "in this
 build". Measured here on CPython 3.12.15 it returns **`False`** — and so does
