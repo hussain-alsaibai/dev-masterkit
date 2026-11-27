@@ -108,6 +108,34 @@ repo (`snapdb` has three: `snapdb/__init__.py`, `pyproject.toml`,
 `package.json`) — a missed surface failed `test_version_consistency` after the
 commit. See `prompts/fetch-before-you-choose-a-version-number.md`.
 
+## Trap rows from 2026-11-27: the boundary, not the prefix
+
+`tiny-config` 0.4.4 (`980cfaa`). Five scenarios run against the live tree and
+against `16cebb7` (0.4.3) in this container; every one changes classification
+between the trees. Suites: 137 passed / 14 skipped on both.
+
+| the claim | what was actually true | the probe that would have caught it |
+|---|---|---|
+| `from_env(prefix="APP")` reads only `APP`'s variables | `APP2_DB__HOST` starts with `APP`, so a neighbour app's variable was absorbed as the key `2_db.host` | set `APP_X` and `APP2_X` together and read the result |
+| two names for one key is a corner case | `APP_SVC__PATH` and `APP_SVC__path` collapse to one dotted key; **last writer wins**, so the config depends on `os.environ` iteration order | run the same pair with the dict literal reversed and **diff the two outputs** |
+| `COLTEST_DB__HOST.startswith("COLTEST__")` returns `False` "in this build" | it does return `False` — and so does the slice, because the string does not begin with that prefix (9th char is `D`). The changelog comment explains a correct fix with an unreproducible fact | print `startswith(p)` and `k[:len(p)] == p` for the **same** `p`; if they agree, the build is not the story |
+| a missing `startswith` is why the sibling bug happened | `startswith(prefix)` **without** the separator is the defect; `startswith` itself agrees with `==` on every pair tried | `APP2_X`.startswith("APP") and `APP2_X`[:3] == "APP" both → True |
+| `"1"` is an `int` is a cosmetic choice | `API_KEY=1` came back `True`; an API key, a tenant id, a port and a flag all arrive as one character | `type(_coerce("1")).__name__` and `repr(_coerce("1"))` |
+
+**Ninth rule: when a changelog or comment justifies a line with a fact about the
+*runtime*, execute that fact literally and print the value.** Three defects here
+were real and the explanation for the first was not. A wrong explanation is not
+cosmetic: it sends the next reader to a `.pyc`, an editable-install finder, or a
+disassembler, and the fix that actually worked gets "simplified" back by
+someone who reads the comment and believes it. Fix the comment in the same
+commit as the code, or the code is right and the reason is lost.
+
+**Tenth rule: a boundary bug and an ordering bug look identical in a single
+run.** The case-collision row printed a plausible config in both directions —
+just a different one. The only probe that separates them is the **same input
+with the insertion order reversed**, and the finding is that the two outputs
+differ. Print both.
+
 ## Trap rows from 2026-11-26 (evening): a version number is not taken until it is merged
 
 The morning's rule said *fetch before choosing a number*. The evening run showed
@@ -350,6 +378,8 @@ Not: "checked the repos" and not "found some stale ones".
 - `prompts/readme-claims-must-be-runnable.md`
 - `prompts/check-the-repo-before-you-recommend-the-bounty.md`
 - `prompts/a-test-that-constructs-the-response-cannot-validate-it.md`
+- `prompts/a-prefix-is-a-boundary-not-a-prefix.md`
+- `tools/probing-a-boundary-in-five-lines.md`
 - `tools/asserting-on-the-wire-not-the-object.md`
 - the **rule-reachability** skill - proving a rule can fire at all
 - the **runtime-reliability** skill - the same discipline applied to job runtimes

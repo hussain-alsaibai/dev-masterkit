@@ -3,6 +3,54 @@
 > A comprehensive developer toolkit for AI-assisted repository creation, testing, documentation, security auditing, performance benchmarking, prompt engineering, and infrastructure automation. Zero dependencies. Production-ready.
 
 
+### 🆕 Latest additions (2026-11-27 17:00Z) — a prefix is a boundary, and a comment is a claim
+
+A release of our own library, and a correction to the explanation it shipped
+with. Both trees measured from a fresh clone in this container.
+**Nothing removed** — one stale guide re-verified in place.
+
+- **`tiny-config` 0.4.4 (`980cfaa`)** — `from_env(prefix="APP")` filtered with
+  `key.startswith(prefix)`, so `APP2_DB__HOST` was absorbed as the key
+  `2_db.host`, and `APP_SVC__PATH` / `APP_SVC__path` collapsed onto one key with
+  **last writer wins** — the config depended on `os.environ` iteration order, so
+  the same container produced different settings on different boots. A prefix
+  is now matched as a **boundary** (prefix *and* the separator follows);
+  `MYAPP_` and `MYAPP` are one namespace; a case-only collision raises
+  `ConfigError` naming **both** variables; `MYAPP_DB__` and `MYAPP__` with a
+  value raise instead of leaving unreadable values behind. Also `"1"`/`"0"`
+  are **numbers**, not booleans — `API_KEY=1` used to come back `True`.
+  Measured: **137 passed / 14 skipped**, five scenarios red on `16cebb7` and
+  green here. The expensive pair is the ordering one: a single run prints a
+  plausible config in both directions, just a different one.
+- **The fix is right; one comment explaining it is not.** The changelog says the
+  slice comparison exists because `"COLTEST_DB__HOST".startswith("COLTEST__")`
+  returns `False` "in this build". Executed on CPython 3.12.15: `startswith`
+  and the slice **agree on every pair tried**, both `False`, because the string
+  does not begin with that prefix (9th char is `D`). The real defect is
+  `startswith(prefix)` *without* the separator — `COLTEST2_DB__HOST.startswith(
+  "COLTEST")` is `True`. The slice spelling stays (it states the boundary with
+  no search implementation to depend on), the false reason is recorded in the
+  new prompt so it is not "simplified" back.
+- **`tools/tiny-config-guide.md` was two releases stale** — `Last Verified:
+  2026-11-02` at 0.4.0 / 54 tests, against a real 0.4.4 / 137+14 / 22 exports.
+  Re-verified, and the Quick Start **executed** rather than proofread; it now
+  documents two facts the signature hides: `load()` parses `sys.argv` by
+  default (`cli=True`), and `env_prefix` is keyword-only.
+- New: `prompts/a-prefix-is-a-boundary-not-a-prefix.md`. **Extended:**
+  `tools/probing-a-boundary-in-five-lines.md` (the membership case — five rows,
+  the 0.4.3-vs-0.4.4 table, and why row 3 is the one people skip),
+  `skills/verification-sweep/` (five trap rows, ninth and tenth rules), and
+  `tools/tiny-config-guide.md` re-verified in place at 0.4.4.
+- **Stats:** Prompts **164 → 165**. Tool Guides **162** (the count was already
+  162 in the tree; the 2026-11-26 entry's "161" was a miscount — one guide was
+  added after that entry was written; today **extended** a guide and added
+  none). Daily Updates **154 → 155**. Skills **45 loadable** (unchanged; one
+  extended). `check_structure.py` 45/45 green.
+- Last verified 2026-11-27 17:00Z — `tiny-config` suite run from a fresh clone
+  at `980cfaa`; the repo's own `tests/` show the same 8 `test_scan_skills.py`
+  failures from `/tmp` being `noexec` recorded on 2026-11-26, unreproducible
+  here as a regression.
+
 ### 🆕 Latest additions (2026-11-26 17:00Z) — the artifact the other system reads is the contract
 
 Two released versions of our own libraries, both with a suite green **before and
@@ -49,6 +97,10 @@ No upstream PR today.
 - **Stats:** Prompts **161 → 163**. Tool Guides **160 → 161**. Daily Updates
   **153 → 154**. Skills **45 loadable** (unchanged; one extended).
   `check_structure.py` 45/45 green. **Nothing removed.**
+- **Corrected 2026-11-27:** the tree held **Prompts 164 / Tool Guides 162** at
+  this entry's commit, not 163/161 — a guide and a prompt were added after it
+  was written and the table was not re-derived. Counts here are now taken with
+  `ls <dir>/*.md | wc -l` at the commit that states them.
 - Last verified 2026-11-26 17:00Z — both suites run from `--depth 5` clones at
   the SHAs above; the repo's own `tests/` show 8 failures in
   `test_scan_skills.py` from `/tmp` being `noexec`, reproduced on an unmodified
